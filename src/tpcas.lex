@@ -38,11 +38,7 @@ void                              {return VOID;}
 <COMMENT>[.\n\t]*                 ;
 %%
 
-/*
-Not done:
--comparisons (EQ and ORDER)
--OR and AND
-*/
+
 
 void printText(){
     printf("%s yo\n", yytext);
