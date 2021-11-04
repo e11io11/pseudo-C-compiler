@@ -14,10 +14,10 @@ Prog:  DeclVars DeclFoncts
     ;
 DeclVars:
        DeclVars TYPE Declarateurs ';' 
-    |
+    |   
     ;
 Declarateurs:
-       Declarateurs ',' IDENT 
+       Declarateurs ',' IDENT  
     |  IDENT 
     ;
 DeclFoncts:
