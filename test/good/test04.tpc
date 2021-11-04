@@ -1,0 +1,7 @@
+int function(void)
+{
+    char var1;
+    //blabla
+    var1 = 15;
+    return var1;
+}

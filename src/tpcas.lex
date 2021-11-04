@@ -11,6 +11,7 @@ int lineno;
 %x COMMENT
 
 %%
+
 while                             {return WHILE;}
 if                                {return IF;}
 else                              {return ELSE;}
@@ -19,10 +20,14 @@ int|char                          {return TYPE;}
 void                              {return VOID;}
 [0-9]+                            {return NUM;}                     
 '[^']'|'\\n'|'\\t'|'\\''          {return CHARACTER;}
+==|!=                             {return EQ;}
+\<|\>|\<\=|\>\=                   {return ORDER;}
+\|\|                              {return OR;}
+&&                                {return AND;}
 [+-]                              {return ADDSUB;}
 [*/%]                             {return DIVSTAR;}
 [a-zA-Z_][a-zA-Z_0-9]*            {return IDENT;}
-[;,!(){}=!]                       {return yytext[0];}
+[;,!(){}=]                        {return yytext[0];}
 \/\*                              {BEGIN COMMENT;}
 \/\/.*                            ;
 [ \n\t]*                          ;

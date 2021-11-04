@@ -13,7 +13,7 @@ extern int lineno;
 Prog:  DeclVars DeclFoncts 
     ;
 DeclVars:
-       DeclVars TYPE Declarateurs ';' 
+       DeclVars TYPE Declarateurs ';'  
     |   
     ;
 Declarateurs:
