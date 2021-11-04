@@ -21,6 +21,7 @@ EXEC=tpcas
 all:
 	make generate_c_files
 	make generate_o_files
+	make generate_executable
 
 #Script part :
 generate_c_files:
@@ -64,3 +65,11 @@ $(EXEC).tab.o: $(OBJ)$(EXEC).tab.c
 
 lex.yy.o: $(OBJ)lex.yy.c
 	$(CC) -c $< $(CFLAGS) -o $(OBJ)$@
+
+
+#Executable :
+generate_executable:
+	make $(EXEC)
+
+$(EXEC): $(OBJ)$(EXEC).tab.o $(OBJ)lex.yy.o
+	$(CC) $^ $(LDFLAGS) -o $(BIN)$@
