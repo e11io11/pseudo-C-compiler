@@ -8,6 +8,8 @@ int lineno;
 %option noinput
 %option noyywrap
 
+%x COMMENT
+
 %%
 while                             {return WHILE;}
 if                                {return IF;}
@@ -15,19 +17,24 @@ else                              {return ELSE;}
 return                            {return RETURN;}
 int|char                          {return TYPE;}
 void                              {return VOID;}
-[0-9]+                            {return NUM;}
+[0-9]+                            {return NUM;}                     
 '[^']'|'\\n'|'\\t'|'\\''          {return CHARACTER;}
 [+-]                              {return ADDSUB;}
 [*/%]                             {return DIVSTAR;}
 [a-zA-Z_][a-zA-Z_0-9]*            {return IDENT;}
 [;,!(){}=!]                       {return yytext[0];}
+\/\*                              {BEGIN COMMENT;}
+\/\/.*                            ;
 [ \n\t]*                          ;
 <<EOF>>                           {return 0;}
+
+
+<COMMENT>\*\/                     {BEGIN INITIAL;}
+<COMMENT>[.\n\t]*                 ;
 %%
 
 /*
 Not done:
--comments (/* and //)
 -comparisons (EQ and ORDER)
 -OR and AND
 */
