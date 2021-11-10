@@ -495,7 +495,7 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "src/tpcas.lex"
 #line 2 "src/tpcas.lex"
-//#include "tree.h"
+#include "../src/tree.h"
 #include "tpcas.tab.h"
 int lineno;
 #line 502 "obj/lex.yy.c"
@@ -1864,11 +1864,7 @@ void yyfree (void * ptr )
 #line 39 "src/tpcas.lex"
 
 
-/*
-Not done:
--comparisons (EQ and ORDER)
--OR and AND
-*/
+
 
 void printText(){
     printf("%s yo\n", yytext);

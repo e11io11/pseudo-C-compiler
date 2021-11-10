@@ -52,12 +52,16 @@ $(EXEC).tab.h: $(SRC)$(EXEC).y
 generate_o_files:
 	make bison_o
 	make flex_o
+	make tree_o
 
 bison_o:
 	make $(EXEC).tab.o
 
 flex_o:
 	make lex.yy.o
+
+tree_o:
+	make tree.o
 
 
 $(EXEC).tab.o: $(OBJ)$(EXEC).tab.c
@@ -66,10 +70,12 @@ $(EXEC).tab.o: $(OBJ)$(EXEC).tab.c
 lex.yy.o: $(OBJ)lex.yy.c
 	$(CC) -c $< $(CFLAGS) -o $(OBJ)$@
 
+tree.o: $(SRC)tree.c $(SRC)tree.h
+	$(CC) -c $< $(CFLAGS) -o $(OBJ)$@
 
 #Executable :
 generate_executable:
 	make $(EXEC)
 
-$(EXEC): $(OBJ)$(EXEC).tab.o $(OBJ)lex.yy.o
+$(EXEC): $(OBJ)$(EXEC).tab.o $(OBJ)lex.yy.o $(OBJ)tree.o
 	$(CC) $^ $(LDFLAGS) -o $(BIN)$@

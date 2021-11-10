@@ -1,5 +1,5 @@
 %{
-//#include "tree.h"
+#include "../src/tree.h"
 #include "tpcas.tab.h"
 int lineno;
 %}
