@@ -1,9 +1,11 @@
 %{
 #include "../src/tree.h"
 #include <stdio.h>
+#include <getopt.h>
 int yylex();
 int yyerror(char* msg);
 extern int lineno;
+int treeFlag;
 %}
 
 
@@ -18,7 +20,7 @@ extern int lineno;
 %token NUM CHARACTER
 
 %%
-Prog:  DeclVars DeclFoncts                  {$$ = makeNode(Prog); addChild($$, $1); addChild($$, $2); printTree($$);}   
+Prog:  DeclVars DeclFoncts                  {$$ = makeNode(Prog); addChild($$, $1); addChild($$, $2); if (treeFlag) printTree($$);}   
     ;
 DeclVars:                                   
        DeclVars TYPE Declarateurs ';'       {$$ = makeNode(type); addSibling($$, $1); addChild($$, $3);}
@@ -102,3 +104,38 @@ ListExp:
     |  Exp                                  {$$ = $1;}
     ;
 %%
+
+
+int main(int argc, char** argv) {
+    int c;
+    static struct option long_options[] = {
+        {"tree", no_argument, 0, 't'},
+        {"help", no_argument, 0, 'h'},
+        {0,0,0,'?'}
+    };
+    int option_index = 0;
+
+    while (1) {
+        c = getopt_long(argc,argv,"th", long_options, &option_index);
+        if (c == -1) {
+            break;
+        }
+        switch (c) {
+            case 't':
+                treeFlag = 1;
+                break;
+            case 'h':
+                printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n");
+                break;
+            case '?':
+                return 2;
+        }
+    }
+
+    return yyparse();
+}
+
+int yyerror(char* msg) {
+    fprintf(stderr, "Error near line %i.\n", lineno);
+    return 0;
+}

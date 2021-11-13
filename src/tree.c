@@ -32,7 +32,7 @@ Node *makeNode(label_t label) {
   Node *node = malloc(sizeof(Node));
   if (!node) {
     printf("Run out of memory\n");
-    exit(1);
+    exit(2);
   }
   node->label = label;
   node-> firstChild = node->nextSibling = NULL;

@@ -69,13 +69,15 @@
 /* First part of user prologue.  */
 #line 1 "src/tpcas.y"
 
-//#include "tree.h"
+#include "../src/tree.h"
 #include <stdio.h>
+#include <getopt.h>
 int yylex();
 int yyerror(char* msg);
 extern int lineno;
+int treeFlag;
 
-#line 79 "obj/tpcas.tab.c"
+#line 81 "obj/tpcas.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -137,7 +139,16 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 12 "src/tpcas.y"
+
+    Node* node;
+
+#line 149 "obj/tpcas.tab.c"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -581,12 +592,12 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    13,    13,    16,    17,    20,    21,    24,    25,    28,
-      31,    32,    35,    36,    39,    40,    42,    45,    46,    49,
-      50,    51,    52,    53,    54,    55,    56,    57,    59,    60,
-      62,    63,    65,    66,    68,    69,    71,    72,    74,    75,
-      77,    78,    79,    80,    81,    82,    83,    86,    89,    90,
-      93,    94
+       0,    23,    23,    26,    27,    30,    31,    34,    35,    38,
+      41,    42,    45,    46,    49,    50,    52,    55,    56,    59,
+      60,    61,    62,    63,    64,    65,    66,    67,    69,    70,
+      72,    73,    75,    76,    78,    79,    81,    82,    84,    85,
+      87,    88,    89,    90,    91,    92,    93,    96,    99,   100,
+     103,   104
 };
 #endif
 
@@ -1228,8 +1239,308 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
+  case 2: /* Prog: DeclVars DeclFoncts  */
+#line 23 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(Prog); addChild((yyval.node), (yyvsp[-1].node)); addChild((yyval.node), (yyvsp[0].node)); if (treeFlag) printTree((yyval.node));}
+#line 1246 "obj/tpcas.tab.c"
+    break;
 
-#line 1233 "obj/tpcas.tab.c"
+  case 3: /* DeclVars: DeclVars TYPE Declarateurs ';'  */
+#line 26 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(type); addSibling((yyval.node), (yyvsp[-3].node)); addChild((yyval.node), (yyvsp[-1].node));}
+#line 1252 "obj/tpcas.tab.c"
+    break;
+
+  case 4: /* DeclVars: %empty  */
+#line 27 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(epsilon);}
+#line 1258 "obj/tpcas.tab.c"
+    break;
+
+  case 5: /* Declarateurs: Declarateurs ',' IDENT  */
+#line 30 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-2].node); addSibling((yyval.node), makeNode(ident));}
+#line 1264 "obj/tpcas.tab.c"
+    break;
+
+  case 6: /* Declarateurs: IDENT  */
+#line 31 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(ident);}
+#line 1270 "obj/tpcas.tab.c"
+    break;
+
+  case 7: /* DeclFoncts: DeclFoncts DeclFonct  */
+#line 34 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-1].node); addSibling((yyval.node), (yyvsp[0].node));}
+#line 1276 "obj/tpcas.tab.c"
+    break;
+
+  case 8: /* DeclFoncts: DeclFonct  */
+#line 35 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1282 "obj/tpcas.tab.c"
+    break;
+
+  case 9: /* DeclFonct: EnTeteFonct Corps  */
+#line 38 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-1].node); addChild((yyval.node), (yyvsp[0].node));}
+#line 1288 "obj/tpcas.tab.c"
+    break;
+
+  case 10: /* EnTeteFonct: TYPE IDENT '(' Parametres ')'  */
+#line 41 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(ident); addChild((yyval.node), makeNode(type)); addChild((yyval.node), (yyvsp[-1].node));}
+#line 1294 "obj/tpcas.tab.c"
+    break;
+
+  case 11: /* EnTeteFonct: VOID IDENT '(' Parametres ')'  */
+#line 42 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(ident); addChild((yyval.node), makeNode(void_)); addChild((yyval.node), (yyvsp[-1].node));}
+#line 1300 "obj/tpcas.tab.c"
+    break;
+
+  case 12: /* Parametres: VOID  */
+#line 45 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(void_);}
+#line 1306 "obj/tpcas.tab.c"
+    break;
+
+  case 13: /* Parametres: ListTypVar  */
+#line 46 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1312 "obj/tpcas.tab.c"
+    break;
+
+  case 14: /* ListTypVar: ListTypVar ',' TYPE IDENT  */
+#line 49 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(type); addSibling((yyval.node), (yyvsp[-3].node)); addChild((yyval.node), makeNode(ident));}
+#line 1318 "obj/tpcas.tab.c"
+    break;
+
+  case 15: /* ListTypVar: TYPE IDENT  */
+#line 50 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(type); addChild((yyval.node), makeNode(ident));}
+#line 1324 "obj/tpcas.tab.c"
+    break;
+
+  case 16: /* Corps: '{' DeclVars SuiteInstr '}'  */
+#line 52 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-2].node); addSibling((yyval.node), (yyvsp[-1].node));}
+#line 1330 "obj/tpcas.tab.c"
+    break;
+
+  case 17: /* SuiteInstr: SuiteInstr Instr  */
+#line 55 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-1].node); addSibling((yyval.node), (yyvsp[0].node));}
+#line 1336 "obj/tpcas.tab.c"
+    break;
+
+  case 18: /* SuiteInstr: %empty  */
+#line 56 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(epsilon);}
+#line 1342 "obj/tpcas.tab.c"
+    break;
+
+  case 19: /* Instr: LValue '=' Exp ';'  */
+#line 59 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-3].node); addChild((yyval.node), (yyvsp[-1].node));}
+#line 1348 "obj/tpcas.tab.c"
+    break;
+
+  case 20: /* Instr: IF '(' Exp ')' Instr  */
+#line 60 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(if_); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1354 "obj/tpcas.tab.c"
+    break;
+
+  case 21: /* Instr: IF '(' Exp ')' Instr ELSE Instr  */
+#line 61 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(if_); addChild((yyval.node), (yyvsp[-4].node)); addChild((yyval.node), (yyvsp[-2].node)); addSibling((yyval.node), makeNode(else_)); addChild(((yyval.node)->nextSibling), (yyvsp[0].node));}
+#line 1360 "obj/tpcas.tab.c"
+    break;
+
+  case 22: /* Instr: WHILE '(' Exp ')' Instr  */
+#line 62 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(while_); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1366 "obj/tpcas.tab.c"
+    break;
+
+  case 23: /* Instr: IDENT '(' Arguments ')' ';'  */
+#line 63 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(ident); addChild((yyval.node), (yyvsp[-2].node));}
+#line 1372 "obj/tpcas.tab.c"
+    break;
+
+  case 24: /* Instr: RETURN Exp ';'  */
+#line 64 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(return_); addChild((yyval.node), (yyvsp[-1].node));}
+#line 1378 "obj/tpcas.tab.c"
+    break;
+
+  case 25: /* Instr: RETURN ';'  */
+#line 65 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(return_);}
+#line 1384 "obj/tpcas.tab.c"
+    break;
+
+  case 26: /* Instr: '{' SuiteInstr '}'  */
+#line 66 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-1].node);}
+#line 1390 "obj/tpcas.tab.c"
+    break;
+
+  case 27: /* Instr: ';'  */
+#line 67 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(epsilon);}
+#line 1396 "obj/tpcas.tab.c"
+    break;
+
+  case 28: /* Exp: Exp OR TB  */
+#line 69 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(or); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1402 "obj/tpcas.tab.c"
+    break;
+
+  case 29: /* Exp: TB  */
+#line 70 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1408 "obj/tpcas.tab.c"
+    break;
+
+  case 30: /* TB: TB AND FB  */
+#line 72 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(and); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1414 "obj/tpcas.tab.c"
+    break;
+
+  case 31: /* TB: FB  */
+#line 73 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1420 "obj/tpcas.tab.c"
+    break;
+
+  case 32: /* FB: FB EQ M  */
+#line 75 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(eq); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1426 "obj/tpcas.tab.c"
+    break;
+
+  case 33: /* FB: M  */
+#line 76 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1432 "obj/tpcas.tab.c"
+    break;
+
+  case 34: /* M: M ORDER E  */
+#line 78 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(order); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1438 "obj/tpcas.tab.c"
+    break;
+
+  case 35: /* M: E  */
+#line 79 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1444 "obj/tpcas.tab.c"
+    break;
+
+  case 36: /* E: E ADDSUB T  */
+#line 81 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(addsub); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1450 "obj/tpcas.tab.c"
+    break;
+
+  case 37: /* E: T  */
+#line 82 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1456 "obj/tpcas.tab.c"
+    break;
+
+  case 38: /* T: T DIVSTAR F  */
+#line 84 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(divstar); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
+#line 1462 "obj/tpcas.tab.c"
+    break;
+
+  case 39: /* T: F  */
+#line 85 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1468 "obj/tpcas.tab.c"
+    break;
+
+  case 40: /* F: ADDSUB F  */
+#line 87 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(addsub); addChild((yyval.node), (yyvsp[0].node));}
+#line 1474 "obj/tpcas.tab.c"
+    break;
+
+  case 41: /* F: '!' F  */
+#line 88 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1480 "obj/tpcas.tab.c"
+    break;
+
+  case 42: /* F: '(' Exp ')'  */
+#line 89 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-1].node);}
+#line 1486 "obj/tpcas.tab.c"
+    break;
+
+  case 43: /* F: NUM  */
+#line 90 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(num);}
+#line 1492 "obj/tpcas.tab.c"
+    break;
+
+  case 44: /* F: CHARACTER  */
+#line 91 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(character);}
+#line 1498 "obj/tpcas.tab.c"
+    break;
+
+  case 45: /* F: LValue  */
+#line 92 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1504 "obj/tpcas.tab.c"
+    break;
+
+  case 46: /* F: IDENT '(' Arguments ')'  */
+#line 93 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(ident); addChild((yyval.node), (yyvsp[-1].node));}
+#line 1510 "obj/tpcas.tab.c"
+    break;
+
+  case 47: /* LValue: IDENT  */
+#line 96 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(ident);}
+#line 1516 "obj/tpcas.tab.c"
+    break;
+
+  case 48: /* Arguments: ListExp  */
+#line 99 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1522 "obj/tpcas.tab.c"
+    break;
+
+  case 49: /* Arguments: %empty  */
+#line 100 "src/tpcas.y"
+                                            {(yyval.node) = makeNode(epsilon);}
+#line 1528 "obj/tpcas.tab.c"
+    break;
+
+  case 50: /* ListExp: ListExp ',' Exp  */
+#line 103 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[-2].node); addSibling((yyval.node), (yyvsp[0].node));}
+#line 1534 "obj/tpcas.tab.c"
+    break;
+
+  case 51: /* ListExp: Exp  */
+#line 104 "src/tpcas.y"
+                                            {(yyval.node) = (yyvsp[0].node);}
+#line 1540 "obj/tpcas.tab.c"
+    break;
+
+
+#line 1544 "obj/tpcas.tab.c"
 
       default: break;
     }
@@ -1423,5 +1734,40 @@ yyreturn:
   return yyresult;
 }
 
-#line 96 "src/tpcas.y"
+#line 106 "src/tpcas.y"
 
+
+
+int main(int argc, char** argv) {
+    int c;
+    static struct option long_options[] = {
+        {"tree", no_argument, 0, 't'},
+        {"help", no_argument, 0, 'h'},
+        {0,0,0,'?'}
+    };
+    int option_index = 0;
+
+    while (1) {
+        c = getopt_long(argc,argv,"th", long_options, &option_index);
+        if (c == -1) {
+            break;
+        }
+        switch (c) {
+            case 't':
+                treeFlag = 1;
+                break;
+            case 'h':
+                printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n");
+                break;
+            case '?':
+                return 2;
+        }
+    }
+
+    return yyparse();
+}
+
+int yyerror(char* msg) {
+    fprintf(stderr, "Error near line %i.\n", lineno);
+    return 0;
+}

@@ -110,67 +110,67 @@ Nonterminals, with rules where they appear
 
     $accept (26)
         on left: 0
-    Prog (27)
+    Prog <node> (27)
         on left: 1
         on right: 0
-    DeclVars (28)
+    DeclVars <node> (28)
         on left: 2 3
         on right: 1 2 15
-    Declarateurs (29)
+    Declarateurs <node> (29)
         on left: 4 5
         on right: 2 4
-    DeclFoncts (30)
+    DeclFoncts <node> (30)
         on left: 6 7
         on right: 1 6
-    DeclFonct (31)
+    DeclFonct <node> (31)
         on left: 8
         on right: 6 7
-    EnTeteFonct (32)
+    EnTeteFonct <node> (32)
         on left: 9 10
         on right: 8
-    Parametres (33)
+    Parametres <node> (33)
         on left: 11 12
         on right: 9 10
-    ListTypVar (34)
+    ListTypVar <node> (34)
         on left: 13 14
         on right: 12 13
-    Corps (35)
+    Corps <node> (35)
         on left: 15
         on right: 8
-    SuiteInstr (36)
+    SuiteInstr <node> (36)
         on left: 16 17
         on right: 15 16 25
-    Instr (37)
+    Instr <node> (37)
         on left: 18 19 20 21 22 23 24 25 26
         on right: 16 19 20 21
-    Exp (38)
+    Exp <node> (38)
         on left: 27 28
         on right: 18 19 20 21 23 27 41 49 50
-    TB (39)
+    TB <node> (39)
         on left: 29 30
         on right: 27 28 29
-    FB (40)
+    FB <node> (40)
         on left: 31 32
         on right: 29 30 31
-    M (41)
+    M <node> (41)
         on left: 33 34
         on right: 31 32 33
-    E (42)
+    E <node> (42)
         on left: 35 36
         on right: 33 34 35
-    T (43)
+    T <node> (43)
         on left: 37 38
         on right: 35 36 37
-    F (44)
+    F <node> (44)
         on left: 39 40 41 42 43 44 45
         on right: 37 38 39 40
-    LValue (45)
+    LValue <node> (45)
         on left: 46
         on right: 18 44
-    Arguments (46)
+    Arguments <node> (46)
         on left: 47 48
         on right: 22 45
-    ListExp (47)
+    ListExp <node> (47)
         on left: 49 50
         on right: 47 49
 
