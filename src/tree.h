@@ -17,7 +17,15 @@ typedef enum {
   and,
   addsub,
   epsilon,
-  Prog
+  Prog,
+  Arguments,
+  SuiteInstr,
+  LValue,
+  DeclVars,
+  Parametres,
+  DeclFonct,
+  EnTeteFonct,
+  Corps
   /* list all other node labels, if any */
   /* The list must coincide with the string array in tree.c */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */

@@ -79,3 +79,8 @@ generate_executable:
 
 $(EXEC): $(OBJ)$(EXEC).tab.o $(OBJ)lex.yy.o $(OBJ)tree.o
 	$(CC) $^ $(LDFLAGS) -o $(BIN)$@
+	
+clean:
+	$(info Cleaning Object Type)
+	@rm $(OBJ)*
+	$(info Done!)

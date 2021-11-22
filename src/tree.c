@@ -5,6 +5,12 @@
 #include "tree.h"
 extern int lineno;       /* from lexer */
 
+/**
+ * @brief List of all node labels
+ * Warning : If some labels match with keyword of C langage,
+ * add a _ suffix to it
+ * 
+ */
 static const char *StringFromLabel[] = {
   "divstar",
   "ident",
@@ -22,7 +28,15 @@ static const char *StringFromLabel[] = {
   "and",
   "addsub",
   "ε",
-  "Prog"
+  "Prog",
+  "Arguments",
+  "SuiteInstr",
+  "LValue",
+  "DeclVars",
+  "Parametres",
+  "DeclFonct",
+  "EnTeteFonct",
+  "Corps"
   /* list all other node labels, if any */
   /* The list must coincide with the label_t enum in tree.h */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */

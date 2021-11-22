@@ -1,4 +1,15 @@
 %{
+/**
+ * @author Antonin JEAN
+ * @author Elliott FALGUEROLLE
+ * @email ofghanirre@gmail.com
+ * @create date 2021-11-14 19:56:15
+ * @modify date 2021-11-14 19:56:15
+ * @desc Bison file for the Syntax Analyzer
+ * It recieves token from lex compiled file and 
+ * operates based on the latter.
+ */
+
 #include "../src/tree.h"
 #include <stdio.h>
 #include <getopt.h>
@@ -8,14 +19,16 @@ extern int lineno;
 int treeFlag;
 %}
 
-
+/* Type Node's definition : */
 %union {
     Node* node;
 }
+
+/* List of all Possible Values for a node */
 %type <node> Prog DeclVars DeclFoncts Declarateurs DeclFonct EnTeteFonct Corps Parametres ListExp ListTypVar SuiteInstr Instr LValue Arguments TB FB M E T F Exp
 
 
-
+/* List of All possible Tokens */
 %token DIVSTAR IDENT TYPE VOID WHILE IF RETURN ELSE OR AND EQ ORDER ADDSUB
 %token NUM CHARACTER
 
@@ -23,37 +36,37 @@ int treeFlag;
 Prog:  DeclVars DeclFoncts                  {$$ = makeNode(Prog); addChild($$, $1); addChild($$, $2); if (treeFlag) printTree($$);}   
     ;
 DeclVars:                                   
-       DeclVars TYPE Declarateurs ';'       {$$ = makeNode(type); addSibling($$, $1); addChild($$, $3);}
-    |                                       {$$ = makeNode(epsilon);}
+       DeclVars TYPE Declarateurs ';'       {$$ = $1; addChild($$, $3);}
+    |                                       {$$ = makeNode(DeclVars);}
     ;
 Declarateurs:                                   
-       Declarateurs ',' IDENT               {$$ = $1; addSibling($$, makeNode(ident));}
-    |  IDENT                                {$$ = makeNode(ident);}
+       Declarateurs ',' IDENT               {$$ = $1; addChild($$, makeNode(ident));}
+    |  IDENT                                {$$ = makeNode(type); addChild($$, makeNode(ident));}
     ;
 DeclFoncts:                                 
        DeclFoncts DeclFonct                 {$$ = $1; addSibling($$, $2);}
     |  DeclFonct                            {$$ = $1;}
     ;
 DeclFonct:
-       EnTeteFonct Corps                    {$$ = $1; addChild($$, $2);}
+       EnTeteFonct Corps                    {$$ = makeNode(DeclFonct); addChild($$, $1); addChild($$, $2);}
     ;
 EnTeteFonct:
-       TYPE IDENT '(' Parametres ')'        {$$ = makeNode(ident); addChild($$, makeNode(type)); addChild($$, $4);}
-    |  VOID IDENT '(' Parametres ')'        {$$ = makeNode(ident); addChild($$, makeNode(void_)); addChild($$, $4);}
+       TYPE IDENT '(' Parametres ')'        {$$ = makeNode(EnTeteFonct); addChild($$, makeNode(type)); addChild($$, makeNode(ident)); addChild($$, $4);}
+    |  VOID IDENT '(' Parametres ')'        {$$ = makeNode(EnTeteFonct); addChild($$, makeNode(void_)); addChild($$, makeNode(ident)); addChild($$, $4);}
     ;
 Parametres:
-       VOID                                 {$$ = makeNode(void_);}
-    |  ListTypVar                           {$$ = $1;}
+       VOID                                 {$$ = makeNode(Parametres); addChild($$, makeNode(void_));}
+    |  ListTypVar                           {$$ = makeNode(Parametres); addChild($$, $1);}
     ;
 ListTypVar:
        ListTypVar ',' TYPE IDENT            {$$ = makeNode(type); addSibling($$, $1); addChild($$, makeNode(ident));}
     |  TYPE IDENT                           {$$ = makeNode(type); addChild($$, makeNode(ident));}
     ;
-Corps: '{' DeclVars SuiteInstr '}'          {$$ = $2; addSibling($$, $3);}
+Corps: '{' DeclVars SuiteInstr '}'          {$$ = makeNode(Corps); addChild($$, $2); addChild($$, $3);}
     ;
 SuiteInstr:
-       SuiteInstr Instr                     {$$ = $1; addSibling($$, $2);}
-    |                                       {$$ = makeNode(epsilon);}
+       SuiteInstr Instr                     {$$ = $1; addChild($$, $2);}
+    |                                       {$$ = makeNode(SuiteInstr);}
     ;
 Instr:
        LValue '=' Exp ';'                   {$$ = $1; addChild($$, $3);}
@@ -96,8 +109,8 @@ LValue:
        IDENT                                {$$ = makeNode(ident);}
     ;
 Arguments:
-       ListExp                              {$$ = $1;}
-    |                                       {$$ = makeNode(epsilon);}
+       ListExp                              {$$ = makeNode(Arguments), addChild($$, $1);}
+    |                                       {$$ = makeNode(Arguments);}
     ;
 ListExp:
        ListExp ',' Exp                      {$$ = $1; addSibling($$, $3);}
@@ -116,18 +129,18 @@ int main(int argc, char** argv) {
     int option_index = 0;
 
     while (1) {
-        c = getopt_long(argc,argv,"th", long_options, &option_index);
+        c = getopt_long(argc, argv, "th", long_options, &option_index);
         if (c == -1) {
             break;
         }
         switch (c) {
-            case 't':
+            case 't': /* Enable the display of a tree */
                 treeFlag = 1;
                 break;
-            case 'h':
+            case 'h': /* Enable Help Display */
                 printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n");
                 break;
-            case '?':
+            case '?': /* Other unrecognized values */
                 return 2;
         }
     }
