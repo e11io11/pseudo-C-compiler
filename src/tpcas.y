@@ -17,6 +17,8 @@ int yylex();
 int yyerror(char* msg);
 extern int lineno;
 int treeFlag;
+Node* tree;
+int parse;
 %}
 
 /* Type Node's definition : */
@@ -25,15 +27,22 @@ int treeFlag;
 }
 
 /* List of all Possible Values for a node */
-%type <node> Prog DeclVars DeclFoncts Declarateurs DeclFonct EnTeteFonct Corps Parametres ListExp ListTypVar SuiteInstr Instr LValue Arguments TB FB M E T F Exp
+%type <node> Prog DeclVars DeclFoncts Declarateurs DeclFonct EnTeteFonct Corps 
+%type <node> Parametres ListExp ListTypVar SuiteInstr Instr LValue Arguments TB 
+%type <node> FB M E T F Exp Switch EnTeteSwitch CorpsSwitch SuiteSwitch SwitchCase
 
 
 /* List of All possible Tokens */
-%token DIVSTAR IDENT TYPE VOID WHILE IF RETURN ELSE OR AND EQ ORDER ADDSUB
-%token NUM CHARACTER
+%token DIVSTAR IDENT TYPE VOID WHILE IF ELSE RETURN OR AND EQ ORDER ADDSUB
+%token NUM CHARACTER CASE BREAK SWITCH DEFAULT
+
+
+%precedence ')'
+%precedence ELSE
+
 
 %%
-Prog:  DeclVars DeclFoncts                  {$$ = makeNode(Prog); addChild($$, $1); addChild($$, $2); if (treeFlag) printTree($$);}   
+Prog:  DeclVars DeclFoncts                  {$$ = makeNode(Prog); tree = $$; addChild($$, $1); addChild($$, $2);}   
     ;
 DeclVars:                                   
        DeclVars TYPE Declarateurs ';'       {$$ = $1; addChild($$, $3);}
@@ -78,6 +87,7 @@ Instr:
     |  RETURN ';'                           {$$ = makeNode(return_);}
     |  '{' SuiteInstr '}'                   {$$ = $2;}
     |  ';'                                  {$$ = makeNode(epsilon);}
+    |  Switch
     ;
 Exp :  Exp OR TB                            {$$ = makeNode(or); addChild($$, $1); addChild($$, $3);}
     |  TB                                   {$$ = $1;}
@@ -116,6 +126,25 @@ ListExp:
        ListExp ',' Exp                      {$$ = $1; addSibling($$, $3);}
     |  Exp                                  {$$ = $1;}
     ;
+Switch:
+        EnTeteSwitch CorpsSwitch            {$$ = $1; addChild($$, $2);}
+    ;
+EnTeteSwitch:
+        SWITCH '(' Exp ')'                  {$$ = makeNode(switch_); addChild($$, $3);}
+    ;
+CorpsSwitch: 
+        '{'  SuiteInstr SuiteSwitch '}'     {$$ = $2; addSibling($$, $3);}
+    ;
+SuiteSwitch:
+       SuiteSwitch SwitchCase               {$$ = $1; addChild($$, $2);}
+    |                                       {$$ = makeNode(SuiteSwitch);}
+    ;
+SwitchCase:
+        CASE Exp ':' SuiteInstr             {$$ = makeNode(case_); addChild($$, $2); addChild($$, $4);}
+    |   CASE Exp ':' SuiteInstr BREAK ';'   {$$ = makeNode(case_); addChild($$, $2); addChild($$, $4); addChild($$, makeNode(break_));}
+    |   DEFAULT ':' SuiteInstr              {$$ = makeNode(default_); addChild($$, $3);}
+    |   DEFAULT ':' SuiteInstr BREAK ';'    {$$ = makeNode(default_); addChild($$, $3); addChild($$, makeNode(break_));}
+    ;
 %%
 
 
@@ -145,7 +174,13 @@ int main(int argc, char** argv) {
         }
     }
 
-    return yyparse();
+    parse = yyparse();
+    if (!parse) {
+        if (treeFlag) 
+            printTree(tree);
+        deleteTree(tree);
+    }
+    return parse;
 }
 
 int yyerror(char* msg) {

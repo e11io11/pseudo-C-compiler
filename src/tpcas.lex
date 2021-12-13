@@ -28,6 +28,10 @@ int lineno = 1;
 <INITIAL>while                       {return WHILE;}
 <INITIAL>if                          {return IF;}
 <INITIAL>else                        {return ELSE;}
+<INITIAL>switch                      {return SWITCH;}
+<INITIAL>case                        {return CASE;}
+<INITIAL>default                     {return DEFAULT;}
+<INITIAL>break                       {return BREAK;}
 <INITIAL>return                      {return RETURN;}
 <INITIAL>int|char                    {return TYPE;}
 <INITIAL>void                        {return VOID;}
@@ -40,7 +44,7 @@ int lineno = 1;
 <INITIAL>[+-]                        {return ADDSUB;}
 <INITIAL>[*/%]                       {return DIVSTAR;}
 <INITIAL>[a-zA-Z_][a-zA-Z_0-9]*      {return IDENT;}
-<INITIAL>[;,!(){}=]                  {return yytext[0];}
+<INITIAL>[;,!(){}=:]                 {return yytext[0];}
 <INITIAL>\/\*                        {BEGIN COMMENT;}
 <INITIAL>\/\/.*                      ;
 <INITIAL>[ \t]*                      ;

@@ -36,7 +36,12 @@ static const char *StringFromLabel[] = {
   "Parametres",
   "DeclFonct",
   "EnTeteFonct",
-  "Corps"
+  "Corps",
+  "switch",
+  "case",
+  "default",
+  "break",
+  "SuiteSwitch"
   /* list all other node labels, if any */
   /* The list must coincide with the label_t enum in tree.h */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */
