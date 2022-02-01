@@ -29,7 +29,7 @@ int parse;
 /* List of all Possible Values for a node */
 %type <node> Prog DeclVars DeclFoncts Declarateurs DeclFonct EnTeteFonct Corps 
 %type <node> Parametres ListExp ListTypVar SuiteInstr Instr LValue Arguments TB 
-%type <node> FB M E T F Exp Switch EnTeteSwitch CorpsSwitch SuiteSwitch SwitchCase
+%type <node> FB M E T F Exp Switch EnTeteSwitch CorpsSwitch SuiteSwitch SwitchElement SwitchEndElement
 
 
 /* List of All possible Tokens */
@@ -86,7 +86,7 @@ Instr:
     |  RETURN Exp ';'                       {$$ = makeNode(return_); addChild($$, $2);}
     |  RETURN ';'                           {$$ = makeNode(return_);}
     |  '{' SuiteInstr '}'                   {$$ = $2;}
-    |  ';'                                  {$$ = makeNode(epsilon);}
+    |  ';'                                  {$$ = NULL;}
     |  Switch
     ;
 Exp :  Exp OR TB                            {$$ = makeNode(or); addChild($$, $1); addChild($$, $3);}
@@ -126,15 +126,40 @@ ListExp:
        ListExp ',' Exp                      {$$ = $1; addSibling($$, $3);}
     |  Exp                                  {$$ = $1;}
     ;
+
+
+
+
+
+
+    
 Switch:
-        EnTeteSwitch CorpsSwitch            {$$ = $1; addChild($$, $2);}
+        EnTeteSwitch CorpsSwitch            {$$ = makeNode(switch_); addChild($$, $1); addChild($$, $2);}
     ;
 EnTeteSwitch:
-        SWITCH '(' Exp ')'                  {$$ = makeNode(switch_); addChild($$, $3);}
+        SWITCH '(' Exp ')'                  {$$ = makeNode(EnTeteSwitch); addChild($$, $3);}
     ;
 CorpsSwitch: 
-        '{'  SuiteInstr SuiteSwitch '}'     {$$ = $2; addSibling($$, $3);}
+        '{' SuiteSwitch SwitchEndElement '}'{$$ = $2; addChild($$, $3);}
+    |   '{' '}'                             {$$ = makeNode(CorpsSwitch);}
     ;
+
+SuiteSwitch:
+        SuiteSwitch SwitchElement           {$$ = $1; addChild($$, $2);}
+    |                                       {$$ = makeNode(CorpsSwitch);}
+    ;
+SwitchElement:
+        CASE Exp ':'                        {$$ = makeNode(case_); addChild($$, $2);}
+    |   DEFAULT ':'                         {$$ = makeNode(default_);}
+    |   BREAK ';'                           {$$ = makeNode(break_);}
+    |   Instr                               {$$ = $1;}
+    ;
+SwitchEndElement:               
+        BREAK ';'                           {$$ = makeNode(break_);}
+    |   Instr                               {$$ = $1;}
+    ;
+
+/*
 SuiteSwitch:
        SuiteSwitch SwitchCase               {$$ = $1; addChild($$, $2);}
     |                                       {$$ = makeNode(SuiteSwitch);}
@@ -145,6 +170,7 @@ SwitchCase:
     |   DEFAULT ':' SuiteInstr              {$$ = makeNode(default_); addChild($$, $3);}
     |   DEFAULT ':' SuiteInstr BREAK ';'    {$$ = makeNode(default_); addChild($$, $3); addChild($$, makeNode(break_));}
     ;
+*/
 %%
 
 

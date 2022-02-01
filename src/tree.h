@@ -16,7 +16,6 @@ typedef enum {
   or,
   and,
   addsub,
-  epsilon,
   Prog,
   Arguments,
   SuiteInstr,
@@ -30,7 +29,10 @@ typedef enum {
   case_,
   default_,
   break_,
-  SuiteSwitch
+  SuiteSwitch,
+  epsilon,
+  EnTeteSwitch,
+  CorpsSwitch
   /* list all other node labels, if any */
   /* The list must coincide with the string array in tree.c */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */

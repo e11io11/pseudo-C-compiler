@@ -13,12 +13,25 @@ int function(void)
     }
     else
         return -42;
-    switch (var1) {
+    switch (_var1) {
         printf(something);
+        var1 = 'b';
         blabla();
-
-        case 'n': ddqsd(); break;
-        
+        default:
+        case 'y':
+        case 'n': 
+            ddqsd();
+            break;
+        case 'b':
+            while (1) {
+                dosomething(i, y);
+                i = i+   1;
+            }
+        case '9':
+            i=i+*1;
+            break;
+        default:
+            y = 12 + i;
     }
 
     switch (9) {

@@ -13,12 +13,7 @@ int function(void)
     }
     else
         return -42;
-    switch (var1) {
-        printf(something);
-        blabla();
-
-        case 'n': ddqsd(); break;
-        
+    switch (dosomething(i, y)) {
     }
 
     switch (9) {
