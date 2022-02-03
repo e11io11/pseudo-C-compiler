@@ -106,3 +106,27 @@ void printTree(Node *node) {
   }
   depth--;
 }
+
+void printTreeWithValues(Node *node) {
+  static bool rightmost[128]; // tells if node is rightmost sibling
+  static int depth = 0;       // depth of current node
+  for (int i = 1; i < depth; i++) { // 2502 = vertical line
+    printf(rightmost[i] ? "    " : "\u2502   ");
+  }
+  if (depth > 0) { // 2514 = L form; 2500 = horizontal line; 251c = vertical line and right horiz 
+    printf(rightmost[depth] ? "\u2514\u2500\u2500 " : "\u251c\u2500\u2500 ");
+  }
+  printf("%s", StringFromLabel[node->label]);
+  if (node->label == num) printf(": %i", node->value.num);
+  else if (node->label == ident) printf(": %s", node->value.ident);
+  else if (node->label == type || node->label == eq || node->label == order) printf(": %s", node->value.comp); 
+  else if (node->label == character || node->label == addsub || node->label == divstar) printf(": %c", node->value.byte); 
+  
+  printf("\n");
+  depth++;
+  for (Node *child = node->firstChild; child != NULL; child = child->nextSibling) {
+    rightmost[depth] = (child->nextSibling) ? false : true;
+    printTreeWithValues(child);
+  }
+  depth--;
+}

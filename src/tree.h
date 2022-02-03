@@ -40,6 +40,12 @@ typedef enum {
 
 typedef struct Node {
   label_t label;
+  union {
+    char byte;
+    int num;
+    char ident[64];
+    char comp[4];
+  } value;
   struct Node *firstChild, *nextSibling;
   int lineno;
 } Node;

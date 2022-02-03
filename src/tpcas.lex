@@ -33,17 +33,17 @@ int lineno = 1;
 <INITIAL>default                     {return DEFAULT;}
 <INITIAL>break                       {return BREAK;}
 <INITIAL>return                      {return RETURN;}
-<INITIAL>int|char                    {return TYPE;}
+<INITIAL>int|char                    {strcpy(yylval.comp, yytext); return TYPE;}
 <INITIAL>void                        {return VOID;}
-<INITIAL>[0-9]+                      {return NUM;}                     
-<INITIAL>'[^']'|'\\n'|'\\t'|'\\''    {return CHARACTER;}
-<INITIAL>==|!=                       {return EQ;}
-<INITIAL>\<|\>|\<\=|\>\=             {return ORDER;}
+<INITIAL>[0-9]+                      {yylval.num = atoi(yytext); return NUM;}                     
+<INITIAL>'[^']'|'\\n'|'\\t'|'\\''    {yylval.byte = yytext[1]; return CHARACTER;}
+<INITIAL>==|!=                       {strcpy(yylval.comp, yytext); return EQ;}
+<INITIAL>\<|\>|\<\=|\>\=             {strcpy(yylval.comp, yytext); return ORDER;}
 <INITIAL>\|\|                        {return OR;}
 <INITIAL>&&                          {return AND;}
-<INITIAL>[+-]                        {return ADDSUB;}
-<INITIAL>[*/%]                       {return DIVSTAR;}
-<INITIAL>[a-zA-Z_][a-zA-Z_0-9]*      {return IDENT;}
+<INITIAL>[+-]                        {yylval.byte = yytext[0]; return ADDSUB;}
+<INITIAL>[*/%]                       {yylval.byte = yytext[0]; return DIVSTAR;}
+<INITIAL>[a-zA-Z_][a-zA-Z_0-9]*      {strcpy(yylval.ident, yytext); return IDENT;}
 <INITIAL>[;,!(){}=:]                 {return yytext[0];}
 <INITIAL>\/\*                        {BEGIN COMMENT;}
 <INITIAL>\/\/.*                      ;
