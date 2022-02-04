@@ -16,23 +16,19 @@ typedef enum {
   or,
   and,
   addsub,
-  Prog,
-  Arguments,
-  SuiteInstr,
-  LValue,
-  DeclVars,
-  Parametres,
-  DeclFonct,
-  EnTeteFonct,
-  Corps,
+  program,
+  arguments,
+  declare_var,
+  declare_function,
+  parameters,
+  header,
+  body,
   switch_,
   case_,
   default_,
   break_,
-  SuiteSwitch,
-  epsilon,
-  EnTeteSwitch,
-  CorpsSwitch
+  assign,
+  call
   /* list all other node labels, if any */
   /* The list must coincide with the string array in tree.c */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */
