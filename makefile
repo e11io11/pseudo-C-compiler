@@ -18,6 +18,11 @@ BISONFLAGS =--report=all
 #Name of executable
 EXEC=tpcas
 
+DIRS=bin obj
+
+$(shell mkdir -p $(DIRS))
+
+
 all:
 	make generate_c_files
 	make generate_o_files
