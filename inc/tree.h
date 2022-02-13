@@ -1,4 +1,6 @@
 /* tree.h */
+#ifndef __TREE_H__
+#define __TREE_H__
 
 typedef enum {
   divstar,
@@ -38,6 +40,7 @@ typedef struct Node {
   label_t label;
   union {
     char byte;
+    
     int num;
     char ident[64];
     char comp[4];
@@ -51,7 +54,11 @@ void addSibling(Node *node, Node *sibling);
 void addChild(Node *parent, Node *child);
 void deleteTree(Node*node);
 void printTree(Node *node);
+void printTreeWithValues(Node *node);
 
 #define FIRSTCHILD(node) node->firstChild
 #define SECONDCHILD(node) node->firstChild->nextSibling
 #define THIRDCHILD(node) node->firstChild->nextSibling->nextSibling
+
+
+#endif

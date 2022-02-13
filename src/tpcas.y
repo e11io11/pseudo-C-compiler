@@ -9,8 +9,9 @@
  * It recieves token from lex compiled file and 
  * operates based on the latter.
  */
-
-#include "../src/tree.h"
+#include "../inc/includes.h"
+#include "../inc/tree.h"
+#include "../inc/tpcas_functions.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -166,37 +167,15 @@ SwitchEndElement:
 
 
 int main(int argc, char** argv) {
-    int c;
-    static struct option long_options[] = {
-        {"tree", no_argument, 0, 't'},
-        {"help", no_argument, 0, 'h'},
-        {0,0,0,'?'}
-    };
-    int option_index = 0;
-
-    while (1) {
-        c = getopt_long(argc, argv, "th", long_options, &option_index);
-        if (c == -1) {
-            break;
-        }
-        switch (c) {
-            case 't': /* Enable the display of a tree */
-                treeFlag = 1;
-                break;
-            case 'h': /* Enable Help Display */
-                printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n");
-                break;
-            case '?': /* Other unrecognized values */
-                return 2;
-        }
-    }
-
+    if (mainFct_load_arg(argc, argv, &treeFlag)) return 2;
     parse = yyparse();
+
     if (!parse) {
         if (treeFlag) {
             //printTree(tree);
             printTreeWithValues(tree);
         }
+        mainFct_Tree_to_Hash(tree);
         deleteTree(tree);
     }
     return parse;

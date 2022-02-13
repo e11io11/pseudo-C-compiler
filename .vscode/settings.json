@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "tpcas_functions.h": "c",
+        "symboltab.h": "c",
+        "programdata.h": "c"
+    }
+}

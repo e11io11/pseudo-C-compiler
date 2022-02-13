@@ -11,7 +11,7 @@
  * file.
  */
 
-#include "../src/tree.h"
+#include "../inc/tree.h"
 #include "tpcas.tab.h"
 int lineno = 1;
 %}
