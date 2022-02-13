@@ -1,0 +1,31 @@
+
+programSymbolTables mainFct_init_Hash_from_functions1(Node * root) {
+    Node * iter;
+    unsigned int cpt_functions = mainFct_count_functions(root);
+    programSymbolTables result = newProgramSymbolTables(cpt_functions);
+    unsigned int cpt = 0;
+    if (root == NULL) return result; 
+    iter = root->firstChild;
+    while (iter != NULL) {
+        if (iter->label == declare_function) {  /* iter = declare_function */
+            Node * temp = iter->firstChild;    
+            while (temp != NULL) {
+                if (temp->label == header) {    /* temp = header */
+                    Node * temp1 = temp->firstChild; /* temp1 = type */
+                    while (temp1 != NULL) {
+                        if (temp1->label == parameters) { 
+                            result.functions[cpt].parameters = getHash_from_function_parameters(temp1);
+                        }
+                        temp1 = temp1->nextSibling;
+                    }
+                } else if (temp->label == body) {
+                    result.functions[cpt].values = getHash_from_function_body(temp);
+                }
+                temp = temp->nextSibling;
+            }
+            cpt++;
+        }
+        iter = iter->nextSibling;
+    } 
+    return result;
+}

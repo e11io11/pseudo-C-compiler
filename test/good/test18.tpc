@@ -1,6 +1,6 @@
 char c, d;
 int n1, n4,     n0;
-
+char test;
 
 int function(void)
 {
