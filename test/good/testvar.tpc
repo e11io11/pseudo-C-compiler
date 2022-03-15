@@ -1,9 +1,10 @@
 int vga,vgb;
 int vgc;
-
+char vgd, vge, vgf;
 
 void fun1(int a, int b, char c){}
-void function(void)
+
+void fun2(void)
 {
     char var1;
     var1 = 10;
@@ -13,3 +14,10 @@ void function(void)
     return 42;
 }
 
+void fun3(int aoqiej, int bidhqd, int c, char dodjqdj, char ebkcx, char fliirezoi, char gnd, int h)
+{
+    char var1oojdqqhdmqshdqidh;
+    int oizqhdiqhdq,hdqidhqkd,sqhsid,ababab,bababa;
+    char dsssssssssss;
+
+}

@@ -22,7 +22,7 @@ TEST = test/
 CC=gcc
 CFLAGS=-Wall
 LDFLAGS=-Wall -ly
-LEAKFLAG = -fsanitize=address
+LEAKFLAG = -Wall#-fsanitize=address
 BISONFLAGS =--report=all
 
 #Name of executable
