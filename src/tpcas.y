@@ -20,6 +20,7 @@ int yyerror(char* msg);
 void printTreeWithValues(Node* node);
 extern int lineno;
 int treeFlag;
+int symbolFlag;
 Node* tree;
 Node* temp;
 int parse;
@@ -168,15 +169,12 @@ SwitchEndElement:
 
 
 int main(int argc, char** argv) {
-    if (mainFct_load_arg(argc, argv, &treeFlag)) return 2;
+    if (mainFct_load_arg(argc, argv, &treeFlag, &symbolFlag)) return 2;
     parse = yyparse();
 
     if (!parse) {
-        if (treeFlag) {
-            //printTree(tree);
-            printTreeWithValues(tree);
-        }
-        mainFct_Tree_to_Hash(tree);
+        if (treeFlag) printTreeWithValues(tree);
+        mainFct_Tree_to_Hash(tree, symbolFlag);
         deleteTree(tree);
     }
     return parse;

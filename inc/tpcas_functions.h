@@ -21,9 +21,9 @@
 
 
 
-int mainFct_load_arg(int argc, char * argv[], int * treeFlag);
+int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * SymbolFlag);
 
 _type mainFct_charToType(const char * input);
 
-void mainFct_Tree_to_Hash(Node * root);
+void mainFct_Tree_to_Hash(Node * root, int display);
 #endif
