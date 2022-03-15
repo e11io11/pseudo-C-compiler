@@ -13,12 +13,16 @@
 
 #include "../inc/tree.h"
 #include "tpcas.tab.h"
+
 int lineno = 1;
+int charno = 1;
 %}
+
 
 %option nounput
 %option noinput
 %option noyywrap
+%option yylineno
 
 %x COMMENT
 
@@ -50,6 +54,7 @@ int lineno = 1;
 <INITIAL>[ \t]*                      ;
 <INITIAL>.                           {return 1;}
 <INITIAL><<EOF>>                     {return 0;}
+<INITIAL>\n|.                        { return yytext[0]; }
 
 <COMMENT><<EOF>>                     {return 1;}
 <COMMENT>\*\/                        {BEGIN INITIAL;}

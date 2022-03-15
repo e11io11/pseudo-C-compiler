@@ -200,7 +200,19 @@ _type mainFct_charToType(const char * input) {
     return strcmp(input, "int") ?  (strcmp(input, "char") ? _type_other : _type_char) : _type_int;
 }
 
+void mainFct_testHashTable() {
+    HashTable st = newHashTable();
+    int i;
 
+    for (i = 0; i < 10000; i++) {
+        char temp [6];
+        sprintf(temp, "%d", i);
+        putHashVal(&st, newHashElem(temp, _type_int));
+    }
+
+    displayHashTable(st);
+    freeHashTable(&st);
+}
 /*
 program
 ├── declare var

@@ -19,12 +19,15 @@ int yylex();
 int yyerror(char* msg);
 void printTreeWithValues(Node* node);
 extern int lineno;
+extern int yylineno;
 int treeFlag;
 int symbolFlag;
 Node* tree;
 Node* temp;
 int parse;
 %}
+
+%locations
 
 /* Type Node's definition : */
 %union {
@@ -180,7 +183,12 @@ int main(int argc, char** argv) {
     return parse;
 }
 
+#define STYLE_BOLD         "\033[1m"
+#define STYLE_NO_BOLD      "\033[22m"
+#define COLOR_RED         "\033[0;31m"
+#define COLOR_RESET      "\033[0m"
+
 int yyerror(char* msg) {
-    fprintf(stderr, "Error near line %i.\n", lineno);
+    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : << %s >>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i.\n", msg, yylineno);
     return 0;
 }
