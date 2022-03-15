@@ -17,6 +17,7 @@
 #include <string.h>
 int yylex();
 int yyerror(char* msg);
+void printTreeWithValues(Node* node);
 extern int lineno;
 extern int yylineno;
 int treeFlag;
