@@ -1,7 +1,14 @@
 {
     "files.associations": {
+        "*.lex": "lex",
+        "*.tpc": "c",
         "tpcas_functions.h": "c",
         "symboltab.h": "c",
-        "programdata.h": "c"
+        "programdata.h": "c",
+        "utils.h": "c",
+        "tree.h": "c",
+        "debug.h": "c",
+        "includes.h": "c",
+        "hash.h": "c"
     }
 }

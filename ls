@@ -1,0 +1,10 @@
+bin
+doc
+inc
+ls
+makefile
+obj
+README.md
+src
+test
+test.bash

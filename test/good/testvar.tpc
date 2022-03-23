@@ -21,3 +21,7 @@ void fun3(int aoqiej, int bidhqd, int c, char dodjqdj, char ebkcx, char fliirezo
     char dsssssssssss;
 
 }
+
+void fun4(void) {
+    int i;
+}

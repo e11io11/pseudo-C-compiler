@@ -16,7 +16,8 @@ typedef unsigned long __longIndex;
 typedef enum _type {
     _type_other,
     _type_int,
-    _type_char
+    _type_char,
+    _type_function
 } _type;
 
 typedef _type value;
@@ -24,6 +25,7 @@ typedef _type value;
 typedef struct HashElem {
     char h_key[256];
     value h_val;
+    int lineno;
     struct HashElem * h_next;
 } HashElem;
 

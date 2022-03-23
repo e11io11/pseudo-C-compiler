@@ -17,20 +17,21 @@ __longIndex getHashCode(const char * elem) {
     return result % HASH_SIZE;
 }
 
-HashElem * newHashElem(const char * key, _type type) {
+HashElem * newHashElem(const char * key, _type type, int lineno) {
     HashElem * result;
     result = (HashElem* ) malloc(sizeof(HashElem));
     if (result == NULL) raiseError("Malloc error at newHashElem");
     strcpy(result->h_key, key);
     result->h_val = type;
     result->h_next = NULL;
+    result->lineno = lineno;
 
     return result;
 }
 
 void displayHashElem(HashElem * he) {
-    printf("HashElem {{ key : %s -> Value : %u } next : %p }\n", 
-    he->h_key, he->h_val, (void*) he->h_next);
+    printf("HashElem {{ key : %s -> Value : %u, lineno : %u} next : %p }\n", 
+    he->h_key, he->h_val, he->lineno, (void*) he->h_next);
 }
 
 void freeHashElem(HashElem * he) {

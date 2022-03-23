@@ -1,0 +1,6 @@
+void function(void)
+{
+    char blabla;
+    blabla = '\';
+    whil
+}

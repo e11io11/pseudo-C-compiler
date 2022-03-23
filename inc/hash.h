@@ -15,7 +15,7 @@
 
 __longIndex getHashCode(const char * elem);
 
-HashElem * newHashElem(const char * key, _type type);
+HashElem * newHashElem(const char * key, _type type, int lineno);
 
 void displayHashElem(HashElem * he);
 

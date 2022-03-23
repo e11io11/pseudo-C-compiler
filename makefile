@@ -22,7 +22,7 @@ TEST = test/
 CC=gcc
 CFLAGS=-Wall
 LDFLAGS=-Wall -ly
-LEAKFLAG = -Wall#-fsanitize=address
+LEAKFLAG = -Wall -fsanitize=address
 BISONFLAGS =--report=all
 
 #Name of executable
@@ -39,6 +39,7 @@ OBJECTS= $(addprefix $(OBJ), \
 		$(EXEC).tab.o \
 		lex.yy.o \
 		tree.o \
+		debug.o \
 )
 
 # INITIALISATION SECURITY 

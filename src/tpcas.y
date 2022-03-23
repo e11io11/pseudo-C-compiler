@@ -12,6 +12,7 @@
 #include "../inc/includes.h"
 #include "../inc/tree.h"
 #include "../inc/tpcas_functions.h"
+#include "../inc/debug.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -21,10 +22,14 @@ void printTreeWithValues(Node* node);
 extern int lineno;
 extern int yylineno;
 int treeFlag;
+int hashFlag;
 Node* tree;
 Node* temp;
 int parse;
 %}
+
+%define parse.error verbose
+
 
 %locations
 
@@ -171,26 +176,30 @@ SwitchEndElement:
 
 
 int main(int argc, char** argv) {
-    if (mainFct_load_arg(argc, argv, &treeFlag)) return 2;
+    programSymbolTables symbolTabs;
+    /*mainFct_testHashTable();*/
+    
+    if (mainFct_load_arg(argc, argv, &treeFlag, &hashFlag)) return 2;
     parse = yyparse();
-
+    
     if (!parse) {
-        if (treeFlag) {
-            //printTree(tree);
+
+        symbolTabs = mainFct_Tree_to_Hash(tree);
+        debug_final();
+        if (treeFlag)
             printTreeWithValues(tree);
-        }
-        mainFct_Tree_to_Hash(tree);
+        if (hashFlag)
+            displayProgramSymbolTables(symbolTabs);
+
+        freeProgramSymbolTables(symbolTabs);
         deleteTree(tree);
     }
+    debug_final();
     return parse;
 }
 
-#define STYLE_BOLD         "\033[1m"
-#define STYLE_NO_BOLD      "\033[22m"
-#define COLOR_RED         "\033[0;31m"
-#define COLOR_RESET      "\033[0m"
 
 int yyerror(char* msg) {
-    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : << %s >>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i.\n", msg, yylineno);
+    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : << %s >>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n", msg, yylineno);
     return 0;
 }

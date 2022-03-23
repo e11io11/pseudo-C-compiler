@@ -12,11 +12,12 @@
 
 #include "../inc/tpcas_functions.h"
 
-int mainFct_load_arg(int argc, char * argv[], int * treeFlag) {
+int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * hashFlag) {
     int c;
     static struct option long_options[] = {
         {"tree", no_argument, 0, 't'},
         {"help", no_argument, 0, 'h'},
+        {"symbolTab", no_argument, 0, 's'},
         {0,0,0,'?'}
     };
     int option_index = 0;
@@ -32,6 +33,9 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag) {
                 break;
             case 'h': /* Enable Help Display */
                 printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n");
+                break;
+            case 's':
+                *hashFlag = 1;
                 break;
             case '?': /* Other unrecognized values */
                 return 2;
@@ -63,29 +67,39 @@ HashTable mainFct_init_Hash_from_globals(Node * root) {
     iterator = root->firstChild; /* iterator = declare var */
 
     do {
-        iterator = findLabelInTree(iterator, declare_var);
         if (iterator != NULL) {
-            Node * _iter_type = iterator->firstChild;
-            do {
-                _iter_type = findLabelInTree(_iter_type, type);
-                if (_iter_type != NULL) {
-                    Node * _iter_ident = _iter_type->firstChild;
-                    _type t = mainFct_charToType(_iter_type->value.comp);
-                    do {
-                        _iter_ident = findLabelInTree(_iter_ident, ident);
-                        if (_iter_ident != NULL) {
-                            putHashVal(&result, newHashElem(_iter_ident->value.ident, t));
-                            _iter_ident = _iter_ident->nextSibling;
+            if (iterator->label == declare_var) {
+                Node * _iter_type = iterator->firstChild;
+                do {
+                    _iter_type = findLabelInTree(_iter_type, type);
+                    if (_iter_type != NULL) {
+                        Node * _iter_ident = _iter_type->firstChild;
+                        _type t = mainFct_charToType(_iter_type->value.comp);
+                        do {
+                            _iter_ident = findLabelInTree(_iter_ident, ident);
+                            if (_iter_ident != NULL) {
+                                putHashVal_checked(&result, newHashElem(_iter_ident->value.ident, t, _iter_ident->lineno));
+                                _iter_ident = _iter_ident->nextSibling;
+                            }
+                        } while (_iter_ident != NULL);
+                        _iter_type = _iter_type->nextSibling;
+                    }
+                } while (_iter_type != NULL);
+            } else if (iterator->label == declare_function) {
+                Node * _iter_functions = iterator->firstChild;
+                while (_iter_functions != NULL) {
+                    if (_iter_functions->label == header) {
+                        Node * _iter_header = findLabelInTree(_iter_functions->firstChild, ident);
+                        if (_iter_header != NULL) {
+                            putHashVal_checked(&result, newHashElem(_iter_header->value.ident, _type_function, _iter_header->lineno));
                         }
-                    } while (_iter_ident != NULL);
-                    _iter_type = _iter_type->nextSibling;
+                    }
+                    _iter_functions = _iter_functions->nextSibling;
                 }
-            } while (_iter_type != NULL);
-            iterator = iterator->nextSibling;
+            }
         }
-        
+        iterator = iterator->nextSibling;
     } while (iterator != NULL);
-
     return result;
 }
 
@@ -96,7 +110,7 @@ HashTable getHash_from_function_parameters(Node * parametersRoot) {
     parametersRoot = parametersRoot->firstChild;
     while (parametersRoot != NULL) {
         if (parametersRoot->label != void_)
-            putHashVal(&result, newHashElem(parametersRoot->firstChild->value.ident, mainFct_charToType(parametersRoot->value.comp)));
+            putHashVal_checked(&result, newHashElem(parametersRoot->firstChild->value.ident, mainFct_charToType(parametersRoot->value.comp), parametersRoot->lineno));
         parametersRoot = parametersRoot->nextSibling;
     }
 
@@ -117,7 +131,7 @@ HashTable getHash_from_function_body(Node * bodyRoot) {
                     _type t = mainFct_charToType(_iter_type->value.comp);
                     Node * _iter_ident = _iter_type->firstChild;
                     while (_iter_ident != NULL) {
-                        putHashVal(&result, newHashElem(_iter_ident->value.ident, t));
+                        putHashVal_checked(&result, newHashElem(_iter_ident->value.ident, t, _iter_ident->lineno));
                         _iter_ident = _iter_ident->nextSibling;
                     }
                     _iter_type = _iter_type->nextSibling;
@@ -180,14 +194,12 @@ programSymbolTables mainFct_init_Hash_from_functions(Node * root) {
 }
 
 
-void mainFct_Tree_to_Hash(Node * root) {
+programSymbolTables mainFct_Tree_to_Hash(Node * root) {
     programSymbolTables result;
     result = mainFct_init_Hash_from_functions(root);
     result.globals = mainFct_init_Hash_from_globals(root);
 
-    displayProgramSymbolTables(result);
-
-    freeProgramSymbolTables(result);
+    return result;
 }
 
 
@@ -202,10 +214,11 @@ void mainFct_testHashTable() {
     for (i = 0; i < 10000; i++) {
         char temp [6];
         sprintf(temp, "%d", i);
-        putHashVal(&st, newHashElem(temp, _type_int));
+        putHashVal(&st, newHashElem(temp, _type_int, 0));
     }
 
     displayHashTable(st);
+    testHashTableRepartition(&st, 10000);
     freeHashTable(&st);
 }
 /*

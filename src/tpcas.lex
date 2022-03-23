@@ -15,7 +15,6 @@
 #include "tpcas.tab.h"
 
 int lineno = 1;
-int charno = 1;
 %}
 
 
