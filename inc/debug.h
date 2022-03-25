@@ -19,6 +19,9 @@
 typedef enum {
     DB_ERR_UNKNOWN = 1,
     DB_ERR_REDEFINITION = 2,
+    DB_ERR_INCORRECT_DEFINITION = 3,
+    DB_ERR_MAIN_LACKING = 4,
+    DB_ERR_INCORRECT_REFERENCE = 5,
 } _error_type;
 
 
@@ -33,4 +36,7 @@ void debug_warning(_warn_type type, const char* message );
 void debug_error(_error_type type, const char* message);
 void debug_final();
 void putHashVal_checked (SymbolTab* st, HashElem* he);
+void function_parameters_checked (functionSymbolTables fst);
+void function_main_checked (Node * rootHeader);
+void variables_reference_checked (Node * function_iter, programSymbolTables pst );
 #endif

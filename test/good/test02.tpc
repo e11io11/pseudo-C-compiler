@@ -3,3 +3,5 @@ void function(void)
     char blabla;
     blabla = '\'';
 }
+
+int main(void) {}

@@ -14,7 +14,7 @@ void fun2(void)
     return 42;
 }
 
-void fun3(int aoqiej, int bidhqd, int c, char dodjqdj, char ebkcx, char fliirezoi, char gnd, int h)
+char fun3(int aoqiej, int bidhqd, int c, char dodjqdj, char ebkcx, char fliirezoi, char gnd, int h)
 {
     char var1oojdqqhdmqshdqidh;
     int oizqhdiqhdq,hdqidhqkd,sqhsid,ababab,bababa;
@@ -23,5 +23,9 @@ void fun3(int aoqiej, int bidhqd, int c, char dodjqdj, char ebkcx, char fliirezo
 }
 
 void fun4(void) {
+    int i;
+}
+
+int main(void)  {
     int i;
 }

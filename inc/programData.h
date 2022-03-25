@@ -12,7 +12,11 @@
 #include "includes.h"
 
 
-programSymbolTables newProgramSymbolTables(unsigned int cpt);
+programSymbolTables newProgramSymbolTables();
+
+functionSymbolTables * newFunctionSymbolTable();
+
+void putFunctionSymbolTable(programSymbolTables * pst, functionSymbolTables * fst);
 
 void displayProgramSymbolTables(programSymbolTables pst);
 

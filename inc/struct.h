@@ -32,11 +32,13 @@ typedef struct HashElem {
 typedef struct SymbolTab {
     HashElem * hashList[HASH_SIZE];
     __longIndex size;
+    __longIndex elemAmount;
 } SymbolTab, HashTable;
 
 typedef struct functionSymbolTables {
     SymbolTab parameters;
     SymbolTab values;
+    struct functionSymbolTables * next;
 } functionSymbolTables;
 
 typedef struct programSymbolTables {

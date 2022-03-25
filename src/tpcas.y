@@ -13,6 +13,8 @@
 #include "../inc/tree.h"
 #include "../inc/tpcas_functions.h"
 #include "../inc/debug.h"
+#include "../inc/programData.h"
+#include "../inc/hash.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -25,6 +27,14 @@ int treeFlag;
 int hashFlag;
 Node* tree;
 Node* temp;
+
+
+SymbolTab currentSt;
+_type currentType;
+programSymbolTables pst;
+HashElem* tempH;
+
+
 int parse;
 %}
 
@@ -61,15 +71,42 @@ int parse;
 
 
 %%
-Prog:  DeclVars DeclFoncts                  {$$ = makeNode(program); tree = $$; addChild($$, $1); addChild($$, $2);}   
+Prog:  DeclVars DeclFoncts                  {
+                                                /*printf("test entrée\n");*/
+                                                $$ = makeNode(program);
+                                                tree = $$;
+                                                pst = newProgramSymbolTables();
+                                                pst.globals = newSymbolTab();
+                                                currentSt = pst.globals; 
+                                                addChild($$, $1); 
+                                                addChild($$, $2); 
+                                                /*printf("test sortie\n");*/
+                                            }   
     ;
 DeclVars:                                   
-       DeclVars TYPE Declarateurs ';'       {$$ = $1; addChild($$, temp = makeNode(type)); strcpy(temp->value.comp, $2); addChild(temp, $3);}
+       DeclVars TYPE Declarateurs ';'       {
+                                                $$ = $1; 
+                                                addChild($$, temp = makeNode(type)); 
+                                                strcpy(temp->value.comp, $2); 
+                                                currentType = mainFct_charToType($2);
+                                                addChild(temp, $3);
+                                            }
     |                                       {$$ = makeNode(declare_var);}
     ;
 Declarateurs:                                   
-       Declarateurs ',' IDENT               {$$ = $1; addSibling($$, temp = makeNode(ident)); strcpy(temp->value.ident, $3);}
-    |  IDENT                                {$$ = makeNode(ident); strcpy($$->value.ident, $1);}
+       Declarateurs ',' IDENT               {
+                                                $$ = $1; 
+                                                addSibling($$, temp = makeNode(ident)); 
+                                                strcpy(temp->value.ident, $3);
+                                                putHashVal(&currentSt, tempH= newHashElem(temp->value.ident, currentType, temp->lineno));
+                                                /*displayHashElem(tempH);*/
+                                            }
+    |  IDENT                                {
+                                                $$ = makeNode(ident); 
+                                                strcpy($$->value.ident, $1);
+                                                putHashVal(&currentSt, tempH= newHashElem($$->value.ident, currentType, $$->lineno));
+                                                /*displayHashElem(tempH);*/
+                                            }
     ;
 DeclFoncts:                                 
        DeclFoncts DeclFonct                 {$$ = $1; addSibling($$, $2);}
@@ -194,12 +231,13 @@ int main(int argc, char** argv) {
         freeProgramSymbolTables(symbolTabs);
         deleteTree(tree);
     }
+    /*displayProgramSymbolTables(pst);*/
     debug_final();
     return parse;
 }
 
 
 int yyerror(char* msg) {
-    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : << %s >>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n", msg, yylineno);
-    return 0;
+    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : " COLOR_YELLOW  "<<" COLOR_RED STYLE_BOLD " %s " COLOR_YELLOW ">>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n" COLOR_RESET "Error code -1\n", msg, yylineno);
+    return -1;
 }

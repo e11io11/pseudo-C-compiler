@@ -2,3 +2,5 @@ void function(void)
 {
     char var1;
 }
+
+int main(void) {}

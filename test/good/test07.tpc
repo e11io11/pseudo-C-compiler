@@ -8,3 +8,5 @@ void function(void)
     return 42;
 }
 
+
+int main(void) {}

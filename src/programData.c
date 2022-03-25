@@ -9,36 +9,53 @@
 #include "../inc/programData.h"
 #include "../inc/symbolTab.h"
 
-programSymbolTables newProgramSymbolTables(unsigned int cpt) {
+programSymbolTables newProgramSymbolTables() {
     programSymbolTables result;
-    result.functionsAmount = cpt;
-    result.functions = (functionSymbolTables *) malloc(sizeof(functionSymbolTables) * cpt);
+    result.functionsAmount = 0;
+    result.functions = NULL;
     return result;
+}
+
+functionSymbolTables * newFunctionSymbolTable() {
+    functionSymbolTables * result = (functionSymbolTables*) malloc(sizeof(functionSymbolTables));
+    result->next = NULL;
+    return result;
+}
+
+void putFunctionSymbolTable(programSymbolTables * pst, functionSymbolTables * fst) {
+    functionSymbolTables * temp;
+    pst->functionsAmount += 1;
+    temp = pst->functions;
+    pst->functions = fst;
+    fst->next = temp;
 }
 
 void displayProgramSymbolTables(programSymbolTables pst) {
     int cpt = 0;
+    functionSymbolTables * temp;
     printf( "TPC hashValues :\n"
             "Global Values:\n");
     displayHashTable(pst.globals);
     printf("Functions:\t[total : %d]\n",pst.functionsAmount);
     
-
-    for (cpt = 0; cpt < pst.functionsAmount; cpt++) {
-        printf("++ FUNCTIONS [%d / %d]\n", cpt+1, pst.functionsAmount);
-        printf("[%d]\t\tParameters:\t\t", cpt+1);
-        displayHashTable(pst.functions[cpt].parameters);
-        printf("[%d]\t\tLocal Variables:\t", cpt+1);
-        displayHashTable(pst.functions[cpt].values);
+    temp = pst.functions;
+    while (temp != NULL) {
+        printf("++ FUNCTIONS [%d / %d]\n", ++cpt, pst.functionsAmount);
+        printf("[%d]\t\tParameters:\t\t", cpt);
+        displayHashTable(temp->parameters);
+        printf("[%d]\t\tLocal Variables:\t", cpt);
+        displayHashTable(temp->values);
+        temp = temp->next;
     }
     printf("\n\n");
 }
 
 void freeProgramSymbolTables(programSymbolTables pst) {
-    int i;
-    for (i = 0; i < pst.functionsAmount; i++) {
-        freeSymbolTab(&(pst.functions[i].parameters));
-        freeSymbolTab(&(pst.functions[i].values));
+    functionSymbolTables * temp = pst.functions;
+    while (temp != NULL) {
+        freeSymbolTab(&(temp->parameters));
+        freeSymbolTab(&(temp->values));
+        temp = temp->next;
     }
 
     freeSymbolTab(&(pst.globals));

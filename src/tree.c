@@ -126,3 +126,11 @@ void printTreeWithValues(Node *node) {
   }
   depth--;
 }
+
+Node * findLabelInTree(Node * root, label_t search) {
+    while (root != NULL) {
+        if (root->label == search) return root;
+        root = root->nextSibling;
+    }
+    return NULL;
+}

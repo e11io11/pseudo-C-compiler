@@ -1,0 +1,16 @@
+int a;
+char function;
+
+void function(int a, char b) {
+    int a;
+    b = b + 1;
+}
+
+
+void function1(int b) {
+    char b;
+}
+
+void main(void) {
+}
+

@@ -31,7 +31,7 @@ int function(void)
 
 char _blavla4(char text, int number) {
     int n;
-    n = function(blabla, dd);
+    n = function(n, n);
     ;
     return text;
 }

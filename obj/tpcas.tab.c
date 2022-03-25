@@ -82,6 +82,8 @@
 #include "../inc/tree.h"
 #include "../inc/tpcas_functions.h"
 #include "../inc/debug.h"
+#include "../inc/programData.h"
+#include "../inc/hash.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -94,9 +96,17 @@ int treeFlag;
 int hashFlag;
 Node* tree;
 Node* temp;
+
+
+SymbolTab currentSt;
+_type currentType;
+programSymbolTables pst;
+HashElem* tempH;
+
+
 int parse;
 
-#line 100 "obj/tpcas.tab.c"
+#line 110 "obj/tpcas.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -167,7 +177,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 37 "src/tpcas.y"
+#line 47 "src/tpcas.y"
 
     Node* node;
     char byte;
@@ -175,7 +185,7 @@ union YYSTYPE
     char ident[64];
     char comp[4];
 
-#line 179 "obj/tpcas.tab.c"
+#line 189 "obj/tpcas.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -569,13 +579,13 @@ static const yytype_int8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    64,    64,    67,    68,    71,    72,    75,    76,    79,
-      82,    83,    86,    87,    90,    91,    93,    96,    99,   102,
-     103,   104,   105,   106,   107,   108,   109,   110,   111,   113,
-     114,   116,   117,   119,   120,   122,   123,   125,   126,   128,
-     129,   131,   132,   133,   134,   135,   136,   137,   140,   143,
-     144,   147,   148,   151,   154,   157,   158,   162,   163,   166,
-     167,   168,   169,   172,   173
+       0,    74,    74,    87,    94,    97,   104,   112,   113,   116,
+     119,   120,   123,   124,   127,   128,   130,   133,   136,   139,
+     140,   141,   142,   143,   144,   145,   146,   147,   148,   150,
+     151,   153,   154,   156,   157,   159,   160,   162,   163,   165,
+     166,   168,   169,   170,   171,   172,   173,   174,   177,   180,
+     181,   184,   185,   188,   191,   194,   195,   199,   200,   203,
+     204,   205,   206,   209,   210
 };
 #endif
 
@@ -1543,381 +1553,408 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 64 "src/tpcas.y"
-                                            {(yyval.node) = makeNode(program); tree = (yyval.node); addChild((yyval.node), (yyvsp[-1].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1549 "obj/tpcas.tab.c"
+#line 74 "src/tpcas.y"
+                                            {
+                                                /*printf("test entrée\n");*/
+                                                (yyval.node) = makeNode(program);
+                                                tree = (yyval.node);
+                                                pst = newProgramSymbolTables();
+                                                pst.globals = newSymbolTab();
+                                                currentSt = pst.globals; 
+                                                addChild((yyval.node), (yyvsp[-1].node)); 
+                                                addChild((yyval.node), (yyvsp[0].node)); 
+                                                /*printf("test sortie\n");*/
+                                            }
+#line 1569 "obj/tpcas.tab.c"
     break;
 
   case 3:
-#line 67 "src/tpcas.y"
-                                            {(yyval.node) = (yyvsp[-3].node); addChild((yyval.node), temp = makeNode(type)); strcpy(temp->value.comp, (yyvsp[-2].comp)); addChild(temp, (yyvsp[-1].node));}
-#line 1555 "obj/tpcas.tab.c"
+#line 87 "src/tpcas.y"
+                                            {
+                                                (yyval.node) = (yyvsp[-3].node); 
+                                                addChild((yyval.node), temp = makeNode(type)); 
+                                                strcpy(temp->value.comp, (yyvsp[-2].comp)); 
+                                                currentType = mainFct_charToType((yyvsp[-2].comp));
+                                                addChild(temp, (yyvsp[-1].node));
+                                            }
+#line 1581 "obj/tpcas.tab.c"
     break;
 
   case 4:
-#line 68 "src/tpcas.y"
+#line 94 "src/tpcas.y"
                                             {(yyval.node) = makeNode(declare_var);}
-#line 1561 "obj/tpcas.tab.c"
+#line 1587 "obj/tpcas.tab.c"
     break;
 
   case 5:
-#line 71 "src/tpcas.y"
-                                            {(yyval.node) = (yyvsp[-2].node); addSibling((yyval.node), temp = makeNode(ident)); strcpy(temp->value.ident, (yyvsp[0].ident));}
-#line 1567 "obj/tpcas.tab.c"
+#line 97 "src/tpcas.y"
+                                            {
+                                                (yyval.node) = (yyvsp[-2].node); 
+                                                addSibling((yyval.node), temp = makeNode(ident)); 
+                                                strcpy(temp->value.ident, (yyvsp[0].ident));
+                                                putHashVal(&currentSt, tempH= newHashElem(temp->value.ident, currentType, temp->lineno));
+                                                /*displayHashElem(tempH);*/
+                                            }
+#line 1599 "obj/tpcas.tab.c"
     break;
 
   case 6:
-#line 72 "src/tpcas.y"
-                                            {(yyval.node) = makeNode(ident); strcpy((yyval.node)->value.ident, (yyvsp[0].ident));}
-#line 1573 "obj/tpcas.tab.c"
+#line 104 "src/tpcas.y"
+                                            {
+                                                (yyval.node) = makeNode(ident); 
+                                                strcpy((yyval.node)->value.ident, (yyvsp[0].ident));
+                                                putHashVal(&currentSt, tempH= newHashElem((yyval.node)->value.ident, currentType, (yyval.node)->lineno));
+                                                /*displayHashElem(tempH);*/
+                                            }
+#line 1610 "obj/tpcas.tab.c"
     break;
 
   case 7:
-#line 75 "src/tpcas.y"
+#line 112 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[-1].node); addSibling((yyval.node), (yyvsp[0].node));}
-#line 1579 "obj/tpcas.tab.c"
+#line 1616 "obj/tpcas.tab.c"
     break;
 
   case 8:
-#line 76 "src/tpcas.y"
+#line 113 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1585 "obj/tpcas.tab.c"
+#line 1622 "obj/tpcas.tab.c"
     break;
 
   case 9:
-#line 79 "src/tpcas.y"
+#line 116 "src/tpcas.y"
                                             {(yyval.node) = makeNode(declare_function); addChild((yyval.node), (yyvsp[-1].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1591 "obj/tpcas.tab.c"
+#line 1628 "obj/tpcas.tab.c"
     break;
 
   case 10:
-#line 82 "src/tpcas.y"
+#line 119 "src/tpcas.y"
                                             {(yyval.node) = makeNode(header); addChild((yyval.node), temp = makeNode(type)); strcpy(temp->value.comp, (yyvsp[-4].comp)); addChild((yyval.node), temp = makeNode(ident)); strcpy(temp->value.ident, (yyvsp[-3].ident)); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1597 "obj/tpcas.tab.c"
+#line 1634 "obj/tpcas.tab.c"
     break;
 
   case 11:
-#line 83 "src/tpcas.y"
+#line 120 "src/tpcas.y"
                                             {(yyval.node) = makeNode(header); addChild((yyval.node), makeNode(void_)); addChild((yyval.node), temp = makeNode(ident)); strcpy(temp->value.ident, (yyvsp[-3].ident)); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1603 "obj/tpcas.tab.c"
+#line 1640 "obj/tpcas.tab.c"
     break;
 
   case 12:
-#line 86 "src/tpcas.y"
+#line 123 "src/tpcas.y"
                                             {(yyval.node) = makeNode(parameters); addChild((yyval.node), makeNode(void_));}
-#line 1609 "obj/tpcas.tab.c"
+#line 1646 "obj/tpcas.tab.c"
     break;
 
   case 13:
-#line 87 "src/tpcas.y"
+#line 124 "src/tpcas.y"
                                             {(yyval.node) = makeNode(parameters); addChild((yyval.node), (yyvsp[0].node));}
-#line 1615 "obj/tpcas.tab.c"
+#line 1652 "obj/tpcas.tab.c"
     break;
 
   case 14:
-#line 90 "src/tpcas.y"
+#line 127 "src/tpcas.y"
                                             {(yyval.node) = makeNode(type); strcpy((yyval.node)->value.comp, (yyvsp[-1].comp)); addSibling((yyval.node), (yyvsp[-3].node)); addChild((yyval.node), temp = makeNode(ident)); strcpy(temp->value.ident, (yyvsp[0].ident));}
-#line 1621 "obj/tpcas.tab.c"
+#line 1658 "obj/tpcas.tab.c"
     break;
 
   case 15:
-#line 91 "src/tpcas.y"
+#line 128 "src/tpcas.y"
                                             {(yyval.node) = makeNode(type); strcpy((yyval.node)->value.comp, (yyvsp[-1].comp)); addChild((yyval.node), temp = makeNode(ident)); strcpy(temp->value.ident, (yyvsp[0].ident));}
-#line 1627 "obj/tpcas.tab.c"
+#line 1664 "obj/tpcas.tab.c"
     break;
 
   case 16:
-#line 93 "src/tpcas.y"
+#line 130 "src/tpcas.y"
                                             {(yyval.node) = makeNode(body); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1633 "obj/tpcas.tab.c"
+#line 1670 "obj/tpcas.tab.c"
     break;
 
   case 17:
-#line 96 "src/tpcas.y"
+#line 133 "src/tpcas.y"
                                             {temp = (yyvsp[-1].node);
                                             if (temp == NULL) (yyval.node) = (yyvsp[0].node);              //this block makes it so no sibling
                                             else {(yyval.node) = temp; addSibling((yyval.node), (yyvsp[0].node));}}
-#line 1641 "obj/tpcas.tab.c"
+#line 1678 "obj/tpcas.tab.c"
     break;
 
   case 18:
-#line 99 "src/tpcas.y"
+#line 136 "src/tpcas.y"
                                             {(yyval.node) = NULL;}
-#line 1647 "obj/tpcas.tab.c"
+#line 1684 "obj/tpcas.tab.c"
     break;
 
   case 19:
-#line 102 "src/tpcas.y"
+#line 139 "src/tpcas.y"
                                             {(yyval.node) = makeNode(assign); addChild((yyval.node), (yyvsp[-3].node)); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1653 "obj/tpcas.tab.c"
+#line 1690 "obj/tpcas.tab.c"
     break;
 
   case 20:
-#line 103 "src/tpcas.y"
+#line 140 "src/tpcas.y"
                                             {(yyval.node) = makeNode(if_); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1659 "obj/tpcas.tab.c"
+#line 1696 "obj/tpcas.tab.c"
     break;
 
   case 21:
-#line 104 "src/tpcas.y"
+#line 141 "src/tpcas.y"
                                             {(yyval.node) = makeNode(if_); addChild((yyval.node), (yyvsp[-4].node)); addChild((yyval.node), (yyvsp[-2].node)); addSibling((yyval.node), makeNode(else_)); addChild(((yyval.node)->nextSibling), (yyvsp[0].node));}
-#line 1665 "obj/tpcas.tab.c"
+#line 1702 "obj/tpcas.tab.c"
     break;
 
   case 22:
-#line 105 "src/tpcas.y"
+#line 142 "src/tpcas.y"
                                             {(yyval.node) = makeNode(while_); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1671 "obj/tpcas.tab.c"
+#line 1708 "obj/tpcas.tab.c"
     break;
 
   case 23:
-#line 106 "src/tpcas.y"
+#line 143 "src/tpcas.y"
                                             {(yyval.node) = makeNode(call); addChild((yyval.node), temp = makeNode(ident)); strcpy(temp->value.ident, (yyvsp[-4].ident)); addChild((yyval.node), (yyvsp[-2].node));}
-#line 1677 "obj/tpcas.tab.c"
+#line 1714 "obj/tpcas.tab.c"
     break;
 
   case 24:
-#line 107 "src/tpcas.y"
+#line 144 "src/tpcas.y"
                                             {(yyval.node) = makeNode(return_); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1683 "obj/tpcas.tab.c"
+#line 1720 "obj/tpcas.tab.c"
     break;
 
   case 25:
-#line 108 "src/tpcas.y"
+#line 145 "src/tpcas.y"
                                             {(yyval.node) = makeNode(return_);}
-#line 1689 "obj/tpcas.tab.c"
+#line 1726 "obj/tpcas.tab.c"
     break;
 
   case 26:
-#line 109 "src/tpcas.y"
+#line 146 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[-1].node);}
-#line 1695 "obj/tpcas.tab.c"
+#line 1732 "obj/tpcas.tab.c"
     break;
 
   case 27:
-#line 110 "src/tpcas.y"
+#line 147 "src/tpcas.y"
                                             {(yyval.node) = NULL;}
-#line 1701 "obj/tpcas.tab.c"
+#line 1738 "obj/tpcas.tab.c"
     break;
 
   case 29:
-#line 113 "src/tpcas.y"
+#line 150 "src/tpcas.y"
                                             {(yyval.node) = makeNode(or); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1707 "obj/tpcas.tab.c"
+#line 1744 "obj/tpcas.tab.c"
     break;
 
   case 30:
-#line 114 "src/tpcas.y"
+#line 151 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1713 "obj/tpcas.tab.c"
+#line 1750 "obj/tpcas.tab.c"
     break;
 
   case 31:
-#line 116 "src/tpcas.y"
+#line 153 "src/tpcas.y"
                                             {(yyval.node) = makeNode(and); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1719 "obj/tpcas.tab.c"
+#line 1756 "obj/tpcas.tab.c"
     break;
 
   case 32:
-#line 117 "src/tpcas.y"
+#line 154 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1725 "obj/tpcas.tab.c"
+#line 1762 "obj/tpcas.tab.c"
     break;
 
   case 33:
-#line 119 "src/tpcas.y"
+#line 156 "src/tpcas.y"
                                             {(yyval.node) = makeNode(eq); strcpy((yyval.node)->value.comp, (yyvsp[-1].comp)); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1731 "obj/tpcas.tab.c"
+#line 1768 "obj/tpcas.tab.c"
     break;
 
   case 34:
-#line 120 "src/tpcas.y"
+#line 157 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1737 "obj/tpcas.tab.c"
+#line 1774 "obj/tpcas.tab.c"
     break;
 
   case 35:
-#line 122 "src/tpcas.y"
+#line 159 "src/tpcas.y"
                                             {(yyval.node) = makeNode(order); strcpy((yyval.node)->value.comp, (yyvsp[-1].comp)); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1743 "obj/tpcas.tab.c"
+#line 1780 "obj/tpcas.tab.c"
     break;
 
   case 36:
-#line 123 "src/tpcas.y"
+#line 160 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1749 "obj/tpcas.tab.c"
+#line 1786 "obj/tpcas.tab.c"
     break;
 
   case 37:
-#line 125 "src/tpcas.y"
+#line 162 "src/tpcas.y"
                                             {(yyval.node) = makeNode(addsub); (yyval.node)->value.byte = (yyvsp[-1].byte); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1755 "obj/tpcas.tab.c"
+#line 1792 "obj/tpcas.tab.c"
     break;
 
   case 38:
-#line 126 "src/tpcas.y"
+#line 163 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1761 "obj/tpcas.tab.c"
+#line 1798 "obj/tpcas.tab.c"
     break;
 
   case 39:
-#line 128 "src/tpcas.y"
+#line 165 "src/tpcas.y"
                                             {(yyval.node) = makeNode(divstar); (yyval.node)->value.byte = (yyvsp[-1].byte); addChild((yyval.node), (yyvsp[-2].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1767 "obj/tpcas.tab.c"
+#line 1804 "obj/tpcas.tab.c"
     break;
 
   case 40:
-#line 129 "src/tpcas.y"
+#line 166 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1773 "obj/tpcas.tab.c"
+#line 1810 "obj/tpcas.tab.c"
     break;
 
   case 41:
-#line 131 "src/tpcas.y"
+#line 168 "src/tpcas.y"
                                             {(yyval.node) = makeNode(addsub); (yyval.node)->value.byte = (yyvsp[-1].byte); addChild((yyval.node), (yyvsp[0].node));}
-#line 1779 "obj/tpcas.tab.c"
+#line 1816 "obj/tpcas.tab.c"
     break;
 
   case 42:
-#line 132 "src/tpcas.y"
+#line 169 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1785 "obj/tpcas.tab.c"
+#line 1822 "obj/tpcas.tab.c"
     break;
 
   case 43:
-#line 133 "src/tpcas.y"
+#line 170 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[-1].node);}
-#line 1791 "obj/tpcas.tab.c"
+#line 1828 "obj/tpcas.tab.c"
     break;
 
   case 44:
-#line 134 "src/tpcas.y"
+#line 171 "src/tpcas.y"
                                             {(yyval.node) = makeNode(num); (yyval.node)->value.num = (yyvsp[0].num);}
-#line 1797 "obj/tpcas.tab.c"
+#line 1834 "obj/tpcas.tab.c"
     break;
 
   case 45:
-#line 135 "src/tpcas.y"
+#line 172 "src/tpcas.y"
                                             {(yyval.node) = makeNode(character); (yyval.node)->value.byte = (yyvsp[0].byte);}
-#line 1803 "obj/tpcas.tab.c"
+#line 1840 "obj/tpcas.tab.c"
     break;
 
   case 46:
-#line 136 "src/tpcas.y"
+#line 173 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1809 "obj/tpcas.tab.c"
+#line 1846 "obj/tpcas.tab.c"
     break;
 
   case 47:
-#line 137 "src/tpcas.y"
+#line 174 "src/tpcas.y"
                                             {(yyval.node) = makeNode(ident); strcpy((yyval.node)->value.ident, (yyvsp[-3].ident)); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1815 "obj/tpcas.tab.c"
+#line 1852 "obj/tpcas.tab.c"
     break;
 
   case 48:
-#line 140 "src/tpcas.y"
+#line 177 "src/tpcas.y"
                                             {(yyval.node) = makeNode(ident); strcpy((yyval.node)->value.ident, (yyvsp[0].ident));}
-#line 1821 "obj/tpcas.tab.c"
+#line 1858 "obj/tpcas.tab.c"
     break;
 
   case 49:
-#line 143 "src/tpcas.y"
+#line 180 "src/tpcas.y"
                                             {(yyval.node) = makeNode(arguments), addChild((yyval.node), (yyvsp[0].node));}
-#line 1827 "obj/tpcas.tab.c"
+#line 1864 "obj/tpcas.tab.c"
     break;
 
   case 50:
-#line 144 "src/tpcas.y"
+#line 181 "src/tpcas.y"
                                             {(yyval.node) = makeNode(arguments);}
-#line 1833 "obj/tpcas.tab.c"
+#line 1870 "obj/tpcas.tab.c"
     break;
 
   case 51:
-#line 147 "src/tpcas.y"
+#line 184 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[-2].node); addSibling((yyval.node), (yyvsp[0].node));}
-#line 1839 "obj/tpcas.tab.c"
+#line 1876 "obj/tpcas.tab.c"
     break;
 
   case 52:
-#line 148 "src/tpcas.y"
+#line 185 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1845 "obj/tpcas.tab.c"
+#line 1882 "obj/tpcas.tab.c"
     break;
 
   case 53:
-#line 151 "src/tpcas.y"
+#line 188 "src/tpcas.y"
                                             {(yyval.node) = makeNode(switch_); addChild((yyval.node), (yyvsp[-1].node)); addChild((yyval.node), (yyvsp[0].node));}
-#line 1851 "obj/tpcas.tab.c"
+#line 1888 "obj/tpcas.tab.c"
     break;
 
   case 54:
-#line 154 "src/tpcas.y"
+#line 191 "src/tpcas.y"
                                             {(yyval.node) = makeNode(header); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1857 "obj/tpcas.tab.c"
+#line 1894 "obj/tpcas.tab.c"
     break;
 
   case 55:
-#line 157 "src/tpcas.y"
+#line 194 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[-2].node); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1863 "obj/tpcas.tab.c"
+#line 1900 "obj/tpcas.tab.c"
     break;
 
   case 56:
-#line 158 "src/tpcas.y"
+#line 195 "src/tpcas.y"
                                             {(yyval.node) = makeNode(body);}
-#line 1869 "obj/tpcas.tab.c"
+#line 1906 "obj/tpcas.tab.c"
     break;
 
   case 57:
-#line 162 "src/tpcas.y"
+#line 199 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[-1].node); addChild((yyval.node), (yyvsp[0].node));}
-#line 1875 "obj/tpcas.tab.c"
+#line 1912 "obj/tpcas.tab.c"
     break;
 
   case 58:
-#line 163 "src/tpcas.y"
+#line 200 "src/tpcas.y"
                                             {(yyval.node) = makeNode(body);}
-#line 1881 "obj/tpcas.tab.c"
+#line 1918 "obj/tpcas.tab.c"
     break;
 
   case 59:
-#line 166 "src/tpcas.y"
+#line 203 "src/tpcas.y"
                                             {(yyval.node) = makeNode(case_); addChild((yyval.node), (yyvsp[-1].node));}
-#line 1887 "obj/tpcas.tab.c"
+#line 1924 "obj/tpcas.tab.c"
     break;
 
   case 60:
-#line 167 "src/tpcas.y"
+#line 204 "src/tpcas.y"
                                             {(yyval.node) = makeNode(default_);}
-#line 1893 "obj/tpcas.tab.c"
+#line 1930 "obj/tpcas.tab.c"
     break;
 
   case 61:
-#line 168 "src/tpcas.y"
+#line 205 "src/tpcas.y"
                                             {(yyval.node) = makeNode(break_);}
-#line 1899 "obj/tpcas.tab.c"
+#line 1936 "obj/tpcas.tab.c"
     break;
 
   case 62:
-#line 169 "src/tpcas.y"
+#line 206 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1905 "obj/tpcas.tab.c"
+#line 1942 "obj/tpcas.tab.c"
     break;
 
   case 63:
-#line 172 "src/tpcas.y"
+#line 209 "src/tpcas.y"
                                             {(yyval.node) = makeNode(break_);}
-#line 1911 "obj/tpcas.tab.c"
+#line 1948 "obj/tpcas.tab.c"
     break;
 
   case 64:
-#line 173 "src/tpcas.y"
+#line 210 "src/tpcas.y"
                                             {(yyval.node) = (yyvsp[0].node);}
-#line 1917 "obj/tpcas.tab.c"
+#line 1954 "obj/tpcas.tab.c"
     break;
 
 
-#line 1921 "obj/tpcas.tab.c"
+#line 1958 "obj/tpcas.tab.c"
 
       default: break;
     }
@@ -2155,7 +2192,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 175 "src/tpcas.y"
+#line 212 "src/tpcas.y"
 
 
 
@@ -2178,12 +2215,13 @@ int main(int argc, char** argv) {
         freeProgramSymbolTables(symbolTabs);
         deleteTree(tree);
     }
+    /*displayProgramSymbolTables(pst);*/
     debug_final();
     return parse;
 }
 
 
 int yyerror(char* msg) {
-    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : << %s >>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n", msg, yylineno);
-    return 0;
+    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : " COLOR_YELLOW  "<<" COLOR_RED STYLE_BOLD " %s " COLOR_YELLOW ">>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n" COLOR_RESET "Error code -1\n", msg, yylineno);
+    return -1;
 }

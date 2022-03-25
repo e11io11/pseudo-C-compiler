@@ -11,3 +11,5 @@ void function(void)
         
         
                         */
+
+int main(void) {}

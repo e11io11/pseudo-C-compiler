@@ -6,3 +6,4 @@ int function(void)
     var2 = var1 / 2;
 }
 
+int main(void) {}

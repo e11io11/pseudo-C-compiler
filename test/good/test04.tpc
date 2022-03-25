@@ -5,3 +5,6 @@ int function(void)
     var1 = 15;
     return var1;
 }
+
+
+int main(void) {}

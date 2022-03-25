@@ -18,3 +18,6 @@ char _blavla4(char text, int number) {
     n = function();
     return text;
 }
+
+int main(void) {}
+
