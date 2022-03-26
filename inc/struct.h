@@ -20,6 +20,7 @@ typedef enum _type {
     _type_function
 } _type;
 
+
 typedef _type value;
 
 typedef struct HashElem {

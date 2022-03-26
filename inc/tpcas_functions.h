@@ -21,7 +21,7 @@
 #include "../inc/debug.h"
 
 
-int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * hashFlag);
+int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag);
 
 _type mainFct_charToType(const char * input);
 

@@ -13,15 +13,16 @@ void debug_error(_error_type type, const char* message) {
     _file_got_errors += 1;
 }
 
-void debug_final() {
+int debug_final() {
     if (_file_got_errors) {
         fprintf(stderr, 
         COLOR_GREEN "-----------------------------------------\n"
         COLOR_RED STYLE_BOLD "%d ERROR%s occured during compilation, exiting\n"
         COLOR_GREEN "-----------------------------------------\n",
         _file_got_errors, _file_got_errors > 1 ? "S" : "");
-        exit(EXIT_FAILURE);
+        return 1;
     }
+    return 0;
 }
 
 
@@ -78,7 +79,7 @@ void function_main_checked (Node * function_iter) {
     }
 }
 
-void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters, SymbolTab local ) {
+void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters, SymbolTab local, SymbolTab * varMemory) {
     if (root == NULL) return;
     else {
         if (root->label == ident) {
@@ -86,16 +87,19 @@ void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters,
             while (iter_ident != NULL){
                 if (!(findHashElem(local, iter_ident->value.ident) || findHashElem(parameters, iter_ident->value.ident) || findHashElem(global, iter_ident->value.ident))) {
                     char buf[512];
+                    int foundFlag = findHashElem(*varMemory, iter_ident->value.ident) ? 1 : 0;
                     puts("\n");
-                    sprintf(buf, "variable : " COLOR_CYAN STYLE_BOLD "'%s'" COLOR_RESET" undeclared " COLOR_GREEN "(first use in this function)" COLOR_RESET "\n"
-                    " -- referenced at line %d ", iter_ident->value.ident, iter_ident->lineno);
+                    if (!foundFlag)
+                        putHashVal(varMemory, newHashElem(iter_ident->value.ident, 0, iter_ident->lineno));
+                    sprintf(buf, "variable : " COLOR_CYAN STYLE_BOLD "'%s'" COLOR_RESET" undeclared %s" COLOR_RESET "\n"
+                    " -- referenced at line %d ", iter_ident->value.ident, foundFlag ? COLOR_CYAN "(already used before)" : COLOR_GREEN "(first use in this function)", iter_ident->lineno);
                     debug_error(DB_ERR_INCORRECT_REFERENCE, buf);
                 }
                 iter_ident = findLabelInTree(iter_ident->nextSibling, ident);
             }
         } else {
-            function_body_checked(root->firstChild, global, parameters, local);
-            function_body_checked(root->nextSibling, global, parameters, local);
+            function_body_checked(root->firstChild, global, parameters, local, varMemory);
+            function_body_checked(root->nextSibling, global, parameters, local, varMemory);
         }
     }
 }
@@ -104,18 +108,24 @@ void variables_reference_checked (Node * root, programSymbolTables pst ) {
     functionSymbolTables * fst_iter = pst.functions;
     Node * function_iter = findLabelInTree(root->firstChild, declare_function);
     functionSymbolTables * fst_list[pst.functionsAmount];
+    SymbolTab varMemory = newSymbolTab();
     int cpt = pst.functionsAmount - 1;
+
+    /* Initilisation of function array */
     while (fst_iter) {
         fst_list[cpt--] = fst_iter;
         fst_iter = fst_iter->next;
     }
+
     cpt = 0;
     while ( function_iter ) {
         Node * body_iter = findLabelInTree(function_iter->firstChild, body);
         if (body_iter) {
             Node * declare_var_iter = body_iter->firstChild;
             declare_var_iter = findLabelInTree (declare_var_iter, declare_var);
-            function_body_checked(declare_var_iter->nextSibling, pst.globals, fst_list[cpt]->parameters, fst_list[cpt]->values);
+            function_body_checked(declare_var_iter->nextSibling, pst.globals, fst_list[cpt]->parameters, fst_list[cpt]->values, &varMemory);
+            freeSymbolTab(&varMemory);
+            varMemory = newSymbolTab();
             cpt++;
         }
         function_iter = findLabelInTree(function_iter->nextSibling, declare_function);

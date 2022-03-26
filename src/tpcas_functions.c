@@ -12,10 +12,11 @@
 
 #include "../inc/tpcas_functions.h"
 
-int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * hashFlag) {
+int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) {
     int c;
     static struct option long_options[] = {
         {"tree", no_argument, 0, 't'},
+        {"symbol", no_argument, 0, 's'},
         {"help", no_argument, 0, 'h'},
         {"symbolTab", no_argument, 0, 's'},
         {0,0,0,'?'}
@@ -23,19 +24,19 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * hashFlag) {
     int option_index = 0;
 
     while (1) {
-        c = getopt_long(argc, argv, "th", long_options, &option_index);
+        c = getopt_long(argc, argv, "ths", long_options, &option_index);
         if (c == -1) {
             break;
         }
         switch (c) {
-            case 't': /* Enable the display of a tree */
+            case 't': /* Enable tree display*/
                 *treeFlag = 1;
                 break;
-            case 'h': /* Enable Help Display */
+            case 'h': /* Enable help Display */
                 printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n");
                 break;
-            case 's':
-                *hashFlag = 1;
+            case 's': /* Enable symbol table display */
+                *symbolFlag = 1;
                 break;
             case '?': /* Other unrecognized values */
                 return 2;
@@ -199,7 +200,6 @@ programSymbolTables mainFct_Tree_to_Hash(Node * root) {
     variables_reference_checked (root, result );
     return result;
 }
-
 
 
 _type mainFct_charToType(const char * input) {

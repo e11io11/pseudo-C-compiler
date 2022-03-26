@@ -1,7 +1,8 @@
 int i;
-
+int b;
 
 void function(int i, int j) {
+    int a;
     while (i != j) {
         err = i + 2;
         i = i + 1;
@@ -17,7 +18,7 @@ int main(void) {
     }
     a = 2;
     a = b;
-    a = 2 + b;
+    a = 2 + a;
     function(a, 2);
     if (a == 2) {
         switch (b) {

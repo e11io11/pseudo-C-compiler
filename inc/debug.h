@@ -34,7 +34,7 @@ extern int _file_got_errors;
 
 void debug_warning(_warn_type type, const char* message );
 void debug_error(_error_type type, const char* message);
-void debug_final();
+int debug_final();
 void putHashVal_checked (SymbolTab* st, HashElem* he);
 void function_parameters_checked (functionSymbolTables fst);
 void function_main_checked (Node * rootHeader);

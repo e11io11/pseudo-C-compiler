@@ -1,8 +1,6 @@
 /* tree.c */
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "../inc/tree.h"
+
 extern int lineno;       /* from lexer */
 
 /**
@@ -81,7 +79,7 @@ void deleteTree(Node *node) {
   if (node->nextSibling) {
     deleteTree(node->nextSibling);
   }
-  free(node);
+  cfree(node);
 }
 
 void printTree(Node *node) {

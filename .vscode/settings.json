@@ -9,6 +9,7 @@
         "tree.h": "c",
         "debug.h": "c",
         "includes.h": "c",
-        "hash.h": "c"
+        "hash.h": "c",
+        "stdio.h": "c"
     }
 }

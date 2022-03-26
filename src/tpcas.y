@@ -24,15 +24,9 @@ void printTreeWithValues(Node* node);
 extern int lineno;
 extern int yylineno;
 int treeFlag;
-int hashFlag;
+int symbolFlag;
 Node* tree;
 Node* temp;
-
-
-SymbolTab currentSt;
-_type currentType;
-programSymbolTables pst;
-HashElem* tempH;
 
 
 int parse;
@@ -72,15 +66,10 @@ int parse;
 
 %%
 Prog:  DeclVars DeclFoncts                  {
-                                                /*printf("test entrée\n");*/
                                                 $$ = makeNode(program);
                                                 tree = $$;
-                                                pst = newProgramSymbolTables();
-                                                pst.globals = newSymbolTab();
-                                                currentSt = pst.globals; 
                                                 addChild($$, $1); 
                                                 addChild($$, $2); 
-                                                /*printf("test sortie\n");*/
                                             }   
     ;
 DeclVars:                                   
@@ -88,7 +77,6 @@ DeclVars:
                                                 $$ = $1; 
                                                 addChild($$, temp = makeNode(type)); 
                                                 strcpy(temp->value.comp, $2); 
-                                                currentType = mainFct_charToType($2);
                                                 addChild(temp, $3);
                                             }
     |                                       {$$ = makeNode(declare_var);}
@@ -98,14 +86,10 @@ Declarateurs:
                                                 $$ = $1; 
                                                 addSibling($$, temp = makeNode(ident)); 
                                                 strcpy(temp->value.ident, $3);
-                                                putHashVal(&currentSt, tempH= newHashElem(temp->value.ident, currentType, temp->lineno));
-                                                /*displayHashElem(tempH);*/
                                             }
     |  IDENT                                {
                                                 $$ = makeNode(ident); 
                                                 strcpy($$->value.ident, $1);
-                                                putHashVal(&currentSt, tempH= newHashElem($$->value.ident, currentType, $$->lineno));
-                                                /*displayHashElem(tempH);*/
                                             }
     ;
 DeclFoncts:                                 
@@ -216,23 +200,26 @@ int main(int argc, char** argv) {
     programSymbolTables symbolTabs;
     /*mainFct_testHashTable();*/
     
-    if (mainFct_load_arg(argc, argv, &treeFlag, &hashFlag)) return 2;
+    if (mainFct_load_arg(argc, argv, &treeFlag, &symbolFlag)) return 2;
     parse = yyparse();
     
     if (!parse) {
-
         symbolTabs = mainFct_Tree_to_Hash(tree);
-        debug_final();
-        if (treeFlag)
-            printTreeWithValues(tree);
-        if (hashFlag)
-            displayProgramSymbolTables(symbolTabs);
-
+        if (!debug_final(symbolTabs)) {
+            if (treeFlag)
+                printTreeWithValues(tree);
+            if (symbolFlag)
+                displayProgramSymbolTables(symbolTabs);
+        }
         freeProgramSymbolTables(symbolTabs);
-        deleteTree(tree);
+        
+    } else {
+        if (debug_final()) {
+            deleteTree(tree);
+            exit(EXIT_FAILURE);
+        }
     }
-    /*displayProgramSymbolTables(pst);*/
-    debug_final();
+    deleteTree(tree);
     return parse;
 }
 

@@ -50,6 +50,13 @@ void displayProgramSymbolTables(programSymbolTables pst) {
     printf("\n\n");
 }
 
+
+void freeFunctionSymbolTab(functionSymbolTables * pt) {
+    if (pt) {
+        freeFunctionSymbolTab(pt->next);
+        cfree(pt);
+    }
+}
 void freeProgramSymbolTables(programSymbolTables pst) {
     functionSymbolTables * temp = pst.functions;
     while (temp != NULL) {
@@ -59,6 +66,5 @@ void freeProgramSymbolTables(programSymbolTables pst) {
     }
 
     freeSymbolTab(&(pst.globals));
-
-    cfree(pst.functions);
+    freeFunctionSymbolTab(pst.functions);
 }
