@@ -9,7 +9,8 @@
 #ifndef __UTILS_H__
 #define __UTILS_H__
 
-#include "includes.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void display();
 void debug(char arg[]);

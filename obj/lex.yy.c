@@ -546,11 +546,10 @@ char *yytext;
 #include "tpcas.tab.h"
 
 int lineno = 1;
-int charno = 1;
-#line 551 "obj/lex.yy.c"
+#line 550 "obj/lex.yy.c"
 #define YY_NO_INPUT 1
 
-#line 554 "obj/lex.yy.c"
+#line 553 "obj/lex.yy.c"
 
 #define INITIAL 0
 #define COMMENT 1
@@ -766,9 +765,9 @@ YY_DECL
 		}
 
 	{
-#line 29 "src/tpcas.lex"
+#line 28 "src/tpcas.lex"
 
-#line 772 "obj/lex.yy.c"
+#line 771 "obj/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -838,165 +837,165 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 30 "src/tpcas.lex"
+#line 29 "src/tpcas.lex"
 {lineno += 1;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 32 "src/tpcas.lex"
+#line 31 "src/tpcas.lex"
 {return WHILE;}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 33 "src/tpcas.lex"
+#line 32 "src/tpcas.lex"
 {return IF;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 34 "src/tpcas.lex"
+#line 33 "src/tpcas.lex"
 {return ELSE;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 35 "src/tpcas.lex"
+#line 34 "src/tpcas.lex"
 {return SWITCH;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 36 "src/tpcas.lex"
+#line 35 "src/tpcas.lex"
 {return CASE;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 37 "src/tpcas.lex"
+#line 36 "src/tpcas.lex"
 {return DEFAULT;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 38 "src/tpcas.lex"
+#line 37 "src/tpcas.lex"
 {return BREAK;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 39 "src/tpcas.lex"
+#line 38 "src/tpcas.lex"
 {return RETURN;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 40 "src/tpcas.lex"
+#line 39 "src/tpcas.lex"
 {strcpy(yylval.comp, yytext); return TYPE;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 41 "src/tpcas.lex"
+#line 40 "src/tpcas.lex"
 {return VOID;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 42 "src/tpcas.lex"
+#line 41 "src/tpcas.lex"
 {yylval.num = atoi(yytext); return NUM;}                     
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 43 "src/tpcas.lex"
+#line 42 "src/tpcas.lex"
 {yylval.byte = yytext[1]; return CHARACTER;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 44 "src/tpcas.lex"
+#line 43 "src/tpcas.lex"
 {strcpy(yylval.comp, yytext); return EQ;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 45 "src/tpcas.lex"
+#line 44 "src/tpcas.lex"
 {strcpy(yylval.comp, yytext); return ORDER;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 46 "src/tpcas.lex"
+#line 45 "src/tpcas.lex"
 {return OR;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 47 "src/tpcas.lex"
+#line 46 "src/tpcas.lex"
 {return AND;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 48 "src/tpcas.lex"
+#line 47 "src/tpcas.lex"
 {yylval.byte = yytext[0]; return ADDSUB;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 49 "src/tpcas.lex"
+#line 48 "src/tpcas.lex"
 {yylval.byte = yytext[0]; return DIVSTAR;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 50 "src/tpcas.lex"
+#line 49 "src/tpcas.lex"
 {strcpy(yylval.ident, yytext); return IDENT;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 51 "src/tpcas.lex"
+#line 50 "src/tpcas.lex"
 {return yytext[0];}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 52 "src/tpcas.lex"
+#line 51 "src/tpcas.lex"
 {BEGIN COMMENT;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 53 "src/tpcas.lex"
+#line 52 "src/tpcas.lex"
 ;
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 54 "src/tpcas.lex"
+#line 53 "src/tpcas.lex"
 ;
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 55 "src/tpcas.lex"
+#line 54 "src/tpcas.lex"
 {return 1;}
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-#line 56 "src/tpcas.lex"
+#line 55 "src/tpcas.lex"
 {return 0;}
 	YY_BREAK
 case 26:
 /* rule 26 can match eol */
 YY_RULE_SETUP
-#line 57 "src/tpcas.lex"
+#line 56 "src/tpcas.lex"
 { return yytext[0]; }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-#line 59 "src/tpcas.lex"
+#line 58 "src/tpcas.lex"
 {return 1;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 60 "src/tpcas.lex"
+#line 59 "src/tpcas.lex"
 {BEGIN INITIAL;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 61 "src/tpcas.lex"
+#line 60 "src/tpcas.lex"
 ;
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 62 "src/tpcas.lex"
+#line 61 "src/tpcas.lex"
 ;
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 63 "src/tpcas.lex"
+#line 62 "src/tpcas.lex"
 ECHO;
 	YY_BREAK
-#line 1000 "obj/lex.yy.c"
+#line 999 "obj/lex.yy.c"
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1970,7 +1969,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 63 "src/tpcas.lex"
+#line 62 "src/tpcas.lex"
 
 
 

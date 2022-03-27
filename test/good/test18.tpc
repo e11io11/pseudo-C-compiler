@@ -23,3 +23,5 @@ char _blavla4(char text, int number) {
     ;
     return text;
 }
+
+int main(void) {}

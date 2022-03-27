@@ -2,6 +2,11 @@
 #ifndef __TREE_H__
 #define __TREE_H__
 
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include "utils.h"
+
 typedef enum {
   divstar,
   ident,
@@ -55,6 +60,7 @@ void addChild(Node *parent, Node *child);
 void deleteTree(Node*node);
 void printTree(Node *node);
 void printTreeWithValues(Node *node);
+Node * findLabelInTree(Node * root, label_t search);
 
 #define FIRSTCHILD(node) node->firstChild
 #define SECONDCHILD(node) node->firstChild->nextSibling

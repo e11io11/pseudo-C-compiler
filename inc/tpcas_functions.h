@@ -18,14 +18,14 @@
 #include "../inc/symbolTab.h"
 #include "../inc/programData.h"
 #include <getopt.h>
+#include "../inc/debug.h"
 
 
-
-int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * SymbolFlag);
+int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag);
 
 _type mainFct_charToType(const char * input);
 
-void mainFct_Tree_to_Hash(Node * root, int display);
+programSymbolTables mainFct_Tree_to_Hash(Node * root);
 
 void mainFct_testHashTable();
 #endif

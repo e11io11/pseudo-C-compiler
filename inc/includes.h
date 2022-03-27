@@ -14,5 +14,6 @@
 #include <string.h>
 #include "struct.h"
 #include "utils.h"
+#include "debug.h"
 
 #endif

@@ -29,4 +29,7 @@ void freeHashTable(SymbolTab * st);
 void testHashTableRepartition(SymbolTab * st, int input_amount);
 #define testSymbolTabRepartition testHashTableRepartition
 
+HashElem * findHashElem(HashTable st, const char * key);
+HashElem ** HashTableValues(HashTable * ht);
+
 #endif

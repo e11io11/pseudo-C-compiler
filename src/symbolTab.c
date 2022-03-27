@@ -11,7 +11,7 @@
 void displayHashTable(HashTable st) {
     __longIndex i;
     short isEmpty = 1;
-    printf("HASHTABLE : \n");
+    printf("HASHTABLE : [%lu]\n", st.elemAmount);
     for (i = 0; i < st.size; i++) {
         if (st.hashList[i] != NULL) {
             int cpt = 0;
@@ -37,6 +37,7 @@ HashTable newHashTable() {
     result.size = HASH_SIZE;
     for (i = 0; i < result.size; i++)
         result.hashList[i] = NULL;
+    result.elemAmount = 0;
     return result;
 }
 
@@ -57,6 +58,19 @@ HashElem * getHashVal(HashTable st, const char * key) {
     return findHashElem(st, key);
 }
 
+HashElem ** HashTableValues(HashTable * ht) {
+    HashElem ** result = (HashElem **) malloc (sizeof (HashElem *) * ht->elemAmount);
+    int i, cpt = 0;
+    
+    for (i = 0; i < ht->size; i++) {
+        HashElem * temp = ht->hashList[i];
+        while (temp != NULL) {
+            result[cpt++] = temp;
+            temp = temp->h_next;
+        }
+    }
+    return result;
+}
 
 void putHashVal(HashTable * st, HashElem * he) {
     if (st == NULL) raiseError("putHashVal : st is NULL");
@@ -79,6 +93,8 @@ void putHashVal(HashTable * st, HashElem * he) {
             he->h_next = st->hashList[index];
             st->hashList[index] = he;
         }
+        st->elemAmount += 1;
+        
     }
 }
 

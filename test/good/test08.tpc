@@ -13,3 +13,4 @@ var1;
 42;
             }
 
+int main(void) {}

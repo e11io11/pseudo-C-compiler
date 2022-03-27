@@ -12,3 +12,4 @@ void function(void)
     return var1;
 }
 
+int main(void) {}

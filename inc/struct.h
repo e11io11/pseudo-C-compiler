@@ -16,25 +16,30 @@ typedef unsigned long __longIndex;
 typedef enum _type {
     _type_other,
     _type_int,
-    _type_char
+    _type_char,
+    _type_function
 } _type;
+
 
 typedef _type value;
 
 typedef struct HashElem {
     char h_key[256];
     value h_val;
+    int lineno;
     struct HashElem * h_next;
 } HashElem;
 
 typedef struct SymbolTab {
     HashElem * hashList[HASH_SIZE];
     __longIndex size;
+    __longIndex elemAmount;
 } SymbolTab, HashTable;
 
 typedef struct functionSymbolTables {
     SymbolTab parameters;
     SymbolTab values;
+    struct functionSymbolTables * next;
 } functionSymbolTables;
 
 typedef struct programSymbolTables {

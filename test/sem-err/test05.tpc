@@ -1,0 +1,30 @@
+int i;
+int b;
+
+void function(int i, int j) {
+    int a;
+    while (i != j) {
+        err = i + 2;
+        i = i + 1;
+    }
+}
+
+int main(void) {
+    char test;
+    /* test */
+    int est;
+    if (i == 1) {
+        function(4, i);
+    }
+    a = 2;
+    a = b;
+    a = 2 + a;
+    function(a, 2);
+    if (a == 2) {
+        switch (b) {
+            case z : break;
+            default :;
+        }
+    }
+    return z;
+}

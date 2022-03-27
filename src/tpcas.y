@@ -12,6 +12,9 @@
 #include "../inc/includes.h"
 #include "../inc/tree.h"
 #include "../inc/tpcas_functions.h"
+#include "../inc/debug.h"
+#include "../inc/programData.h"
+#include "../inc/hash.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -24,8 +27,13 @@ int treeFlag;
 int symbolFlag;
 Node* tree;
 Node* temp;
+
+
 int parse;
 %}
+
+%define parse.error verbose
+
 
 %locations
 
@@ -57,15 +65,32 @@ int parse;
 
 
 %%
-Prog:  DeclVars DeclFoncts                  {$$ = makeNode(program); tree = $$; addChild($$, $1); addChild($$, $2);}   
+Prog:  DeclVars DeclFoncts                  {
+                                                $$ = makeNode(program);
+                                                tree = $$;
+                                                addChild($$, $1); 
+                                                addChild($$, $2); 
+                                            }   
     ;
 DeclVars:                                   
-       DeclVars TYPE Declarateurs ';'       {$$ = $1; addChild($$, temp = makeNode(type)); strcpy(temp->value.comp, $2); addChild(temp, $3);}
+       DeclVars TYPE Declarateurs ';'       {
+                                                $$ = $1; 
+                                                addChild($$, temp = makeNode(type)); 
+                                                strcpy(temp->value.comp, $2); 
+                                                addChild(temp, $3);
+                                            }
     |                                       {$$ = makeNode(declare_var);}
     ;
 Declarateurs:                                   
-       Declarateurs ',' IDENT               {$$ = $1; addSibling($$, temp = makeNode(ident)); strcpy(temp->value.ident, $3);}
-    |  IDENT                                {$$ = makeNode(ident); strcpy($$->value.ident, $1);}
+       Declarateurs ',' IDENT               {
+                                                $$ = $1; 
+                                                addSibling($$, temp = makeNode(ident)); 
+                                                strcpy(temp->value.ident, $3);
+                                            }
+    |  IDENT                                {
+                                                $$ = makeNode(ident); 
+                                                strcpy($$->value.ident, $1);
+                                            }
     ;
 DeclFoncts:                                 
        DeclFoncts DeclFonct                 {$$ = $1; addSibling($$, $2);}
@@ -172,23 +197,34 @@ SwitchEndElement:
 
 
 int main(int argc, char** argv) {
+    programSymbolTables symbolTabs;
+    /*mainFct_testHashTable();*/
+    
     if (mainFct_load_arg(argc, argv, &treeFlag, &symbolFlag)) return 2;
     parse = yyparse();
-
+    
     if (!parse) {
-        if (treeFlag) printTreeWithValues(tree);
-        mainFct_Tree_to_Hash(tree, symbolFlag);
-        deleteTree(tree);
+        symbolTabs = mainFct_Tree_to_Hash(tree);
+        if (!debug_final(symbolTabs)) {
+            if (treeFlag)
+                printTreeWithValues(tree);
+            if (symbolFlag)
+                displayProgramSymbolTables(symbolTabs);
+        }
+        freeProgramSymbolTables(symbolTabs);
+        
+    } else {
+        if (debug_final()) {
+            deleteTree(tree);
+            exit(EXIT_FAILURE);
+        }
     }
+    deleteTree(tree);
     return parse;
 }
 
-#define STYLE_BOLD         "\033[1m"
-#define STYLE_NO_BOLD      "\033[22m"
-#define COLOR_RED         "\033[0;31m"
-#define COLOR_RESET      "\033[0m"
 
 int yyerror(char* msg) {
-    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : << %s >>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i.\n", msg, yylineno);
-    return 0;
+    fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : " COLOR_YELLOW  "<<" COLOR_RED STYLE_BOLD " %s " COLOR_YELLOW ">>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n" COLOR_RESET "Error code -1\n", msg, yylineno);
+    return -1;
 }
