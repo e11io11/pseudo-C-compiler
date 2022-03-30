@@ -3,6 +3,7 @@
 
 #include "symbolTab.h"
 #include "tree.h"
+#include "type.h"
 
 #define STYLE_BOLD         "\033[1m"
 #define STYLE_NO_BOLD      "\033[22m"
