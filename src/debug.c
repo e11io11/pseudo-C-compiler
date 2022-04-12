@@ -95,8 +95,7 @@ _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, Symb
                 if ((elem = findHashElem(local, exprRoot->value.ident)) || 
                     (elem = findHashElem(parameters, exprRoot->value.ident)) ||
                     (elem = findHashElem(global, exprRoot->value.ident))) {
-                        if (! exprRoot->firstChild) 
-                            raiseError
+                        if (! exprRoot->firstChild) {;}
                         if (elem->h_val.type == _type_function)
                             return elem->h_val.val.func.ret;
                         return elem->h_val.type;
@@ -111,8 +110,9 @@ _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, Symb
                 switch (t1) {
                     case -1: return t2;
                     case void_: {
-                        debug_error()
+                        ;
                     }
+                    default: ;
                 }
 
 

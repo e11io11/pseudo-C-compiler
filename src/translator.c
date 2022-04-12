@@ -40,6 +40,7 @@ void __initAsmFile(const char * name) {
     if (!asm_file) raiseError("__initAsmFile : asm_file failed at creation");
     
     fprintf(asm_file, __ASM_PATTERN_HEADER);
+    
     fprintf(asm_file, __ASM_PATTERN_FOOTER);
 }
 
