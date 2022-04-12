@@ -42,6 +42,8 @@ void __initAsmFile(const char * name) {
     fprintf(asm_file, __ASM_PATTERN_HEADER);
     
     fprintf(asm_file, __ASM_PATTERN_FOOTER);
+    
+    fclose(asm_file);
 }
 
 

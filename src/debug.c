@@ -1,12 +1,13 @@
 #include "../inc/debug.h"
 
 char * _error_type_message[256] = {"_", "Unknown", "Redefinition of an Object", "Incorrect Definition of an Object", "Main Function is Lacking", "Incorrect Reference of an Object", "Incorrect type assignment of an Object"};
-char * _warning_type_message[256] = {"_", "Unknown", "Assignement without a cast may result in Data loss"};
+char * _warning_type_message[256] = {"_", "Unknown", "Overflow Risk"};
 int _file_got_errors = 0;
 int _file_got_warnings = 0;
 
 void debug_warning(_warn_type type, const char* message ) {
-    fprintf(stderr, _WARNING_PREFIX, type, message);
+    fprintf(stderr, _WARNING_PREFIX, _warning_type_message[type], message, type);
+    _file_got_warnings += 1;
 }
 
 void debug_error(_error_type type, const char* message) {
@@ -19,7 +20,7 @@ int debug_final() {
         fprintf(stderr, 
         COLOR_GREEN "-----------------------------------------\n"
         COLOR_PURPLE STYLE_BOLD "%d WARNING%s occured during compilation, please check before processing\n"
-        COLOR_GREEN "-----------------------------------------\n",
+        COLOR_GREEN "-----------------------------------------\n" COLOR_RESET,
         _file_got_warnings, _file_got_warnings > 1 ? "S" : "");
     }
     if (_file_got_errors) {
@@ -87,6 +88,9 @@ void function_main_checked (Node * function_iter) {
     }
 }
 
+#define ERROR -2
+#define IGNORE -1
+
 _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, SymbolTab local) {
     if (exprRoot) {
         switch (exprRoot->label) {
@@ -95,11 +99,18 @@ _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, Symb
                 if ((elem = findHashElem(local, exprRoot->value.ident)) || 
                     (elem = findHashElem(parameters, exprRoot->value.ident)) ||
                     (elem = findHashElem(global, exprRoot->value.ident))) {
-                        if (! exprRoot->firstChild) {;}
-                        if (elem->h_val.type == _type_function)
+                        
+                        if (elem->h_val.type == _type_function) {
+                            if (! exprRoot->firstChild) {
+                                char buf[512];
+                                sprintf(buf, "Can not assign the type " COLOR_CYAN STYLE_BOLD "function" COLOR_RESET" to a LValue.\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, exprRoot->lineno);
+                                debug_error(DB_ERR_INCORRECT_ASSIGNMENT, buf);
+                                return ERROR;
+                            }
                             return elem->h_val.val.func.ret;
+                        }
                         return elem->h_val.type;
-                } else { return -1;}
+                } else { return IGNORE;}
             }
             case num: return _type_int;
             case character: return _type_char;
@@ -107,19 +118,25 @@ _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, Symb
                 _type t1, t2;
                 t1 = evalExprType(exprRoot->firstChild, global, parameters, local);
                 t2 = evalExprType(exprRoot->firstChild->nextSibling, global, parameters, local);
-                switch (t1) {
-                    case -1: return t2;
-                    case void_: {
-                        ;
+                switch ((int) t1) {
+                    case IGNORE: return t2;
+                    case ERROR: return ERROR;
+                    case _type_void: {
+                        char buf[512];
+                        sprintf(buf, "Can not assign the type " COLOR_CYAN STYLE_BOLD "void" COLOR_RESET" to a LValue.\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, exprRoot->lineno);
+                        debug_error(DB_ERR_INCORRECT_ASSIGNMENT, buf);
+                        return ERROR;
                     }
-                    default: ;
+                    default: {
+                        if (t2 == ERROR) return ERROR;
+                        if (t2 == IGNORE) return t1;
+                        return _type_int;
+                    }
                 }
-
-
             }
         }
     }
-    return -1;
+    return IGNORE;
 }
 
 void variables_assignment_checked(Node * assignRoot, SymbolTab global, SymbolTab parameters, SymbolTab local) {
@@ -131,10 +148,28 @@ void variables_assignment_checked(Node * assignRoot, SymbolTab global, SymbolTab
             (elem = findHashElem(parameters, assignRoot->value.ident)) ||
             (elem = findHashElem(global, assignRoot->value.ident))) {
                 leftValue = elem->h_val.type;
+                if (leftValue == _type_function) {
+                    char buf[512];
+                    sprintf(buf, "Can not use the type " COLOR_CYAN STYLE_BOLD "function" COLOR_RESET" as a LValue.\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, assignRoot->lineno);
+                    debug_error(DB_ERR_INCORRECT_ASSIGNMENT, buf);
+                }
         } else { return ;}
         assignRoot = assignRoot->nextSibling;
         rightValue = evalExprType(assignRoot, global, parameters, local);
-        
+        switch ((int) rightValue) {
+            case ERROR:;
+            case IGNORE: return;
+            case _type_int: {
+                if (leftValue == _type_char) {
+                    char buf[512];
+                    sprintf(buf, "Assignment of an " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET" into a " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET" may result in  " COLOR_RED STYLE_BOLD "data Overflow" COLOR_RESET ".\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, typeToChar(rightValue), typeToChar(leftValue), elem->lineno);
+                    debug_warning(DB_WRN_ASSIGNMENT_OVERFLOW, buf);
+                }
+            }
+            default: {
+                return ;
+            }
+        }
     }
 }
 
@@ -156,9 +191,10 @@ void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters,
                 }
                 iter_ident = findLabelInTree(iter_ident->nextSibling, ident);
             }
-        } else if (root->label == assign) {
-
         } else {
+            if (root->label == assign)
+                variables_assignment_checked(root, global, parameters, local);
+
             function_body_checked(root->firstChild, global, parameters, local, varMemory);
             function_body_checked(root->nextSibling, global, parameters, local, varMemory);
         }

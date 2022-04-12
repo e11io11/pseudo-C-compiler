@@ -10,9 +10,7 @@ int main(void) {
 
     a = 'c';
     if (a == 0) {
-        a = 0 + 5 + b; 
-        b = fun;
-        fun = 1;
+        a = 0 * 5 + 4 + b; 
     }
     b = 256;
     r = 4 - 5;
