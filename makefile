@@ -41,6 +41,7 @@ OBJECTS= $(addprefix $(OBJ), \
 		tree.o \
 		debug.o \
 		type.o \
+		translator.o \
 )
 
 # INITIALISATION SECURITY 

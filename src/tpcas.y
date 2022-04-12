@@ -15,6 +15,7 @@
 #include "../inc/debug.h"
 #include "../inc/programData.h"
 #include "../inc/hash.h"
+#include "../inc/translator.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
@@ -211,6 +212,8 @@ int main(int argc, char** argv) {
             if (symbolFlag)
                 displayProgramSymbolTables(symbolTabs);
         }
+
+        __initAsmFile("output");
         freeProgramSymbolTables(symbolTabs);
         
     } else {
