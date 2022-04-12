@@ -5,6 +5,7 @@
 
 FILE * getFile();
 
-void __initAsmFile(const char * name);
+void __initAsmFile(const char * name, programSymbolTables symbolTabs, Node* tree);
+void initGlobalVariables(programSymbolTables symbolTabs);
 
 #endif

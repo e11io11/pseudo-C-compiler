@@ -213,7 +213,7 @@ int main(int argc, char** argv) {
                 displayProgramSymbolTables(symbolTabs);
         }
 
-        __initAsmFile("output");
+        __initAsmFile("output", symbolTabs, tree);
         freeProgramSymbolTables(symbolTabs);
         
     } else {
