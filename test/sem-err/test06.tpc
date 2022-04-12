@@ -1,0 +1,21 @@
+int get5(void) {
+    return 5;
+}
+
+void getVoid(void) {
+}
+
+int main(void)
+{
+    int a; char c;
+    a = 'c';
+    c = get5();
+
+    a = getVoid();
+    a = get5;
+    get5 = 5;
+    
+    a = 5 * 4 + c * 5;
+    a = 5 * 4 + get5 * 5;
+    return 0;
+}

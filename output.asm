@@ -4,7 +4,16 @@
 ;
 ; authors : Eliott FALGUEROLLE & Antonin JEAN
 
-global _start
-section .text
-_start:
-    
+section .data
+vga: dd 0
+vgb: dd 0
+vgc: dd 0
+vgd: db 0
+vge: db 0
+vgf: db 0
+; End of Program: Print -1 as Fine-Output
+	mov rdi, -1
+	call printInt
+mov rax, 60
+mov rdi, 0
+syscall

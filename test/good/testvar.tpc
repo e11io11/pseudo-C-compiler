@@ -29,4 +29,7 @@ char fun4(int test, char t) {
 
 int main(void)  {
     int i;
+    char j;
+    i = 'c';
+    j = 256;
 }
