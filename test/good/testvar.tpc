@@ -22,8 +22,9 @@ char fun3(int aoqiej, int bidhqd, int c, char dodjqdj, char ebkcx, char fliirezo
 
 }
 
-void fun4(void) {
+char fun4(int test, char t) {
     int i;
+    fun4(test, t);
 }
 
 int main(void)  {

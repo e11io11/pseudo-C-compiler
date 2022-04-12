@@ -11,17 +11,40 @@
 
 #define HASH_SIZE 4096
 
+#define __SIZE_INT 4
+#define __SIZE_CHAR 1
+#define __SIZE_OTHER 1
+
 typedef unsigned long __longIndex;
 
 typedef enum _type {
     _type_other,
     _type_int,
     _type_char,
-    _type_function
+    _type_function,
+    _type_void
 } _type;
 
+typedef struct _type_fc_param {
+    _type type;
+    struct _type_fc_param * next;
+} _type_fc_param;
 
-typedef _type value;
+typedef struct _type_fc {
+    _type ret;
+    int param_ct;
+    _type_fc_param * param;
+} _type_fc;
+
+
+typedef struct value {
+    _type type;
+    union __val {
+        int size;
+        _type_fc func;
+    } val;
+} value;
+
 
 typedef struct HashElem {
     char h_key[256];

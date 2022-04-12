@@ -15,11 +15,12 @@
 #include "../inc/debug.h"
 #include "../inc/programData.h"
 #include "../inc/hash.h"
+#include "../inc/translator.h"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
 int yylex();
-int yyerror(char* msg);
+int yyerror(const char* msg);
 void printTreeWithValues(Node* node);
 extern int lineno;
 extern int yylineno;
@@ -211,6 +212,8 @@ int main(int argc, char** argv) {
             if (symbolFlag)
                 displayProgramSymbolTables(symbolTabs);
         }
+
+        __initAsmFile("output");
         freeProgramSymbolTables(symbolTabs);
         
     } else {
@@ -224,7 +227,7 @@ int main(int argc, char** argv) {
 }
 
 
-int yyerror(char* msg) {
+int yyerror(const char* msg) {
     fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : " COLOR_YELLOW  "<<" COLOR_RED STYLE_BOLD " %s " COLOR_YELLOW ">>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n" COLOR_RESET "Error code -1\n", msg, yylineno);
     return -1;
 }

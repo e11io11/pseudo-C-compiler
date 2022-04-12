@@ -90,7 +90,7 @@ void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters,
                     int foundFlag = findHashElem(*varMemory, iter_ident->value.ident) ? 1 : 0;
                     puts("\n");
                     if (!foundFlag)
-                        putHashVal(varMemory, newHashElem(iter_ident->value.ident, 0, iter_ident->lineno));
+                        putHashVal(varMemory, newHashElem(iter_ident->value.ident, newValueVoid(), iter_ident->lineno));
                     sprintf(buf, "variable : " COLOR_CYAN STYLE_BOLD "'%s'" COLOR_RESET" undeclared %s" COLOR_RESET "\n"
                     " -- referenced at line %d ", iter_ident->value.ident, foundFlag ? COLOR_CYAN "(already used before)" : COLOR_GREEN "(first use in this function)", iter_ident->lineno);
                     debug_error(DB_ERR_INCORRECT_REFERENCE, buf);

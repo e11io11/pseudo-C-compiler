@@ -53,7 +53,6 @@ int lineno = 1;
 <INITIAL>[ \t]*                      ;
 <INITIAL>.                           {return 1;}
 <INITIAL><<EOF>>                     {return 0;}
-<INITIAL>\n|.                        { return yytext[0]; }
 
 <COMMENT><<EOF>>                     {return 1;}
 <COMMENT>\*\/                        {BEGIN INITIAL;}

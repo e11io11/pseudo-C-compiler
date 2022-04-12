@@ -10,12 +10,13 @@
 #define __HASH_H__
 
 #include "includes.h"
+#include "type.h"
 
 #define HASH_CODE 21
 
 __longIndex getHashCode(const char * elem);
 
-HashElem * newHashElem(const char * key, _type type, int lineno);
+HashElem * newHashElem(const char * key, value v, int lineno);
 
 void displayHashElem(HashElem * he);
 

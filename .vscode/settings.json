@@ -10,6 +10,15 @@
         "debug.h": "c",
         "includes.h": "c",
         "hash.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "type.h": "c",
+        "array": "c",
+        "functional": "c",
+        "istream": "c",
+        "ostream": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "stdlib.h": "c"
     }
 }

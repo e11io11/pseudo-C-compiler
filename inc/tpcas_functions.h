@@ -19,6 +19,7 @@
 #include "../inc/programData.h"
 #include <getopt.h>
 #include "../inc/debug.h"
+#include "type.h"
 
 
 int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag);

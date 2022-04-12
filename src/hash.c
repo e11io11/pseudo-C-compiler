@@ -17,12 +17,12 @@ __longIndex getHashCode(const char * elem) {
     return result % HASH_SIZE;
 }
 
-HashElem * newHashElem(const char * key, _type type, int lineno) {
+HashElem * newHashElem(const char * key, value v, int lineno) {
     HashElem * result;
     result = (HashElem* ) malloc(sizeof(HashElem));
     if (result == NULL) raiseError("Malloc error at newHashElem");
     strcpy(result->h_key, key);
-    result->h_val = type;
+    result->h_val = v;
     result->h_next = NULL;
     result->lineno = lineno;
 
@@ -30,11 +30,14 @@ HashElem * newHashElem(const char * key, _type type, int lineno) {
 }
 
 void displayHashElem(HashElem * he) {
-    printf("HashElem {{ key : %s -> Value : %u, lineno : %u} next : %p }\n", 
-    he->h_key, he->h_val, he->lineno, (void*) he->h_next);
+    printf("HashElem {{ key : %s -> Value : {", he->h_key);
+    displayValue(he->h_val);
+    printf("}, lineno : %u} next : %p }\n", 
+    he->lineno, (void*) he->h_next);
 }
 
 void freeHashElem(HashElem * he) {
+    freeValue(he->h_val);
     cfree(he);
 }
 
@@ -43,5 +46,6 @@ void freeHashElemRecursively(HashElem * he) {
     if (he == NULL) return;
 
     freeHashElemRecursively(he->h_next);
+    freeValue(he->h_val);
     cfree(he);
 }
