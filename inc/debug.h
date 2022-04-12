@@ -23,6 +23,7 @@ typedef enum {
     DB_ERR_INCORRECT_DEFINITION = 3,
     DB_ERR_MAIN_LACKING = 4,
     DB_ERR_INCORRECT_REFERENCE = 5,
+    DB_ERR_INCORRECT_ASSIGNMENT = 6
 } _error_type;
 
 

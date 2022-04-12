@@ -23,7 +23,9 @@ CC=gcc
 CFLAGS=-Wall
 LDFLAGS=-Wall -ly 
 LEAKFLAG = -Wall -fsanitize=address
+CC_OPTIONS = -nostartfiles -no-pie
 BISONFLAGS =--report=all
+ASM_CC = nasm -f elf64
 
 #Name of executable
 EXEC=tpcas
@@ -55,6 +57,11 @@ $(shell mkdir -p bin obj)
 all:
 	@make -s generate_c_files
 	@make -s generate_executable
+
+asm:
+	@./bin/tpcas --t < test/good/testAsm.tpc
+	@make -s output
+	./output
 #
 #
 #
@@ -64,6 +71,10 @@ all:
 #
 #
 #
+
+output: $(BIN)output.o $(BIN)utils.o
+	$(CC) -o $@ $^ $(CC_OPTIONS)
+
 generate_c_files:
 	make bison_c
 	make flex_c
@@ -116,6 +127,10 @@ $(EXEC).tab.o: $(OBJ)$(EXEC).tab.c
 lex.yy.o: $(OBJ)lex.yy.c
 	$(CC) -c $< $(CFLAGS) $(LEAKFLAG) -o $(OBJ)$@
 	$(info +++ $@)
+
+$(BIN)%.o: %.asm
+	$(ASM_CC) -o $@ $^
+	$(info ++ $@ from $^)
 
 #=========================================
 # COMPIL PROTOCOL :

@@ -4,7 +4,14 @@
 ;
 ; authors : Eliott FALGUEROLLE & Antonin JEAN
 
-global _start
+section .data
 section .text
+extern printInt
+global _start
 _start:
-    
+; End of Program: Print -1 as Fine-Output
+	mov rdi, -1
+	call printInt
+mov rax, 60
+mov rdi, 0
+syscall

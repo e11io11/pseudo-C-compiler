@@ -1,8 +1,9 @@
 #include "../inc/debug.h"
 
-char * _error_type_message[256] = {"_", "Unknown", "Redefinition of an Object", "Incorrect Definition of an Object", "Main Function is Lacking", "Incorrect Reference of an Object"};
-
+char * _error_type_message[256] = {"_", "Unknown", "Redefinition of an Object", "Incorrect Definition of an Object", "Main Function is Lacking", "Incorrect Reference of an Object", "Incorrect type assignment of an Object"};
+char * _warning_type_message[256] = {"_", "Unknown", "Assignement without a cast may result in Data loss"};
 int _file_got_errors = 0;
+int _file_got_warnings = 0;
 
 void debug_warning(_warn_type type, const char* message ) {
     fprintf(stderr, _WARNING_PREFIX, type, message);
@@ -14,6 +15,13 @@ void debug_error(_error_type type, const char* message) {
 }
 
 int debug_final() {
+    if (_file_got_warnings) {
+        fprintf(stderr, 
+        COLOR_GREEN "-----------------------------------------\n"
+        COLOR_PURPLE STYLE_BOLD "%d WARNING%s occured during compilation, please check before processing\n"
+        COLOR_GREEN "-----------------------------------------\n",
+        _file_got_warnings, _file_got_warnings > 1 ? "S" : "");
+    }
     if (_file_got_errors) {
         fprintf(stderr, 
         COLOR_GREEN "-----------------------------------------\n"
@@ -79,6 +87,57 @@ void function_main_checked (Node * function_iter) {
     }
 }
 
+_type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, SymbolTab local) {
+    if (exprRoot) {
+        switch (exprRoot->label) {
+            case ident: {
+                HashElem * elem;
+                if ((elem = findHashElem(local, exprRoot->value.ident)) || 
+                    (elem = findHashElem(parameters, exprRoot->value.ident)) ||
+                    (elem = findHashElem(global, exprRoot->value.ident))) {
+                        if (! exprRoot->firstChild) 
+                            raiseError
+                        if (elem->h_val.type == _type_function)
+                            return elem->h_val.val.func.ret;
+                        return elem->h_val.type;
+                } else { return -1;}
+            }
+            case num: return _type_int;
+            case character: return _type_char;
+            default: {
+                _type t1, t2;
+                t1 = evalExprType(exprRoot->firstChild, global, parameters, local);
+                t2 = evalExprType(exprRoot->firstChild->nextSibling, global, parameters, local);
+                switch (t1) {
+                    case -1: return t2;
+                    case void_: {
+                        debug_error()
+                    }
+                }
+
+
+            }
+        }
+    }
+    return -1;
+}
+
+void variables_assignment_checked(Node * assignRoot, SymbolTab global, SymbolTab parameters, SymbolTab local) {
+    if (assignRoot) {
+        _type leftValue, rightValue;
+        HashElem * elem;
+        assignRoot = assignRoot->firstChild;
+        if ((elem = findHashElem(local, assignRoot->value.ident)) || 
+            (elem = findHashElem(parameters, assignRoot->value.ident)) ||
+            (elem = findHashElem(global, assignRoot->value.ident))) {
+                leftValue = elem->h_val.type;
+        } else { return ;}
+        assignRoot = assignRoot->nextSibling;
+        rightValue = evalExprType(assignRoot, global, parameters, local);
+        
+    }
+}
+
 void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters, SymbolTab local, SymbolTab * varMemory) {
     if (root == NULL) return;
     else {
@@ -97,6 +156,8 @@ void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters,
                 }
                 iter_ident = findLabelInTree(iter_ident->nextSibling, ident);
             }
+        } else if (root->label == assign) {
+
         } else {
             function_body_checked(root->firstChild, global, parameters, local, varMemory);
             function_body_checked(root->nextSibling, global, parameters, local, varMemory);
