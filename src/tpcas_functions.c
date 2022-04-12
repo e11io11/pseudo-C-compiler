@@ -32,7 +32,7 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
                 *treeFlag = 1;
                 break;
             case 'h': /* Enable help Display */
-                printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n");
+                printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n-s --symbol Print target's symbol table\n");
                 break;
             case 's': /* Enable symbol table display */
                 *symbolFlag = 1;
