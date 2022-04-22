@@ -7,5 +7,9 @@ FILE * getFile();
 
 void __initAsmFile(const char * name, programSymbolTables symbolTabs, Node* tree);
 void initGlobalVariables(programSymbolTables symbolTabs);
+void initFunctions(programSymbolTables symbolTabs);
+void initMain(programSymbolTables symbolTabs);
+void initTextSection(programSymbolTables symbolTabs);
+
 
 #endif

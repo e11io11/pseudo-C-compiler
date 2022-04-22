@@ -15,6 +15,8 @@
 #define __SIZE_CHAR 1
 #define __SIZE_OTHER 1
 
+#include "tree.h"
+
 typedef unsigned long __longIndex;
 
 typedef enum _type {
@@ -62,6 +64,7 @@ typedef struct SymbolTab {
 typedef struct functionSymbolTables {
     SymbolTab parameters;
     SymbolTab values;
+    Node* root;
     struct functionSymbolTables * next;
 } functionSymbolTables;
 
