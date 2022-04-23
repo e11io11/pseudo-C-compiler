@@ -212,12 +212,8 @@ int main(int argc, char** argv) {
             if (symbolFlag)
                 displayProgramSymbolTables(symbolTabs);
         }
-<<<<<<< HEAD
-        __initAsmFile("output");
-=======
 
         __initAsmFile("output", symbolTabs, tree);
->>>>>>> daa6239fb656a7691d52d18eea29b1759e240217
         freeProgramSymbolTables(symbolTabs);
         
     } else {
