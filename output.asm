@@ -5,34 +5,17 @@
 ; authors : Elliott FALGUEROLLE & Antonin JEAN
 
 section .data
-vga: dd 0
-vgb: dd 0
-vgc: dd 0
-vgd: db 0
-vge: db 0
-vgf: db 0
-section .data
+i: dd 0
+section .text
 global: main
 
-fun1:
+t:
 push rbpmov rbp, rsp
 mov rsp, rbp
 pop rbp
 ret
 
-fun2:
-push rbpmov rbp, rsp
-mov rsp, rbp
-pop rbp
-ret
-
-fun3:
-push rbpmov rbp, rsp
-mov rsp, rbp
-pop rbp
-ret
-
-fun4:
+fun:
 push rbpmov rbp, rsp
 mov rsp, rbp
 pop rbp

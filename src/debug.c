@@ -285,7 +285,7 @@ void variable_call_checked(Node * callRoot, SymbolTab global, SymbolTab paramete
 }
 void function_return_checked(Node * bodyRoot, _type returnFun) {
     Node * root = findLabelInTree(bodyRoot->firstChild, return_);
-    if (!root)
+    if (!root && returnFun != _type_void)
         db_warn_fun_missing_return(bodyRoot, returnFun);
 } 
 
