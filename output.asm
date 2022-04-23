@@ -2,16 +2,46 @@
 ; --------------------
 ; Translator tpc -> asm
 ;
-; authors : Eliott FALGUEROLLE & Antonin JEAN
+; authors : Elliott FALGUEROLLE & Antonin JEAN
 
 section .data
-section .text
-extern printInt
-global _start
-_start:
+vga: dd 0
+vgb: dd 0
+vgc: dd 0
+vgd: db 0
+vge: db 0
+vgf: db 0
+section .data
+global: main
+
+fun1:
+push rbpmov rbp, rsp
+mov rsp, rbp
+pop rbp
+ret
+
+fun2:
+push rbpmov rbp, rsp
+mov rsp, rbp
+pop rbp
+ret
+
+fun3:
+push rbpmov rbp, rsp
+mov rsp, rbp
+pop rbp
+ret
+
+fun4:
+push rbpmov rbp, rsp
+mov rsp, rbp
+pop rbp
+ret
+
+main:
 ; End of Program: Print -1 as Fine-Output
-	mov rdi, -1
-	call printInt
+mov rdi, -1
+call printInt
 mov rax, 60
 mov rdi, 0
 syscall

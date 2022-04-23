@@ -165,6 +165,7 @@ programSymbolTables mainFct_init_Hash_from_functions(Node * root) {
                 Node * _iter_functions = _iter->firstChild;
                 functionSymbolTables * temp;
                 putFunctionSymbolTable(&result, temp = newFunctionSymbolTable());
+                temp->root = _iter;
                 while (_iter_functions != NULL) {
                     if (_iter_functions->label == header) {
                         Node * _iter_type = _iter_functions->firstChild;
