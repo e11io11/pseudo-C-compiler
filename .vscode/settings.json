@@ -2,23 +2,9 @@
     "files.associations": {
         "*.lex": "lex",
         "*.tpc": "c",
-        "tpcas_functions.h": "c",
-        "symboltab.h": "c",
-        "programdata.h": "c",
-        "utils.h": "c",
-        "tree.h": "c",
-        "debug.h": "c",
+        "debug_messages.h": "c",
         "includes.h": "c",
-        "hash.h": "c",
-        "stdio.h": "c",
-        "type.h": "c",
-        "array": "c",
-        "functional": "c",
-        "istream": "c",
-        "ostream": "c",
-        "tuple": "c",
-        "type_traits": "c",
-        "utility": "c",
-        "stdlib.h": "c"
+        "debug.h": "c",
+        "typeinfo": "c"
     }
 }

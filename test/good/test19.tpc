@@ -1,7 +1,13 @@
 char c, d;
 int n1, n4,     n0;
 
+void dosomething(void) {
 
+}
+
+void dosomethingelse(void) {
+    
+}
 int function(void)
 {
     char var1;

@@ -2,6 +2,9 @@
 char __type_repr[5][16] = {"UNKNOWN", "int", "char", "function", "void"};
 
 char * typeToChar(_type t) {
+    if (t <= 0 || t >= 5) {
+        return __type_repr[0];
+    }
     return __type_repr[t];
 }
 
@@ -34,7 +37,7 @@ value newValueFct(Node * headerRoot) {
         result.val.func.ret = charToType(root->value.comp);
     else result.val.func.ret = _type_void;
 
-    root = findLabelInTree(root, parameters);
+    root = findLabelInTree(headerRoot->firstChild, parameters);
     if (root) {
         root = findLabelInTree(root->firstChild, type);
         while (root) {

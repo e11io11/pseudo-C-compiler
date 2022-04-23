@@ -1,18 +1,24 @@
 int i;
 
-void fun(int a) {
+void fun(int a, char c) {
     int i;
 }
 
+int t(void ) {
+    return 5;
+}
+
 int main(void) {
-    int a; char b;
+    int a;
+    char b;
     int r;
+
 
     a = 'c';
     if (a == 0) {
-        a = 0 * 5 + 4 + b; 
+        a = 0 * 5 + 4 + b;
     }
-    b = 256;
+    fun(1, 'c');
     r = 4 - 5;
     return 0;
 }

@@ -22,13 +22,16 @@ TEST = test/
 CC=gcc
 CFLAGS=-Wall
 LDFLAGS=-Wall -ly 
-LEAKFLAG = -Wall -fsanitize=address
+LEAKFLAG = -Wall #-fsanitize=address
 CC_OPTIONS = -nostartfiles -no-pie
-BISONFLAGS =--report=all
+BISONFLAGS =--report=all 
 ASM_CC = nasm -f elf64
 
 #Name of executable
-EXEC=tpcas
+EXEC=$(BIN)tpcc
+
+#Pattern-Name of the exec-related generated files
+TPCAS=tpcas
 
 #Objects to compile:
 OBJECTS= $(addprefix $(OBJ), \
@@ -38,10 +41,11 @@ OBJECTS= $(addprefix $(OBJ), \
 		tree.o \
 		tpcas_functions.o \
 		programData.o \
-		$(EXEC).tab.o \
+		$(TPCAS).tab.o \
 		lex.yy.o \
 		tree.o \
 		debug.o \
+		debug_messages.o \
 		type.o \
 		translator.o \
 )
@@ -59,7 +63,12 @@ all:
 	@make -s generate_executable
 
 asm:
-	@./bin/tpcas --t < test/good/testAsm.tpc
+	@./$(EXEC) --t < test/good/testAsm.tpc
+	@make -s output
+	./output
+
+t:
+	@./$(EXEC) --t < test/good/testvar.tpc
 	@make -s output
 	./output
 #
@@ -72,7 +81,7 @@ asm:
 #
 #
 
-output: $(BIN)output.o $(BIN)utils.o
+output: $(OBJ)output.o $(OBJ)utils.o
 	$(CC) -o $@ $^ $(CC_OPTIONS)
 
 generate_c_files:
@@ -80,24 +89,24 @@ generate_c_files:
 	make flex_c
 
 bison_c:
-	make $(EXEC).tab.c
-	make $(EXEC).tab.h
+	make $(TPCAS).tab.c
+	make $(TPCAS).tab.h
 
 flex_c:
 	make lex.yy.c
 
 # FLEX :
-lex.yy.c: $(SRC)$(EXEC).lex $(EXEC).tab.h
+lex.yy.c: $(SRC)$(TPCAS).lex $(TPCAS).tab.h
 	flex -o $(OBJ)$@ $< 
 	$(info + $@  from $^)
 
 # BISON : Src file
-$(EXEC).tab.c: $(SRC)$(EXEC).y
+$(TPCAS).tab.c: $(SRC)$(TPCAS).y
 	bison $< $(BISONFLAGS) -o $(OBJ)$@
 	$(info + $@  from $^)
 
 # BISON : Header file : required for flex
-$(EXEC).tab.h: $(SRC)$(EXEC).y
+$(TPCAS).tab.h: $(SRC)$(TPCAS).y
 	bison $< -d $(BISONFLAGS) -o $(OBJ)$@
 	$(info + $@  from $^)
 
@@ -120,7 +129,7 @@ $(EXEC).tab.h: $(SRC)$(EXEC).y
 $(INCH): $(INC)struct.h $(INC)utils.h
 	$(info + $@)
 
-$(EXEC).tab.o: $(OBJ)$(EXEC).tab.c
+$(TPCAS).tab.o: $(OBJ)$(TPCAS).tab.c
 	$(CC) -c $< $(CFLAGS) $(LEAKFLAG) -o $(OBJ)$@ 
 	$(info +++ $@)
 
@@ -141,10 +150,10 @@ $(OBJ)%.o: $(SRC)%.c $(INC)%.h $(INCH)
 
 #Executable :
 generate_executable:
-	make $(EXEC)
+	make $(TPCAS)
 
-$(EXEC): $(OBJECTS)
-	$(CC) $^ $(LDFLAGS) $(LEAKFLAG) -o $(BIN)$@
+$(TPCAS): $(OBJECTS)
+	$(CC) $^ $(LDFLAGS) $(LEAKFLAG) -o $(EXEC)
 	$(info +++++ $@  from $^)
 	
 clean:

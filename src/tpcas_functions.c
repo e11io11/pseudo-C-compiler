@@ -25,7 +25,7 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
     while (1) {
         c = getopt_long(argc, argv, "ths", long_options, &option_index);
         if (c == -1) {
-            break;
+            return 0;
         }
         switch (c) {
             case 't': /* Enable tree display*/
@@ -33,7 +33,7 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
                 break;
             case 'h': /* Enable help Display */
                 printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n-s --symbol Print target's symbol table\n");
-                break;
+                return 2;
             case 's': /* Enable symbol table display */
                 *symbolFlag = 1;
                 break;

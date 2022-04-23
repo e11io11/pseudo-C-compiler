@@ -101,6 +101,7 @@ void putHashVal(HashTable * st, HashElem * he) {
 
 void freeHashTable(HashTable * st) {
     __longIndex i;
+    if (st == NULL) return;
     for (i = 0; i < st->size; i++) {
         freeHashElemRecursively(st->hashList[i]);
     }
