@@ -97,22 +97,18 @@ HashTable mainFct_init_Hash_from_globals(Node * root) {
 }
 
 
-HashTable getHash_from_function_parameters(Node * parametersRoot) {
-    HashTable result = newHashTable();
+void getHash_from_function_parameters(Node * parametersRoot, HashTable * result) {
     if (parametersRoot == NULL) exit(EXIT_FAILURE);
     parametersRoot = parametersRoot->firstChild;
     while (parametersRoot != NULL) {
         if (parametersRoot->label != void_)
-            putHashVal_checked(&result, newHashElem(parametersRoot->firstChild->value.ident, newValuePrim(charToType(parametersRoot->value.comp)), parametersRoot->lineno));
+            putHashVal_checked(result, newHashElem(parametersRoot->firstChild->value.ident, newValuePrim(charToType(parametersRoot->value.comp)), parametersRoot->lineno));
         parametersRoot = parametersRoot->nextSibling;
     }
-
-    return result;
 }
 
 
-HashTable getHash_from_function_body(Node * bodyRoot) {
-    HashTable result = newHashTable();
+void getHash_from_function_body(Node * bodyRoot, HashTable * result) {
     bodyRoot = bodyRoot->firstChild;
     do {
         bodyRoot = findLabelInTree(bodyRoot, declare_var);
@@ -124,7 +120,7 @@ HashTable getHash_from_function_body(Node * bodyRoot) {
                     _type t = charToType(_iter_type->value.comp);
                     Node * _iter_ident = _iter_type->firstChild;
                     while (_iter_ident != NULL) {
-                        putHashVal_checked(&result, newHashElem(_iter_ident->value.ident, newValuePrim(t), _iter_ident->lineno));
+                        putHashVal_checked(result, newHashElem(_iter_ident->value.ident, newValuePrim(t), _iter_ident->lineno));
                         _iter_ident = _iter_ident->nextSibling;
                     }
                     _iter_type = _iter_type->nextSibling;
@@ -134,8 +130,6 @@ HashTable getHash_from_function_body(Node * bodyRoot) {
             bodyRoot = bodyRoot->nextSibling;
         }
     } while (bodyRoot != NULL);
-
-    return result;
 }
 
 
@@ -166,24 +160,28 @@ programSymbolTables mainFct_init_Hash_from_functions(Node * root) {
                 functionSymbolTables * temp;
                 putFunctionSymbolTable(&result, temp = newFunctionSymbolTable());
                 temp->root = _iter;
+                temp->values = newSymbolTab();
+                temp->parameters = newSymbolTab();
                 while (_iter_functions != NULL) {
                     if (_iter_functions->label == header) {
                         Node * _iter_type = _iter_functions->firstChild;
                         do {
                             _iter_type = findLabelInTree(_iter_type, parameters);
                             if (_iter_type != NULL) {
-                                temp->parameters = getHash_from_function_parameters(_iter_type);
+                                getHash_from_function_parameters(_iter_type, &(temp->parameters));
+                                getHash_from_function_parameters(_iter_type, &(temp->values));
+
                                 _iter_type = _iter_type->nextSibling;
                             }
                         } while (_iter_type != NULL);
                     } else if (_iter_functions->label == body) {
-                        temp->values = getHash_from_function_body(_iter_functions);
+                        getHash_from_function_body(_iter_functions, &(temp->values));
                     }
                     _iter_functions = _iter_functions->nextSibling;
                 }
                 cpt++;
                 _iter = _iter->nextSibling;
-                function_parameters_checked(*temp);
+                // function_parameters_checked(*temp);
             }
         } while (_iter != NULL);
     }

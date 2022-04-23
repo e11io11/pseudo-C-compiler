@@ -74,7 +74,7 @@ void function_parameters_checked (functionSymbolTables fst) {
         for (j = 0; j < fst.values.elemAmount; j++) {
             if (strcmp(temp->h_key, local_fun_variables[j]->h_key) == 0) {
                 char buf[512];
-                sprintf(buf, "Value : " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET", defined at line " COLOR_GREEN "%d" COLOR_RESET ", is redefined at line " COLOR_GREEN "%d", temp->h_key, temp->lineno, local_fun_variables[j]->lineno);
+                sprintf(buf, "Value | : " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET", defined at line " COLOR_GREEN "%d" COLOR_RESET ", is redefined at line " COLOR_GREEN "%d", temp->h_key, temp->lineno, local_fun_variables[j]->lineno);
                 debug_error(DB_ERR_REDEFINITION, buf);
             }
         }
@@ -117,9 +117,8 @@ _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, Symb
         switch (exprRoot->label) {
             case ident: {
                 HashElem * elem;
-                if ((elem = findHashElem(local, exprRoot->value.ident)) || 
-                    (elem = findHashElem(parameters, exprRoot->value.ident)) ||
-                    (elem = findHashElem(global, exprRoot->value.ident))) {
+                if ((elem = findHashElem(local, exprRoot->value.ident))
+                    || (elem = findHashElem(global, exprRoot->value.ident))) {
                         
                         if (elem->h_val.type == _type_function) {
                             if (! exprRoot->firstChild) {
@@ -171,9 +170,8 @@ void variables_assignment_checked(Node * assignRoot, SymbolTab global, SymbolTab
         _type leftValue, rightValue;
         HashElem * elem;
         assignRoot = assignRoot->firstChild;
-        if ((elem = findHashElem(local, assignRoot->value.ident)) || 
-            (elem = findHashElem(parameters, assignRoot->value.ident)) ||
-            (elem = findHashElem(global, assignRoot->value.ident))) {
+        if ((elem = findHashElem(local, assignRoot->value.ident)) 
+            || (elem = findHashElem(global, assignRoot->value.ident))) {
                 leftValue = elem->h_val.type;
                 if (leftValue == _type_function) {
                     /**
@@ -269,9 +267,8 @@ void variable_call_checked(Node * callRoot, SymbolTab global, SymbolTab paramete
     if (callRoot) {
         Node * call_iter = callRoot->firstChild;
         HashElem * elem;
-        if ((elem = findHashElem(global, call_iter->value.ident))
-            || (elem = findHashElem(parameters, call_iter->value.ident))
-            || (elem = findHashElem(local, call_iter->value.ident)
+        if ((elem = findHashElem(local, call_iter->value.ident))
+            || (elem = findHashElem(global, call_iter->value.ident)
         )) {
             if (elem->h_val.type != _type_function) {
                 db_error_var_not_callable(call_iter);
@@ -297,7 +294,6 @@ void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters,
             HashElem * elem;
                 if (!(
                     (elem = findHashElem(local, iter_ident->value.ident))
-                    || (elem = findHashElem(parameters, iter_ident->value.ident))
                     || (elem = findHashElem(global, iter_ident->value.ident))
                     )) 
                 {
