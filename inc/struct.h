@@ -63,6 +63,7 @@ typedef struct SymbolTab {
 } SymbolTab, HashTable;
 
 typedef struct functionSymbolTables {
+    char name[256];
     SymbolTab parameters;
     SymbolTab values;
     Node* root;
