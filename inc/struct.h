@@ -41,6 +41,7 @@ typedef struct _type_fc {
 
 typedef struct value {
     _type type;
+    int pileOffset;
     union __val {
         int size;
         _type_fc func;

@@ -11,7 +11,7 @@ vgc: dd 0
 vgd: db 0
 vge: db 0
 vgf: db 0
-section .data
+section .text
 global: main
 
 fun1:
