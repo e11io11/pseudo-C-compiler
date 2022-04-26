@@ -165,6 +165,9 @@ programSymbolTables mainFct_init_Hash_from_functions(Node * root) {
                 while (_iter_functions != NULL) {
                     if (_iter_functions->label == header) {
                         Node * _iter_type = _iter_functions->firstChild;
+                        Node * identname = findLabelInTree(_iter_type, ident);
+                        if (temp)
+                            strcpy(temp->name, identname->value.ident);
                         do {
                             _iter_type = findLabelInTree(_iter_type, parameters);
                             if (_iter_type != NULL) {

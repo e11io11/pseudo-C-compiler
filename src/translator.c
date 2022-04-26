@@ -27,7 +27,7 @@
     "syscall"
 
 #define __ASM_PATTERN_FNC_HEADER \
-    "push rbp" \
+    "push rbp\n" \
     "mov rbp, rsp\n"
 
 #define __ASM_PATTERN_FNC_FOOTER \
@@ -61,19 +61,19 @@ void initTextSection(programSymbolTables symbolTabs) {
 }
 
 void initGlobalVariables(programSymbolTables symbolTabs) {
+    HashElem* el;
     int amount = symbolTabs.globals.elemAmount;
     HashElem ** elements = HashTableValues(&(symbolTabs.globals));
     int totalOffset = 0;
     fprintf(asm_file, "section .data\n");
     for (int i = 0; i < amount; i++) {
-        HashElem* el = elements[i];
+        el = elements[i];
         if (el->h_val.type != _type_function) {
             el->h_val.pileOffset = totalOffset;
             totalOffset += el->h_val.val.size;
             fprintf(asm_file, "%s: %s 0\n", el->h_key, 
                 el->h_val.type == _type_char ? SIZE_CHAR : SIZE_INT);
         }
-        printf("var %s, offset %i\n", el->h_key, el->h_val.pileOffset);
     }
     free(elements);
 }
@@ -82,24 +82,45 @@ void initGlobalVariables(programSymbolTables symbolTabs) {
 void initMain(programSymbolTables symbolTabs) {
     fprintf(asm_file, "main:\n");
     fprintf(asm_file, "%s", __ASM_PATTERN_MAIN_FOOTER);
+    fprintf(asm_file, "\n");
 }
 
 
-void initFunctions(programSymbolTables symbolTabs) {
-    int amount = symbolTabs.globals.elemAmount;
-    HashElem ** elements = HashTableValues(&(symbolTabs.globals));
-    for (int i = 0; i < amount; i++) {
-        HashElem* el = elements[i];
-        if (el->h_val.type == _type_function) {
-            if (strcmp(el->h_key, "main") == 0)
-                initMain(symbolTabs);
-            else {
-                fprintf(asm_file, "%s:\n", el->h_key);
-                fprintf(asm_file, "%s", __ASM_PATTERN_FNC_HEADER); 
-                //initFunctionBody()
-                fprintf(asm_file, "%s", __ASM_PATTERN_FNC_FOOTER);    
-            }
-        }
+void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables* func) {
+    HashElem* el;
+    int totalOffset = 0;
+    int parAmount = func->parameters.elemAmount;
+    HashElem ** elements = HashTableValues(&(func->parameters));
+    for (int i = 0; i < parAmount; i++) {
+        el = elements[i];
+        el->h_val.pileOffset = totalOffset;
+        totalOffset -= el->h_val.val.size;
+        //todo, set parameter variables to their values
     }
     free(elements);
+    int varAmount = func->values.elemAmount;
+    elements = HashTableValues(&(func->values));
+    for (int i = 0; i < varAmount; i++) {
+        el = elements[i];
+        el->h_val.pileOffset = totalOffset;
+        totalOffset -= el->h_val.val.size;
+    }
+    free(elements);
+    fprintf(asm_file, "add rsp, %i\n", totalOffset);
+}
+
+void initFunctions(programSymbolTables symbolTabs) {
+    functionSymbolTables* func = symbolTabs.functions;
+    while (func != NULL) {
+        if (strcmp(func->name, "main") == 0)
+            initMain(symbolTabs);
+        else {
+            fprintf(asm_file, "%s:\n", func->name);
+            fprintf(asm_file, "%s", __ASM_PATTERN_FNC_HEADER);
+            initFunctionVariables(symbolTabs, func); 
+            //initFunctionBody()
+            fprintf(asm_file, "%s", __ASM_PATTERN_FNC_FOOTER);    
+        }
+        func = func->next;
+    }
 }

@@ -10,6 +10,7 @@ void initGlobalVariables(programSymbolTables symbolTabs);
 void initFunctions(programSymbolTables symbolTabs);
 void initMain(programSymbolTables symbolTabs);
 void initTextSection(programSymbolTables symbolTabs);
+void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables* func);
 
 
 #endif
