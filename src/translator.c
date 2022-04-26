@@ -63,13 +63,17 @@ void initTextSection(programSymbolTables symbolTabs) {
 void initGlobalVariables(programSymbolTables symbolTabs) {
     int amount = symbolTabs.globals.elemAmount;
     HashElem ** elements = HashTableValues(&(symbolTabs.globals));
+    int totalOffset = 0;
     fprintf(asm_file, "section .data\n");
     for (int i = 0; i < amount; i++) {
         HashElem* el = elements[i];
         if (el->h_val.type != _type_function) {
+            el->h_val.pileOffset = totalOffset;
+            totalOffset += el->h_val.val.size;
             fprintf(asm_file, "%s: %s 0\n", el->h_key, 
                 el->h_val.type == _type_char ? SIZE_CHAR : SIZE_INT);
         }
+        printf("var %s, offset %i\n", el->h_key, el->h_val.pileOffset);
     }
     free(elements);
 }
