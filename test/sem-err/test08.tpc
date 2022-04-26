@@ -1,6 +1,9 @@
 void getVoid(void) {
 }
 
+int c(void) {
+}
+
 int t(void) {
     int a;
     a = 2;
@@ -19,6 +22,13 @@ int t(void) {
     }
 }
 
+void c(void ) {
+    int a;
+    if (1) {
+        return;
+    }
+    a = 5;
+}
 
 void f(void ) {
     return t();

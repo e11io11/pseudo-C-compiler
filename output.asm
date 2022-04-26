@@ -5,9 +5,20 @@
 ; authors : Elliott FALGUEROLLE & Antonin JEAN
 
 section .data
-i: dd 0
 section .text
 global: main
+
+c:
+push rbpmov rbp, rsp
+mov rsp, rbp
+pop rbp
+ret
+
+f:
+push rbpmov rbp, rsp
+mov rsp, rbp
+pop rbp
+ret
 
 t:
 push rbpmov rbp, rsp
@@ -15,7 +26,7 @@ mov rsp, rbp
 pop rbp
 ret
 
-fun:
+getVoid:
 push rbpmov rbp, rsp
 mov rsp, rbp
 pop rbp
