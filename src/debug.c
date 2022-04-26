@@ -23,10 +23,13 @@ char * _warning_type_message[256] = {
 
 int _file_got_errors = 0;
 int _file_got_warnings = 0;
+int _display_warnings = 1;
 
 void debug_warning(_warning_type type, const char* message ) {
-    fprintf(stderr, _WARNING_PREFIX, _warning_type_message[type], message, type);
-    _file_got_warnings += 1;
+    if (_display_warnings) {
+        fprintf(stderr, _WARNING_PREFIX, _warning_type_message[type], message, type);
+        _file_got_warnings += 1;
+    }
 }
 
 void debug_error(_error_type type, const char* message) {

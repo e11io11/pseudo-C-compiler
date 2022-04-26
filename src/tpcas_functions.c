@@ -19,6 +19,7 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
         {"symbol", no_argument, 0, 's'},
         {"help", no_argument, 0, 'h'},
         {"symbolTab", no_argument, 0, 's'},
+        {"no-warn", no_argument, 0, 'q'},
         {0,0,0,'?'}
     };
     int option_index = 0;
@@ -32,10 +33,20 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
                 *treeFlag = 1;
                 break;
             case 'h': /* Enable help Display */
-                printf("Usage: ./tpcas [options] < [target]\nOptions:\n-h --help Print this message and exit.\n-t --tree Print target's abstract tree\n-s --symbol Print target's symbol table\n");
+                printf(
+                    "Usage: ./tpcas [options] < [target]\n"\
+                    "Options:\n"\
+                    "-h --help Print this message and exit.\n"\
+                    "-t --tree Print target's abstract tree\n"\
+                    "-s --symbol Print target's symbol table\n"\
+                    "-w --no-warn Hide the warnings messages\n"
+                );
                 return 2;
             case 's': /* Enable symbol table display */
                 *symbolFlag = 1;
+                break;
+            case 'q':
+                _display_warnings = 0;
                 break;
             case '?': /* Other unrecognized values */
                 return 2;

@@ -6,14 +6,25 @@
 #include "tree.h"
 #include "type.h"
 
-#define STYLE_BOLD         "\033[1m"
-#define STYLE_NO_BOLD      "\033[22m"
-#define COLOR_RESET      "\033[0m"
-#define COLOR_RED         "\033[0;31m"
-#define COLOR_PURPLE    "\033[0;35m"
-#define COLOR_GREEN     "\033[0;32m"
-#define COLOR_YELLOW    "\033[0;33m"
-#define COLOR_CYAN      "\033[0;36m"
+#ifdef _WIN32
+    #define STYLE_BOLD         ""
+    #define STYLE_NO_BOLD      ""
+    #define COLOR_RESET      ""
+    #define COLOR_RED         ""
+    #define COLOR_PURPLE    ""
+    #define COLOR_GREEN     ""
+    #define COLOR_YELLOW    ""
+    #define COLOR_CYAN      ""
+#else
+    #define STYLE_BOLD         "\033[1m"
+    #define STYLE_NO_BOLD      "\033[22m"
+    #define COLOR_RESET      "\033[0m"
+    #define COLOR_RED         "\033[0;31m"
+    #define COLOR_PURPLE    "\033[0;35m"
+    #define COLOR_GREEN     "\033[0;32m"
+    #define COLOR_YELLOW    "\033[0;33m"
+    #define COLOR_CYAN      "\033[0;36m"
+#endif
 
 #define _ERROR_PREFIX COLOR_RED STYLE_BOLD "[ERROR] : " COLOR_YELLOW  "<<" COLOR_RED STYLE_BOLD " %s " COLOR_YELLOW  ">>  " STYLE_NO_BOLD COLOR_RESET "%s\n" COLOR_PURPLE "Error Code %d\n" COLOR_RESET
 #define _WARNING_PREFIX COLOR_PURPLE STYLE_BOLD "{WARNING} : << %s >>  " STYLE_NO_BOLD COLOR_RESET "%s\n" COLOR_PURPLE "Warning Code %d\n" COLOR_RESET
@@ -42,6 +53,7 @@ typedef enum {
 } _warn_type;
 
 extern int _file_got_errors;
+extern int _display_warnings;
 
 void debug_warning(_warning_type type, const char* message );
 void debug_error(_error_type type, const char* message);

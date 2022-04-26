@@ -22,3 +22,7 @@ int main(void) {
     r = 4 - 5;
     return 0;
 }
+
+int g(void) {
+    
+}

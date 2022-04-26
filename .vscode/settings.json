@@ -5,6 +5,7 @@
         "debug_messages.h": "c",
         "includes.h": "c",
         "debug.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "tpcas_functions.h": "c"
     }
 }
