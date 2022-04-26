@@ -200,13 +200,13 @@ SwitchEndElement:
 int main(int argc, char** argv) {
     programSymbolTables symbolTabs;
     /*mainFct_testHashTable();*/
-    
-    if (mainFct_load_arg(argc, argv, &treeFlag, &symbolFlag)) return 2;
+    int returnCode = 0;
+    if (mainFct_load_arg(argc, argv, &treeFlag, &symbolFlag)) return 3;
     parse = yyparse();
     
     if (!parse) {
         symbolTabs = mainFct_Tree_to_Hash(tree);
-        if (!debug_final(symbolTabs)) {
+        if (! (returnCode = debug_final(symbolTabs))) {
             if (treeFlag)
                 printTreeWithValues(tree);
             if (symbolFlag)
@@ -217,17 +217,18 @@ int main(int argc, char** argv) {
         freeProgramSymbolTables(symbolTabs);
         
     } else {
-        if (debug_final()) {
+        if ((returnCode = debug_final())) {
             deleteTree(tree);
             exit(EXIT_FAILURE);
         }
     }
     deleteTree(tree);
-    return parse;
+    printf("return : %d\n",MAX(parse, returnCode));
+    return MAX(parse, returnCode);
 }
 
 
 int yyerror(const char* msg) {
     fprintf(stderr, COLOR_RED STYLE_BOLD "[ERROR] : " COLOR_YELLOW  "<<" COLOR_RED STYLE_BOLD " %s " COLOR_YELLOW ">>" STYLE_NO_BOLD COLOR_RESET "  --  near line %i\n" COLOR_RESET "Error code -1\n", msg, yylineno);
-    return -1;
+    return 1;
 }

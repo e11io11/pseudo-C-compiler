@@ -1,11 +1,30 @@
 #include "../inc/debug.h"
 
-char * _error_type_message[256] = {"_", "Unknown", "Redefinition of an Object", "Incorrect Definition of an Object", "Main Function is Lacking", "Incorrect Reference of an Object", "Incorrect type assignment of an Object"};
-char * _warning_type_message[256] = {"_", "Unknown", "Overflow Risk"};
+char * _error_type_message[256] = {
+    "_", 
+    "Unknown", 
+    "Redefinition of an Object", 
+    "Incorrect Definition of an Object", 
+    "Main Function is Lacking", 
+    "Incorrect Reference of an Object", 
+    "Incorrect type assignment of an Object", 
+    "Incorrect Usage of an Object",
+    "Invalid Return Value"
+};
+
+char * _warning_type_message[256] = {
+    "_", 
+    "Unknown", 
+    "Overflow Risk", 
+    "Incoherent return",
+    "Missing return",
+    "Post-Return Instructions",
+};
+
 int _file_got_errors = 0;
 int _file_got_warnings = 0;
 
-void debug_warning(_warn_type type, const char* message ) {
+void debug_warning(_warning_type type, const char* message ) {
     fprintf(stderr, _WARNING_PREFIX, _warning_type_message[type], message, type);
     _file_got_warnings += 1;
 }
@@ -27,9 +46,9 @@ int debug_final() {
         fprintf(stderr, 
         COLOR_GREEN "-----------------------------------------\n"
         COLOR_RED STYLE_BOLD "%d ERROR%s occured during compilation, exiting\n"
-        COLOR_GREEN "-----------------------------------------\n",
+        COLOR_GREEN "-----------------------------------------\n" COLOR_RESET,
         _file_got_errors, _file_got_errors > 1 ? "S" : "");
-        return 1;
+        return 2;
     }
     return 0;
 }
@@ -55,7 +74,7 @@ void function_parameters_checked (functionSymbolTables fst) {
         for (j = 0; j < fst.values.elemAmount; j++) {
             if (strcmp(temp->h_key, local_fun_variables[j]->h_key) == 0) {
                 char buf[512];
-                sprintf(buf, "Value : " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET", defined at line " COLOR_GREEN "%d" COLOR_RESET ", is redefined at line " COLOR_GREEN "%d", temp->h_key, temp->lineno, local_fun_variables[j]->lineno);
+                sprintf(buf, "Value | : " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET", defined at line " COLOR_GREEN "%d" COLOR_RESET ", is redefined at line " COLOR_GREEN "%d", temp->h_key, temp->lineno, local_fun_variables[j]->lineno);
                 debug_error(DB_ERR_REDEFINITION, buf);
             }
         }
@@ -87,26 +106,32 @@ void function_main_checked (Node * function_iter) {
         debug_error(DB_ERR_MAIN_LACKING, buf);
     }
 }
-
 #define ERROR -2
 #define IGNORE -1
+
+void variable_call_checked(Node * callRoot, SymbolTab global, SymbolTab parameters, SymbolTab local);
+void function_call_checked(HashElem * fun, Node * argumentsRoot,  SymbolTab global, SymbolTab parameters, SymbolTab local);
 
 _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, SymbolTab local) {
     if (exprRoot) {
         switch (exprRoot->label) {
             case ident: {
                 HashElem * elem;
-                if ((elem = findHashElem(local, exprRoot->value.ident)) || 
-                    (elem = findHashElem(parameters, exprRoot->value.ident)) ||
-                    (elem = findHashElem(global, exprRoot->value.ident))) {
+                if ((elem = findHashElem(local, exprRoot->value.ident))
+                    || (elem = findHashElem(global, exprRoot->value.ident))) {
                         
                         if (elem->h_val.type == _type_function) {
                             if (! exprRoot->firstChild) {
-                                char buf[512];
-                                sprintf(buf, "Can not assign the type " COLOR_CYAN STYLE_BOLD "function" COLOR_RESET" to a LValue.\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, exprRoot->lineno);
-                                debug_error(DB_ERR_INCORRECT_ASSIGNMENT, buf);
+                                /**
+                                 * @brief ERROR FUN RVALUE
+                                 */
+                                db_error_fun_rValue(exprRoot);
                                 return ERROR;
                             }
+                            if (exprRoot->firstChild && exprRoot->firstChild->label == arguments) 
+                                function_call_checked (elem, exprRoot->firstChild, global, parameters, local);
+                            else function_call_checked (elem, exprRoot->nextSibling, global, parameters, local);
+
                             return elem->h_val.val.func.ret;
                         }
                         return elem->h_val.type;
@@ -122,9 +147,10 @@ _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, Symb
                     case IGNORE: return t2;
                     case ERROR: return ERROR;
                     case _type_void: {
-                        char buf[512];
-                        sprintf(buf, "Can not assign the type " COLOR_CYAN STYLE_BOLD "void" COLOR_RESET" to a LValue.\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, exprRoot->lineno);
-                        debug_error(DB_ERR_INCORRECT_ASSIGNMENT, buf);
+                        /**
+                        * @brief ERROR VOID RVALUE
+                        */
+                        db_error_void_rValue(exprRoot);
                         return ERROR;
                     }
                     default: {
@@ -144,26 +170,34 @@ void variables_assignment_checked(Node * assignRoot, SymbolTab global, SymbolTab
         _type leftValue, rightValue;
         HashElem * elem;
         assignRoot = assignRoot->firstChild;
-        if ((elem = findHashElem(local, assignRoot->value.ident)) || 
-            (elem = findHashElem(parameters, assignRoot->value.ident)) ||
-            (elem = findHashElem(global, assignRoot->value.ident))) {
+        if ((elem = findHashElem(local, assignRoot->value.ident)) 
+            || (elem = findHashElem(global, assignRoot->value.ident))) {
                 leftValue = elem->h_val.type;
                 if (leftValue == _type_function) {
-                    char buf[512];
-                    sprintf(buf, "Can not use the type " COLOR_CYAN STYLE_BOLD "function" COLOR_RESET" as a LValue.\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, assignRoot->lineno);
-                    debug_error(DB_ERR_INCORRECT_ASSIGNMENT, buf);
+                    /**
+                     * @brief ERROR FUN LVALUE
+                     */
+                    db_error_fun_lValue(assignRoot);
                 }
-        } else { return ;}
+        } else { return ;} /* already debuged in variable reference check */
         assignRoot = assignRoot->nextSibling;
         rightValue = evalExprType(assignRoot, global, parameters, local);
         switch ((int) rightValue) {
             case ERROR:;
-            case IGNORE: return;
+            case IGNORE: return; 
+            case _type_void: {
+                        /**
+                         * @brief ERROR VOID RVALUE
+                         */
+                        db_error_void_rValue(assignRoot);
+                        return;
+            };
             case _type_int: {
                 if (leftValue == _type_char) {
-                    char buf[512];
-                    sprintf(buf, "Assignment of an " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET" into a " COLOR_CYAN STYLE_BOLD "%s" COLOR_RESET" may result in  " COLOR_RED STYLE_BOLD "data Overflow" COLOR_RESET ".\nOccured at line " COLOR_GREEN "%d" COLOR_RESET, typeToChar(rightValue), typeToChar(leftValue), elem->lineno);
-                    debug_warning(DB_WRN_ASSIGNMENT_OVERFLOW, buf);
+                    /**
+                     * @brief WARNING UNMATCH ASSIGNMENT
+                     */
+                    db_warning_assignment(assignRoot, leftValue, rightValue);
                 }
             }
             default: {
@@ -173,31 +207,154 @@ void variables_assignment_checked(Node * assignRoot, SymbolTab global, SymbolTab
     }
 }
 
-void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters, SymbolTab local, SymbolTab * varMemory) {
+void function_call_checked(HashElem * fun, Node * argumentsRoot,  SymbolTab global, SymbolTab parameters, SymbolTab local) {
+    if (argumentsRoot) {
+        Node * arg_iter = argumentsRoot->firstChild;
+        int i;
+        int save_line = argumentsRoot->lineno;
+        _type_fc fct = fun->h_val.val.func;
+        _type_fc_param * param_iter = fct.param;
+        for (i = 0; i < fct.param_ct; i++) {
+            _type leftValue, rightValue;
+            leftValue = param_iter->type;
+            if (!arg_iter) {
+                char buf[512];
+                sprintf(buf, "Not enough arguments were given " COLOR_CYAN STYLE_BOLD " ( expected amount : %d )" COLOR_RESET "\n" \
+                    " -- referenced at line %d ", fct.param_ct, save_line);  
+                debug_error(DB_ERR_INCORRECT_USAGE, buf);
+                break;
+            }
+            save_line = arg_iter->lineno;
+
+            rightValue = evalExprType(arg_iter, global, parameters, local);
+
+            switch ((int) rightValue) {
+                case IGNORE: ;
+                case ERROR: break;
+                case _type_void: {
+                        /**
+                        * @brief ERROR VOID RVALUE
+                        */
+                        db_error_void_rValue(arg_iter);
+                        break;
+                    }
+                case _type_int : {
+                    if (leftValue == _type_char) {
+                        /**
+                         * @brief WARNING TYPE ASSIGNMENT
+                         */
+                        db_warning_assignment(arg_iter, leftValue, rightValue);
+                    }
+                }
+                default :;
+                
+            }
+
+            param_iter = param_iter->next;
+            arg_iter = arg_iter->nextSibling;
+        }
+        if (arg_iter) {
+            char buf[512];
+            sprintf(buf, "Too much arguments were given " COLOR_CYAN STYLE_BOLD " ( expected amount : %d )" COLOR_RESET "\n" \
+                " -- referenced at line %d ", fct.param_ct, arg_iter->lineno);  
+            debug_error(DB_ERR_INCORRECT_USAGE, buf);
+        }
+    }
+}
+
+
+void variable_call_checked(Node * callRoot, SymbolTab global, SymbolTab parameters, SymbolTab local) {
+    if (callRoot) {
+        Node * call_iter = callRoot->firstChild;
+        HashElem * elem;
+        if ((elem = findHashElem(local, call_iter->value.ident))
+            || (elem = findHashElem(global, call_iter->value.ident)
+        )) {
+            if (elem->h_val.type != _type_function) {
+                db_error_var_not_callable(call_iter);
+                return ;
+            }
+            if (call_iter->firstChild && call_iter->firstChild->label == arguments) 
+                function_call_checked (elem, call_iter->firstChild, global, parameters, local);
+            else function_call_checked (elem, call_iter->nextSibling, global, parameters, local);
+        }
+    }
+}
+void function_return_checked(Node * bodyRoot, _type returnFun) {
+    Node * root = findLabelInTree(bodyRoot->firstChild, return_);
+    if (!root && returnFun != _type_void)
+        db_warn_fun_missing_return(bodyRoot, returnFun);
+} 
+
+void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters, SymbolTab local, SymbolTab * varMemory, _type returnType) {
     if (root == NULL) return;
     else {
+        Node * iter_ident = root;
         if (root->label == ident) {
-            Node * iter_ident = root;
-            while (iter_ident != NULL){
-                if (!(findHashElem(local, iter_ident->value.ident) || findHashElem(parameters, iter_ident->value.ident) || findHashElem(global, iter_ident->value.ident))) {
-                    char buf[512];
+            HashElem * elem;
+                if (!(
+                    (elem = findHashElem(local, iter_ident->value.ident))
+                    || (elem = findHashElem(global, iter_ident->value.ident))
+                    )) 
+                {
                     int foundFlag = findHashElem(*varMemory, iter_ident->value.ident) ? 1 : 0;
                     puts("\n");
                     if (!foundFlag)
                         putHashVal(varMemory, newHashElem(iter_ident->value.ident, newValueVoid(), iter_ident->lineno));
-                    sprintf(buf, "variable : " COLOR_CYAN STYLE_BOLD "'%s'" COLOR_RESET" undeclared %s" COLOR_RESET "\n"
-                    " -- referenced at line %d ", iter_ident->value.ident, foundFlag ? COLOR_CYAN "(already used before)" : COLOR_GREEN "(first use in this function)", iter_ident->lineno);
-                    debug_error(DB_ERR_INCORRECT_REFERENCE, buf);
+                    
+                    /**
+                     * @brief ERROR UNDECLARED VARIABLE
+                     */
+                    db_error_var_undeclared(iter_ident, foundFlag ? 1 : 0);
+                    
                 }
-                iter_ident = findLabelInTree(iter_ident->nextSibling, ident);
-            }
+                else {
+                    if (iter_ident->firstChild != NULL) {
+                        if (elem->h_val.type != _type_function) {
+                            /**
+                             * @brief ERROR VAR IS NOT CALLABLE
+                             */
+                            db_error_var_not_callable(iter_ident);
+                        }
+                        else {;}
+                    }
+                }            
         } else {
             if (root->label == assign)
                 variables_assignment_checked(root, global, parameters, local);
-
-            function_body_checked(root->firstChild, global, parameters, local, varMemory);
-            function_body_checked(root->nextSibling, global, parameters, local, varMemory);
+            else if (root->label == call)
+                variable_call_checked(root, global, parameters, local);
+            else if (root->label == return_) {
+                _type retVal = evalExprType(root->firstChild, global, parameters, local);
+                switch((int) retVal) {
+                    case ERROR:
+                    case IGNORE: break;
+                    case _type_void: {
+                        if (returnType != _type_void) {
+                            db_error_void_return(root);
+                        }
+                        break;
+                    }
+                    default : {
+                        if (returnType == _type_void) {
+                            /**
+                             * @brief WARN RETURN IN A VOID RETURNING FUNCTION
+                             */
+                            db_warn_void_fun_return(root, retVal);
+                        } else {
+                            if (retVal == _type_int && returnType == _type_char) {
+                                db_warn_fun_return(root, retVal, returnType);
+                            }
+                        }
+                    }
+                }
+                if (root->nextSibling) {
+                    db_warn_post_return_instructions(root->nextSibling);
+                }
+            }
         }
+        function_body_checked(root->firstChild, global, parameters, local, varMemory, returnType);
+        function_body_checked(root->nextSibling, global, parameters, local, varMemory, returnType);
     }
 }
 
@@ -216,11 +373,15 @@ void variables_reference_checked (Node * root, programSymbolTables pst ) {
 
     cpt = 0;
     while ( function_iter ) {
+        _type ret = _type_void;
+        Node * temp = findLabelInTree(function_iter->firstChild->firstChild, type);
+        if (temp) ret = charToType(temp->value.comp);
         Node * body_iter = findLabelInTree(function_iter->firstChild, body);
         if (body_iter) {
             Node * declare_var_iter = body_iter->firstChild;
             declare_var_iter = findLabelInTree (declare_var_iter, declare_var);
-            function_body_checked(declare_var_iter->nextSibling, pst.globals, fst_list[cpt]->parameters, fst_list[cpt]->values, &varMemory);
+            function_body_checked(declare_var_iter->nextSibling, pst.globals, fst_list[cpt]->parameters, fst_list[cpt]->values, &varMemory, ret);
+            function_return_checked(body_iter, ret);
             freeSymbolTab(&varMemory);
             varMemory = newSymbolTab();
             cpt++;

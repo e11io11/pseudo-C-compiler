@@ -1,0 +1,31 @@
+void getVoid(void) {
+}
+
+int t(void) {
+    int a;
+    a = 2;
+    if (a == 2) {
+        while (a != 0) {
+            a = a - 1;
+        }
+        return getVoid();
+        f();
+    }
+    
+    return 1;
+    a = 2;
+    if (a ==2) {
+        a = 0;
+    }
+}
+
+
+void f(void ) {
+    return t();
+}
+
+
+int main(void) {
+
+    return 1;
+}

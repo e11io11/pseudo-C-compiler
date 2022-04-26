@@ -17,5 +17,6 @@ int main(void)
     
     a = 5 * 4 + c * 5;
     a = 5 * 4 + get5 * 5;
+    a();
     return 0;
 }

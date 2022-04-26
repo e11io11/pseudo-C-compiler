@@ -73,13 +73,15 @@ void addChild(Node *parent, Node *child) {
 }
 
 void deleteTree(Node *node) {
-  if (node->firstChild) {
-    deleteTree(node->firstChild);
+  if (node) {
+    if (node->firstChild) {
+      deleteTree(node->firstChild);
+    }
+    if (node->nextSibling) {
+      deleteTree(node->nextSibling);
+    }
+    cfree(node);
   }
-  if (node->nextSibling) {
-    deleteTree(node->nextSibling);
-  }
-  cfree(node);
 }
 
 void printTree(Node *node) {
