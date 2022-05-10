@@ -1,0 +1,18 @@
+char global;
+
+int function(void)
+{
+    int var1;
+    var1 = 15;
+    return var1;
+}
+
+
+int main(void) {
+    int a;
+    char b;
+    b = 'o';
+    a = function();
+    global = 'c';
+    return 0;
+}
