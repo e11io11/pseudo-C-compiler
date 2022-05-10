@@ -223,7 +223,7 @@ int main(int argc, char** argv) {
         }
     }
     deleteTree(tree);
-    printf("return : %d\n",MAX(parse, returnCode));
+    /* printf("return : %d\n",MAX(parse, returnCode));*/
     return MAX(parse, returnCode);
 }
 

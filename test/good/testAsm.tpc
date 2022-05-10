@@ -1,10 +1,13 @@
 int gI1;
 char gC1;
 
+
 void getVoid(void) {
 
 }
 
 int main(void) {
+    int b;
+    b = 2;
     return 2 - 5;
 }

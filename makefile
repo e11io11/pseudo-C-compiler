@@ -59,18 +59,10 @@ $(shell mkdir -p bin obj)
 # 		COMPILATION  RULES
 #=========================================
 all:
-	@make -s generate_c_files
-	@make -s generate_executable
+	@make -s all_
 
-asm:
-	@./$(EXEC) --t < test/good/testAsm.tpc
-	@make -s output
-	./output
+all_: generate_c_files generate_executable
 
-t:
-	@./$(EXEC) --t < test/good/testvar.tpc
-	@make -s output
-	./output
 #
 #
 #
@@ -81,33 +73,23 @@ t:
 #
 #
 
-output: $(OBJ)output.o $(OBJ)utils.o
+output: $(OBJ)output.o $(OBJ)std_utils.o
 	$(CC) -o $@ $^ $(CC_OPTIONS)
 
-generate_c_files:
-	make bison_c
-	make flex_c
+generate_c_files: bison_c flex_c
 
-bison_c:
-	make $(TPCAS).tab.c
-	make $(TPCAS).tab.h
+bison_c: $(TPCAS).tab.c $(TPCAS).tab.h
 
-flex_c:
-	make lex.yy.c
+flex_c: lex.yy.c
 
 # FLEX :
-lex.yy.c: $(SRC)$(TPCAS).lex $(TPCAS).tab.h
+lex.yy.c: $(SRC)$(TPCAS).lex
 	flex -o $(OBJ)$@ $< 
 	$(info + $@  from $^)
 
 # BISON : Src file
-$(TPCAS).tab.c: $(SRC)$(TPCAS).y
-	bison $< $(BISONFLAGS) -o $(OBJ)$@
-	$(info + $@  from $^)
-
-# BISON : Header file : required for flex
-$(TPCAS).tab.h: $(SRC)$(TPCAS).y
-	bison $< -d $(BISONFLAGS) -o $(OBJ)$@
+$(TPCAS).tab.c $(TPCAS).tab.h : $(SRC)$(TPCAS).y
+	bison $< $(BISONFLAGS) -d -o $(OBJ)$@
 	$(info + $@  from $^)
 
 #
@@ -119,7 +101,6 @@ $(TPCAS).tab.h: $(SRC)$(TPCAS).y
 #
 #
 #
-
 
 
 #=========================================
@@ -137,8 +118,8 @@ lex.yy.o: $(OBJ)lex.yy.c
 	$(CC) -c $< $(CFLAGS) $(LEAKFLAG) -o $(OBJ)$@
 	$(info +++ $@)
 
-$(BIN)%.o: %.asm
-	$(ASM_CC) -o $@ $^
+$(OBJ)%.o: %.asm
+	@$(ASM_CC) -o $@ $^
 	$(info ++ $@ from $^)
 
 #=========================================
@@ -149,8 +130,7 @@ $(OBJ)%.o: $(SRC)%.c $(INC)%.h $(INCH)
 	$(info +++ $@)
 
 #Executable :
-generate_executable:
-	make $(TPCAS)
+generate_executable: $(TPCAS)
 
 $(TPCAS): $(OBJECTS)
 	$(CC) $^ $(LDFLAGS) $(LEAKFLAG) -o $(EXEC)
@@ -160,3 +140,16 @@ clean:
 	$(info Cleaning Object Type)
 	@rm $(OBJ)*
 	$(info Done!)
+
+
+
+
+asm: asm_make_output
+	@./output
+
+asm_make_output: asm_compile output
+
+asm_compile:
+	@./$(EXEC) < test/good/testAsm.tpc
+
+
