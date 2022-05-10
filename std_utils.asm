@@ -1,4 +1,4 @@
-; utils.asm
+; std_utils.asm
 section .data
     format_registers db "rbx:0x%lx r12:0x%lx r13:%ld r14:%ld", 10, 0
     format_stack db "sommet (rsp): 0x%lx, base du bloc (rbp): 0x%lx", 10, 0

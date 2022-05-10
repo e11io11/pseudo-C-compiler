@@ -5,29 +5,29 @@
 ; authors : Elliott FALGUEROLLE & Antonin JEAN
 
 section .data
-global: db 0
+gC1: db 0
+gI1: dd 0
 section .text
-global main
+extern printInt
+global _start
 
-main:
-add rsp, 5
-pop byte [rbp-4]
-pop dword [rbp-0]
-pop byte [rsp+0]
-; End of Program: Print -1 as Fine-Output
-mov rdi, -1
-call printInt
-mov rax, 60
-mov rdi, 0
-syscall
+_start:
+	; End of Program: Print -1 as Fine-Output
+	mov rdi, -1
+	call printInt
+	mov rax, 60
+	mov rdi, 0
+	syscall
 
-function:
-push rbp
-mov rbp, rsp
-add rsp, 4
-pop dword [rbp-0]
-mov rsp, rbp
-pop rbp
-ret
+getVoid:
+; Function Header : refresh rbp
+	push rbp
+	mov rbp, rsp
 
+	add rsp, 0
+
+; Function Footer : refresh rbp
+	mov rsp, rbp
+	pop rbp
+	ret
 

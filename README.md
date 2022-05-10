@@ -32,3 +32,6 @@ Note aux correcteurs pour le rendu intermédiaire:
     Elements pouvant poser des problemes:
         Analyses d'expression "complexe" :
             ex : function( (expr : 4 * 5 + 'c'), function1(b, 2)) + 5;
+
+
+47 100 100 57 | 76 92 0 -> 71.3 %

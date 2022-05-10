@@ -1,0 +1,1 @@
+{"buildTargets":["all","all_","asm","asm_compile","asm_make_output","bison_c","clean","flex_c","generate_c_files","generate_executable","inc/includes.h","lex.yy.c","lex.yy.o","output","tpcas","tpcas.tab.c","tpcas.tab.h","tpcas.tab.o"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

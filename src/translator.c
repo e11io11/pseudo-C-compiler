@@ -21,22 +21,25 @@
     "; authors : Elliott FALGUEROLLE & Antonin JEAN\n\n"
 
 #define __ASM_PATTERN_MAIN_FOOTER\
-    "; End of Program: Print -1 as Fine-Output\n"           \
-    "mov rdi, -1\n"                                       \
-    "call printInt\n"                                     \
-    "mov rax, 60\n"                                         \
-    "mov rdi, 0\n"                                          \
-    "syscall"
+    "\t; End of Program: Print -1 as Fine-Output\n"           \
+    "\tmov rdi, -1\n"                                       \
+    "\tcall printInt\n"                                     \
+    "\tmov rax, 60\n"                                         \
+    "\tmov rdi, 0\n"                                          \
+    "\tsyscall"
 
 #define __ASM_PATTERN_FNC_HEADER \
-    "push rbp\n" \
-    "mov rbp, rsp\n"
+    "; Function Header : refresh rbp\n" \
+    "\tpush rbp\n" \
+    "\tmov rbp, rsp\n\n"
 
 #define __ASM_PATTERN_FNC_FOOTER \
-    "mov rsp, rbp\n" \
-    "pop rbp\n" \
-    "ret\n\n"
+    "\n; Function Footer : refresh rbp\n" \
+    "\tmov rsp, rbp\n" \
+    "\tpop rbp\n" \
+    "\tret\n\n"
 
+#define __ASM_FUNCTION_IDENT "\t"
 
 FILE * asm_file = NULL;
 
@@ -55,9 +58,9 @@ void __initAsmFile(const char * name, programSymbolTables symbolTabs, Node* tree
 }
 
 void initTextSection(programSymbolTables symbolTabs) {
-    fprintf(asm_file, "section .text\n");
+    fprintf(asm_file, "section .text\nextern printInt\n");
     if (findHashElem(symbolTabs.globals, "main") != NULL)
-        fprintf(asm_file, "global main\n");
+        fprintf(asm_file, "global _start\n");
     fprintf(asm_file, "\n");
 
 }
@@ -85,8 +88,7 @@ void initMain(programSymbolTables symbolTabs, functionSymbolTables* func) {
     fprintf(asm_file, "main:\n");
     initFunctionVariables(symbolTabs, func);
     initFunctionBody(symbolTabs, func, func->root->firstChild->nextSibling);
-    fprintf(asm_file, "%s", __ASM_PATTERN_MAIN_FOOTER);
-    fprintf(asm_file, "\n\n");
+    fprintf(asm_file, "%s\n\n", __ASM_PATTERN_MAIN_FOOTER);
 }
 
 
@@ -110,7 +112,7 @@ void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables*
         totalOffset += el->h_val.val.size;
     }
     free(elements);
-    fprintf(asm_file, "add rsp, %i\n", totalOffset);
+    fprintf(asm_file, "\tadd rsp, %i\n", totalOffset);
 }
 
 void initFunctions(programSymbolTables symbolTabs) {
