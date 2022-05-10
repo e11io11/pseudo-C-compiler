@@ -9,7 +9,7 @@ gC1: db 0
 gI1: dd 0
 section .text
 extern printInt
-global _start
+global: _start
 
 _start:
 	; End of Program: Print -1 as Fine-Output
