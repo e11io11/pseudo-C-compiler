@@ -5,51 +5,29 @@
 ; authors : Elliott FALGUEROLLE & Antonin JEAN
 
 section .data
-vga: dd 0
-vgb: dd 0
-vgc: dd 0
-vgd: db 0
-vge: db 0
-vgf: db 0
+global: db 0
 section .text
-global: main
+global main
 
 main:
+add rsp, 5
+pop byte [rbp-4]
+pop dword [rbp-0]
+pop byte [rsp+0]
 ; End of Program: Print -1 as Fine-Output
 mov rdi, -1
 call printInt
 mov rax, 60
 mov rdi, 0
 syscall
-fun4:
+
+function:
 push rbp
 mov rbp, rsp
-add rsp, -14
+add rsp, 4
+pop dword [rbp-0]
 mov rsp, rbp
 pop rbp
 ret
 
-fun3:
-push rbp
-mov rbp, rsp
-add rsp, -62
-mov rsp, rbp
-pop rbp
-ret
-
-fun2:
-push rbp
-mov rbp, rsp
-add rsp, -1
-mov rsp, rbp
-pop rbp
-ret
-
-fun1:
-push rbp
-mov rbp, rsp
-add rsp, -18
-mov rsp, rbp
-pop rbp
-ret
 
