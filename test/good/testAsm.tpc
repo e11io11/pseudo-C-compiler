@@ -1,28 +1,10 @@
-int i;
+int gI1;
+char gC1;
 
-void fun(int a, char c) {
-    int i;
-}
+void getVoid(void) {
 
-int t(void ) {
-    return 5;
 }
 
 int main(void) {
-    int a;
-    char b;
-    int r;
-
-
-    a = 'c';
-    if (a == 0) {
-        a = 0 * 5 + 4 + b;
-    }
-    fun(1, 'c');
-    r = 4 - 5;
-    return 0;
-}
-
-int g(void) {
-    
+    return 2 - 5;
 }

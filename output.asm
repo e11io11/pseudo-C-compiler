@@ -5,12 +5,8 @@
 ; authors : Elliott FALGUEROLLE & Antonin JEAN
 
 section .data
-vga: dd 0
-vgb: dd 0
-vgc: dd 0
-vgd: db 0
-vge: db 0
-vgf: db 0
+gC1: db 0
+gI1: dd 0
 section .text
 global: main
 
@@ -21,34 +17,13 @@ call printInt
 mov rax, 60
 mov rdi, 0
 syscall
-fun4:
-push rbp
-mov rbp, rsp
-add rsp, -14
-mov rsp, rbp
-pop rbp
-ret
 
-fun3:
-push rbp
-mov rbp, rsp
-add rsp, -62
-mov rsp, rbp
-pop rbp
-ret
 
-fun2:
-push rbp
-mov rbp, rsp
-add rsp, -1
-mov rsp, rbp
-pop rbp
-ret
 
-fun1:
+getVoid:
 push rbp
 mov rbp, rsp
-add rsp, -18
+add rsp, 0
 mov rsp, rbp
 pop rbp
 ret
