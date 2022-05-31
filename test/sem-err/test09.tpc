@@ -1,0 +1,10 @@
+int main(void) {
+    int a;
+    getint(1);
+    getchar('a');
+
+    a = putint();
+    a = putchar(2, 4);
+
+    return 1;
+}

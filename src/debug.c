@@ -9,11 +9,15 @@ char * _error_type_message[256] = {
     "Incorrect Reference of an Object", 
     "Incorrect type assignment of an Object", 
     "Incorrect Usage of an Object",
-    "Invalid Return Value"
+    "Invalid Return Value",
+    "Redefinition of a Builtin Function",
+    "Incorrect Case Label",
+    "Multiple Default Labels",
+    "Case Label Repetition",
 };
 
 char * _warning_type_message[256] = {
-    "_", 
+    "_",
     "Unknown", 
     "Overflow Risk", 
     "Incoherent return",
@@ -292,6 +296,61 @@ void function_return_checked(Node * bodyRoot, _type returnFun) {
         db_warn_fun_missing_return(bodyRoot, returnFun);
 } 
 
+int switch_count_case(Node * caseroot) {
+    if (!caseroot) return 0;
+    return (caseroot->label == case_ ? 1 : 0) + switch_count_case(findLabelInTree(caseroot->nextSibling, case_));
+}
+
+typedef struct {
+    int v;
+    int lineno;
+} case_mem; 
+void switch_checked(Node * switchroot) {
+    if (switchroot) {
+        case_mem * c_mem;
+        int c_mem_amount = 0;
+        Node * iter_label = findLabelInTree(switchroot->firstChild, body)->firstChild;
+        c_mem = (case_mem*) malloc(sizeof(case_mem) * switch_count_case(iter_label));
+        if (!c_mem) raiseError("switch_checked malloc error");
+        while (iter_label) {
+            if (iter_label->label == case_) {
+                int v, i;
+                switch (iter_label->firstChild->label) {
+                    case character: v = iter_label->firstChild->value.byte; break;
+                    case num: v = iter_label->firstChild->value.num; break;
+                    case addsub:
+                        if (iter_label->firstChild->value.byte == '-') { /* sousctraction */
+                            if (iter_label->firstChild->firstChild->label == num /* first elem is a const number */
+                            && iter_label->firstChild->firstChild->value.num == 0) /* first elem is 0 */
+                                if (iter_label->firstChild->firstChild->nextSibling == NULL) /* no more elem */
+                                    break; /* node = -0  -> no error */
+                        }
+                        /* else error */
+                    default:
+                        db_error_switch_case_non_constant(iter_label->firstChild);
+                        goto test;
+                }
+                for (i = 0; i < c_mem_amount; i++) {
+                    if (c_mem[i].v == v) {
+                        db_error_switch_case_repeats(iter_label, v, c_mem[i].lineno);
+                        goto test;
+                    }
+                }
+                c_mem[i].lineno = iter_label->lineno;
+                c_mem[i].v = v;
+                c_mem_amount++;
+                test:;
+            } else if (iter_label->label == default_) {
+                Node * e;
+                if ((e = findLabelInTree(iter_label->nextSibling, default_))) db_error_switch_multiple_default(e);
+            }
+
+            iter_label = iter_label->nextSibling;
+        }
+
+        cfree(c_mem);
+    }
+}
 void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters, SymbolTab local, SymbolTab * varMemory, _type returnType) {
     if (root == NULL) return;
     else {
@@ -325,40 +384,41 @@ void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters,
                         else {;}
                     }
                 }            
-        } else {
-            if (root->label == assign)
+        } 
+        else if (root->label == assign)
                 variables_assignment_checked(root, global, parameters, local);
-            else if (root->label == call)
-                variable_call_checked(root, global, parameters, local);
-            else if (root->label == return_) {
-                _type retVal = evalExprType(root->firstChild, global, parameters, local);
-                switch((int) retVal) {
-                    case ERROR:
-                    case IGNORE: break;
-                    case _type_void: {
-                        if (returnType != _type_void) {
-                            db_error_void_return(root);
-                        }
-                        break;
+        else if (root->label == call)
+            variable_call_checked(root, global, parameters, local);
+        else if (root->label == return_) {
+            _type retVal = evalExprType(root->firstChild, global, parameters, local);
+            switch((int) retVal) {
+                case ERROR:
+                case IGNORE: break;
+                case _type_void: {
+                    if (returnType != _type_void) {
+                        db_error_void_return(root);
                     }
-                    default : {
-                        if (returnType == _type_void) {
-                            /**
-                             * @brief WARN RETURN IN A VOID RETURNING FUNCTION
-                             */
-                            db_warn_void_fun_return(root, retVal);
-                        } else {
-                            if (retVal == _type_int && returnType == _type_char) {
-                                db_warn_fun_return(root, retVal, returnType);
-                            }
-                        }
-                    }
+                    break;
                 }
-                if (root->nextSibling) {
-                    db_warn_post_return_instructions(root->nextSibling);
+                default : {
+                    if (returnType == _type_void) {
+                        /**
+                         * @brief WARN RETURN IN A VOID RETURNING FUNCTION
+                         */
+                        db_warn_void_fun_return(root, retVal);
+                    } else {
+                        if (retVal == _type_int && returnType == _type_char) {
+                            db_warn_fun_return(root, retVal, returnType);
+                        }
+                    }
                 }
             }
+            if (root->nextSibling) {
+                db_warn_post_return_instructions(root->nextSibling);
+            }
         }
+        else if (root->label == switch_) switch_checked(root);
+
         function_body_checked(root->firstChild, global, parameters, local, varMemory, returnType);
         function_body_checked(root->nextSibling, global, parameters, local, varMemory, returnType);
     }

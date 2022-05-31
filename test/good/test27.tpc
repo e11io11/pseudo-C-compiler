@@ -1,0 +1,11 @@
+int main(void) {
+    char a;
+    int b;
+
+    b = getint();
+    a = getchar();
+    putint(b);
+    putchar(a);
+
+    return 1;
+}

@@ -1,0 +1,10 @@
+int getchar;
+
+int getint(void) {
+    return 1;
+}
+
+
+int main(void) {
+    return getint();
+}

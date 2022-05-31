@@ -102,3 +102,16 @@ void displayBuiltin() {
     printf("Loaded Builtin functions:\n");
     displayHashTable(blt_functions.fcts);
 }
+
+void displayBuiltinDecl() {
+    int c = count_blt_func();
+    printf(
+        COLOR_CYAN STYLE_BOLD "List of available builtin : [%d]\n" COLOR_RESET \
+        COLOR_YELLOW "[HINT] They can be defined at ./src/builtin_func.c\n\n" COLOR_RESET,
+        c
+    );
+    for (int i = 0; i < c; i++) {
+        printf(" - %s : %s -> %s\n", __blt_fct[i].name, __blt_fct[i].parameters, __blt_fct[i].return_value);
+    }
+    printf("\n\n");
+}

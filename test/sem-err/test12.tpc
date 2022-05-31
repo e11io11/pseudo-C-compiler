@@ -1,0 +1,29 @@
+void ghost(void) {
+
+}
+
+
+int main(void) {
+    int a, b;
+    a = 2;
+    switch (a) {
+        ghost();
+        case 'a': case 'A':
+        ghost();
+        break;
+        break; break;
+        default:
+        default:
+        default:
+        break;
+        case 255:
+            ghost();
+        case b:
+        case getint():
+        case 2 + 3:
+        case 'a': case 97:
+        case 0: case -0:
+        break;
+    }
+    return 1;
+}

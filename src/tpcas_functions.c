@@ -20,6 +20,7 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
         {"help", no_argument, 0, 'h'},
         {"symbolTab", no_argument, 0, 's'},
         {"no-warn", no_argument, 0, 'q'},
+        {"builtin", no_argument, 0, 'b'},
         {0,0,0,'?'}
     };
     int option_index = 0;
@@ -39,7 +40,8 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
                     "-h --help Print this message and exit.\n"\
                     "-t --tree Print target's abstract tree\n"\
                     "-s --symbol Print target's symbol table\n"\
-                    "-w --no-warn Hide the warnings messages\n"
+                    "-w --no-warn Hide the warnings messages\n"\
+                    "-b --builtin Print the currents Builtin functions\n"
                 );
                 return 2;
             case 's': /* Enable symbol table display */
@@ -47,6 +49,9 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
                 break;
             case 'q':
                 _display_warnings = 0;
+                break;
+            case 'b':
+                displayBuiltinDecl();
                 break;
             case '?': /* Other unrecognized values */
                 return 2;
@@ -71,7 +76,7 @@ HashTable mainFct_init_Hash_from_globals(Node * root) {
     iterator = root->firstChild; /* iterator = declare var */
 
     do {
-        if (iterator != NULL) {
+        if (iterator != NULL) {             
             if (iterator->label == declare_var) {
                 Node * _iter_type = iterator->firstChild;
                 do {
@@ -81,6 +86,8 @@ HashTable mainFct_init_Hash_from_globals(Node * root) {
                         _type t = charToType(_iter_type->value.comp);
                         do {
                             _iter_ident = findLabelInTree(_iter_ident, ident);
+                            if (findHashElem(BLT_FUNCTIONS, _iter_ident->value.ident))
+                                db_error_overwrite_builtin(_iter_ident);   
                             if (_iter_ident != NULL) {
                                 putHashVal_checked(&result, newHashElem(_iter_ident->value.ident, newValuePrim(t), _iter_ident->lineno));
                                 _iter_ident = _iter_ident->nextSibling;
@@ -95,6 +102,8 @@ HashTable mainFct_init_Hash_from_globals(Node * root) {
                     if (_iter_functions->label == header) {
                         Node * _iter_header = findLabelInTree(_iter_functions->firstChild, ident);
                         if (_iter_header != NULL) {
+                            if (findHashElem(BLT_FUNCTIONS, _iter_header->value.ident))
+                                db_error_overwrite_builtin(_iter_header);   
                             putHashVal_checked(&result, newHashElem(_iter_header->value.ident, newValueFct(_iter_functions), _iter_header->lineno));
                         }
                     }
@@ -207,9 +216,10 @@ programSymbolTables mainFct_init_Hash_from_functions(Node * root) {
 
 programSymbolTables mainFct_Tree_to_Hash(Node * root) {
     programSymbolTables result;
+    blt_func_init();
     result = mainFct_init_Hash_from_functions(root);
     result.globals = mainFct_init_Hash_from_globals(root);
-    blt_func_init();
+    
     variables_reference_checked (root, result );
     return result;
 }

@@ -5,14 +5,12 @@
 ; authors : Elliott FALGUEROLLE & Antonin JEAN
 
 section .data
-gC1: db 0
-gI1: dd 0
 section .text
 extern printInt
 global _start
 
 main:
-	add rsp, 4
+	add rsp, 8
 	pop dword [rbp-0]
 	; End of Program: Print -1 as Fine-Output
 	mov rdi, -1
@@ -21,13 +19,12 @@ main:
 	mov rdi, 0
 	syscall
 
-getVoid:
+ghost:
 ; Function Header : refresh rbp
 	push rbp
 	mov rbp, rsp
 
-	add rsp, 14
-	pop dword [rbp-5]
+	add rsp, 0
 
 ; Function Footer : refresh rbp
 	mov rsp, rbp

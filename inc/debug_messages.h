@@ -10,6 +10,10 @@ void db_error_fun_lValue(Node * root);
 void db_error_void_rValue(Node * root);
 void db_error_fun_rValue(Node * root);
 void db_error_void_return(Node * root);
+void db_error_overwrite_builtin(Node * root);
+void db_error_switch_case_non_constant(Node * case_root);
+void db_error_switch_multiple_default(Node * default_root);
+void db_error_switch_case_repeats(Node * case_root, int label, int previous_lineno);
 
 void db_warning_assignment(Node * root, _type leftValue, _type rightValue);
 void db_warn_void_fun_return(Node * root, _type returnVal);

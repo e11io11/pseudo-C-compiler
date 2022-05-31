@@ -24,9 +24,9 @@ void blt_func_init();
 
 extern builtinFunctionSymbolTables blt_functions;
 #define BLT_FUNCTIONS blt_functions.fcts
-#define AMOUNT_BLT_FUNCTIONS blt.functions.amount
+#define AMOUNT_BLT_FUNCTIONS blt_functions.amount
 
 
 void displayBuiltin();
-
+void displayBuiltinDecl();
 #endif
