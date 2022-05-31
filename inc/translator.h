@@ -2,6 +2,7 @@
 #define __TRANSLATOR_H__
 
 #include "includes.h"
+#include "builtin_func.h"
 
 FILE * getFile();
 

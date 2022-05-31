@@ -209,10 +209,15 @@ programSymbolTables mainFct_Tree_to_Hash(Node * root) {
     programSymbolTables result;
     result = mainFct_init_Hash_from_functions(root);
     result.globals = mainFct_init_Hash_from_globals(root);
+    blt_func_init();
     variables_reference_checked (root, result );
     return result;
 }
 
+void displayAllSymbolTab(programSymbolTables psb) {
+    displayBuiltin(); display();
+    displayProgramSymbolTables(psb);
+}
 
 void mainFct_testHashTable() {
     HashTable st = newHashTable();

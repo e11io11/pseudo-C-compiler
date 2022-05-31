@@ -2,12 +2,14 @@ int gI1;
 char gC1;
 
 
-void getVoid(void) {
-
+void getVoid(int test, char c) {
+    int a;
+    a = getint();
 }
+
 
 int main(void) {
     int b;
-    b = 2;
+    b = (2 + 1);
     return 2 - 5;
 }

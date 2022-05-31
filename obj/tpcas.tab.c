@@ -2197,7 +2197,7 @@ int main(int argc, char** argv) {
             if (treeFlag)
                 printTreeWithValues(tree);
             if (symbolFlag)
-                displayProgramSymbolTables(symbolTabs);
+                displayAllSymbolTab(symbolTabs);
         }
 
         __initAsmFile("output", symbolTabs, tree);

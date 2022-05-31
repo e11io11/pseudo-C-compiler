@@ -9,6 +9,8 @@ char * typeToChar(_type t);
 
 _type charToType(const char * input);
 
+_type_fc_param * newFcParam(_type t);
+
 value newValueFct(Node * headerRoot);
 
 value newValueInt();

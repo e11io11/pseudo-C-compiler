@@ -121,7 +121,8 @@ _type evalExprType(Node * exprRoot, SymbolTab global, SymbolTab parameters, Symb
             case ident: {
                 HashElem * elem;
                 if ((elem = findHashElem(local, exprRoot->value.ident))
-                    || (elem = findHashElem(global, exprRoot->value.ident))) {
+                    || (elem = findHashElem(global, exprRoot->value.ident))
+                    || (elem = findHashElem(BLT_FUNCTIONS, exprRoot->value.ident))) {
                         
                         if (elem->h_val.type == _type_function) {
                             if (! exprRoot->firstChild) {
@@ -174,7 +175,8 @@ void variables_assignment_checked(Node * assignRoot, SymbolTab global, SymbolTab
         HashElem * elem;
         assignRoot = assignRoot->firstChild;
         if ((elem = findHashElem(local, assignRoot->value.ident)) 
-            || (elem = findHashElem(global, assignRoot->value.ident))) {
+            || (elem = findHashElem(global, assignRoot->value.ident))
+            || (elem = findHashElem(BLT_FUNCTIONS, assignRoot->value.ident))) {
                 leftValue = elem->h_val.type;
                 if (leftValue == _type_function) {
                     /**
@@ -271,8 +273,9 @@ void variable_call_checked(Node * callRoot, SymbolTab global, SymbolTab paramete
         Node * call_iter = callRoot->firstChild;
         HashElem * elem;
         if ((elem = findHashElem(local, call_iter->value.ident))
-            || (elem = findHashElem(global, call_iter->value.ident)
-        )) {
+            || (elem = findHashElem(global, call_iter->value.ident))
+            || (elem = findHashElem(BLT_FUNCTIONS, call_iter->value.ident))
+        ) {
             if (elem->h_val.type != _type_function) {
                 db_error_var_not_callable(call_iter);
                 return ;
@@ -298,7 +301,7 @@ void function_body_checked (Node * root, SymbolTab global, SymbolTab parameters,
                 if (!(
                     (elem = findHashElem(local, iter_ident->value.ident))
                     || (elem = findHashElem(global, iter_ident->value.ident))
-                    )) 
+                    || (elem = findHashElem(BLT_FUNCTIONS, iter_ident->value.ident)))) 
                 {
                     int foundFlag = findHashElem(*varMemory, iter_ident->value.ident) ? 1 : 0;
                     puts("\n");

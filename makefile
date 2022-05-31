@@ -48,6 +48,7 @@ OBJECTS= $(addprefix $(OBJ), \
 		debug_messages.o \
 		type.o \
 		translator.o \
+		builtin_func.o \
 )
 
 # INITIALISATION SECURITY 
@@ -145,7 +146,7 @@ clean:
 
 
 asm: asm_make_output
-	@./output
+	
 
 asm_make_output: asm_compile output
 

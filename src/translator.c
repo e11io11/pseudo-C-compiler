@@ -142,7 +142,7 @@ void initAssign(programSymbolTables symbolTabs, functionSymbolTables* func, Node
     if (var == NULL)
         var = findHashElem(func->parameters, var_ident);
     if (var != NULL) {
-        fprintf(asm_file, "pop %s [rbp-%i]\n", 
+        fprintf(asm_file, "\tpop %s [rbp-%i]\n", 
             var->h_val.type == _type_char ? SIZE_CHAR : SIZE_INT,
             var->h_val.pileOffset);
             return;
@@ -150,7 +150,7 @@ void initAssign(programSymbolTables symbolTabs, functionSymbolTables* func, Node
 
     var = findHashElem(symbolTabs.globals, var_ident);
     if (var != NULL) {
-        fprintf(asm_file, "pop %s [rsp+%i]\n", 
+        fprintf(asm_file, "\tpop %s [rsp+%i]\n", 
             var->h_val.type == _type_char ? SIZE_CHAR : SIZE_INT,
             var->h_val.pileOffset);
     }

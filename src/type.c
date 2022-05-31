@@ -9,7 +9,11 @@ char * typeToChar(_type t) {
 }
 
 _type charToType(const char * input) {
-    return strcmp(input, "int") ? (strcmp(input, "char") ? _type_other : _type_char) : _type_int;
+    if (!strcmp(input, "int")) return _type_int;
+    else if (!strcmp(input, "char")) return _type_char;
+    else if (!strcmp(input, "fun")) return _type_function;
+    else if (!strcmp(input, "void")) return _type_void;
+    return _type_other;
 }
 
 value getValue(_type t) {
@@ -49,7 +53,6 @@ value newValueFct(Node * headerRoot) {
             root = findLabelInTree(root->nextSibling, type);
         }
     }
-
     return result;
 }
 

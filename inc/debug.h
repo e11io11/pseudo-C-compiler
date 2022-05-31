@@ -5,6 +5,7 @@
 #include "symbolTab.h"
 #include "tree.h"
 #include "type.h"
+#include "builtin_func.h"
 
 #ifdef _WIN32
     #define STYLE_BOLD         ""

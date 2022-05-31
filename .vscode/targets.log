@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue May 10 16:28:24 2022
+# Make data base, printed on Tue May 31 13:50:19 2022
 
 # Variables
 
@@ -32,6 +32,8 @@ SNAP_COMMON = /var/snap/code/common
 XDG_SESSION_TYPE = x11
 # environment
 VSCODE_LOG_NATIVE = false
+# environment
+NVM_INC = /home/antonin/.nvm/versions/node/v12.22.1/include/node
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
 # automatic
@@ -47,13 +49,13 @@ CURDIR := /home/antonin/Documents/L3/S6/Compilation/Projet-AS-C
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/95
+SNAP_DATA = /var/snap/code/97
 # environment
 VTE_VERSION = 6003
 # environment
-VSCODE_NLS_CONFIG = {"locale":"fr","availableLanguages":{"*":"fr"},"_languagePackId":"50ccac6e9bb708a41bfd03dcbba396d8.fr","_translationsConfigFile":"/home/antonin/.config/Code/clp/50ccac6e9bb708a41bfd03dcbba396d8.fr/tcf.json","_cacheRoot":"/home/antonin/.config/Code/clp/50ccac6e9bb708a41bfd03dcbba396d8.fr","_resolvedLanguagePackCoreLocation":"/home/antonin/.config/Code/clp/50ccac6e9bb708a41bfd03dcbba396d8.fr/57fd6d0195bb9b9d1b49f6da5db789060795de47","_corruptedFile":"/home/antonin/.config/Code/clp/50ccac6e9bb708a41bfd03dcbba396d8.fr/corrupted.info","_languagePackSupport":true}
+VSCODE_NLS_CONFIG = {"locale":"fr","availableLanguages":{"*":"fr"},"_languagePackId":"25fe6a3290ec415596628d4afc87a88c.fr","_translationsConfigFile":"/home/antonin/.config/Code/clp/25fe6a3290ec415596628d4afc87a88c.fr/tcf.json","_cacheRoot":"/home/antonin/.config/Code/clp/25fe6a3290ec415596628d4afc87a88c.fr","_resolvedLanguagePackCoreLocation":"/home/antonin/.config/Code/clp/25fe6a3290ec415596628d4afc87a88c.fr/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5","_corruptedFile":"/home/antonin/.config/Code/clp/25fe6a3290ec415596628d4afc87a88c.fr/corrupted.info","_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 8:47111
+JOURNAL_STREAM = 8:40306
 # makefile (from 'makefile', line 23)
 CFLAGS = -Wall
 # environment
@@ -79,29 +81,31 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-MANAGERPID = 917
+MANAGERPID = 950
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
 VSCODE_CWD = /home/antonin
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/95/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/97/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
-PATH = /home/antonin/.local/bin:/home/antonin/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$JAVA_HOME/bin:/opt/jdk17/bin:/opt/jdk17/bin
+PATH = /home/antonin/.local/bin:/home/antonin/.nvm/versions/node/v12.22.1/bin:/home/antonin/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:$JAVA_HOME/bin:/opt/jdk17/bin:/opt/jdk17/bin
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/antonin-TUF-Gaming-FX505DT-TUF505DT:@/tmp/.ICE-unix/1270,unix/antonin-TUF-Gaming-FX505DT-TUF505DT:/tmp/.ICE-unix/1270
+SESSION_MANAGER = local/antonin-TUF-Gaming-FX505DT-TUF505DT:@/tmp/.ICE-unix/1307,unix/antonin-TUF-Gaming-FX505DT-TUF505DT:/tmp/.ICE-unix/1307
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/antonin/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/95
+SNAP = /snap/code/97
 # environment
-SNAP_VERSION = 57fd6d01
+NVM_BIN = /home/antonin/.nvm/versions/node/v12.22.1/bin
+# environment
+SNAP_VERSION = c3511e6c
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -111,11 +115,11 @@ DISABLE_WAYLAND = 1
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # environment
-INVOCATION_ID = 67403210993748bb83a9fd99d816ee48
+INVOCATION_ID = c4ccbfd2c43947d3a7399f17067fab61
 # makefile (from 'makefile', line 24)
 LDFLAGS = -Wall -ly 
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/95/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/97/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # makefile (from 'makefile', line 27)
@@ -143,7 +147,7 @@ INCH = inc/includes.h
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1210
+SSH_AGENT_PID = 1246
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -157,7 +161,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/antonin/.config/Code/CachedData/57fd6d0195bb9b9d1b49f6da5db789060795de47
+VSCODE_CODE_CACHE_PATH = /home/antonin/.config/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
 # environment
 LOGNAME = antonin
 # environment
@@ -166,6 +170,8 @@ APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
 SNAP_CONTEXT = 4aHQzIP3SwKKnTWEozzMJbz1jZxbkxZ7XOwL9NOyxx1UBSNIa8Yi
+# environment
+NVM_CD_FLAGS = 
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
 # environment
@@ -195,7 +201,7 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/antonin/snap/code/95
+SNAP_USER_DATA = /home/antonin/snap/code/97
 # environment
 SHLVL = 1
 # makefile (from 'makefile', line 22)
@@ -203,7 +209,7 @@ CC = gcc
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-838a157d-883f-45e7-86c8-1d4e3d42bfd1.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-254084cb-18c9-4ed4-bf22-f47daf38484b.sock
 # makefile (from 'makefile', line 31)
 EXEC = $(BIN)tpcc
 # default
@@ -211,7 +217,7 @@ MAKE_VERSION := 4.2.1
 # environment
 USER = antonin
 # environment
-SNAP_REVISION = 95
+SNAP_REVISION = 97
 # makefile
 .DEFAULT_GOAL := all
 # environment
@@ -227,13 +233,15 @@ INC = inc/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-2b568dbd-1.67.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-2b568dbd-1.67.2-main.sock
 # makefile
 MAKEFLAGS = pqrR
 # environment
 MFLAGS = -pqrR
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
+# environment
+NVM_DIR = /home/antonin/.nvm
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
@@ -259,11 +267,11 @@ BIN = bin/
 # environment
 LC_ALL = C
 # environment
-GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/28edeeb1_3dc5_4a53_bebf_a489f5faf34c
+GNOME_TERMINAL_SCREEN = /org/gnome/Terminal/screen/2f64664f_9cc8_467d_a649_ff048bd7a97c
 # automatic
 ^F = $(notdir $^)
 # environment
-GNOME_TERMINAL_SERVICE = :1.1191
+GNOME_TERMINAL_SERVICE = :1.85
 # default
 SUFFIXES := 
 # environment
@@ -276,39 +284,39 @@ WINDOWPATH = 2
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # default
 .RECIPEPREFIX := 
- 
 # makefile (from 'makefile', line 37)
-OBJECTS = $(addprefix $(OBJ), hash.o symbolTab.o utils.o tree.o tpcas_functions.o programData.o $(TPCAS).tab.o lex.yy.o tree.o debug.o debug_messages.o type.o translator.o )
+OBJECTS = $(addprefix $(OBJ), hash.o symbolTab.o utils.o tree.o tpcas_functions.o programData.o $(TPCAS).tab.o lex.yy.o tree.o debug.o debug_messages.o type.o translator.o builtin_func.o )
 # environment
 LANG = C
 # environment
 TERM = xterm-256color
 # environment
-VSCODE_PID = 45147
+VSCODE_PID = 2406
 # variable set hash-table stats:
-# Load=137/1024=13%, Rehash=0, Collisions=25/195=13%
+# Load=141/1024=14%, Rehash=0, Collisions=25/199=13%
 
 # Pattern-specific Variable Values
 
 # No pattern-specific variable values.
+ 
 
 # Directories
 
-# . (device 66309, inode 2361203): 16 files, no impossibilities.
+# . (device 66309, inode 2361203): 18 files, no impossibilities.
 # src (device 66309, inode 2379612): No files, no impossibilities so far.
 # inc (device 66309, inode 2379600): No files, no impossibilities so far.
 
-# 16 files, no impossibilities in 3 directories.
+# 18 files, no impossibilities in 3 directories.
 
 # Implicit Rules
 
 obj/%.o: %.asm
-#  recipe to execute (from 'makefile', line 122):
+#  recipe to execute (from 'makefile', line 123):
 	@$(ASM_CC) -o $@ $^
 	$(info ++ $@ from $^)
 
 obj/%.o: src/%.c inc/%.h inc/includes.h
-#  recipe to execute (from 'makefile', line 129):
+#  recipe to execute (from 'makefile', line 130):
 	$(CC) -c $< $(CFLAGS) $(LEAKFLAG) -o $@
 	$(info +++ $@)
 
@@ -328,11 +336,11 @@ obj/lex.yy.c:
 #  Modification time never checked.
 #  File has not been updated.
 
-tpcas: obj/hash.o obj/symbolTab.o obj/utils.o obj/tree.o obj/tpcas_functions.o obj/programData.o obj/tpcas.tab.o obj/lex.yy.o obj/tree.o obj/debug.o obj/debug_messages.o obj/type.o obj/translator.o
+tpcas: obj/hash.o obj/symbolTab.o obj/utils.o obj/tree.o obj/tpcas_functions.o obj/programData.o obj/tpcas.tab.o obj/lex.yy.o obj/tree.o obj/debug.o obj/debug_messages.o obj/type.o obj/translator.o obj/builtin_func.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 136):
+#  recipe to execute (from 'makefile', line 137):
 	$(CC) $^ $(LDFLAGS) $(LEAKFLAG) -o $(EXEC)
 	$(info +++++ $@  from $^)
 	
@@ -347,7 +355,7 @@ asm_compile:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 153):
+#  recipe to execute (from 'makefile', line 154):
 	@./$(EXEC) < test/good/testAsm.tpc
 
 all_: generate_c_files generate_executable
@@ -392,7 +400,7 @@ all:
 # ? := 
 # variable set hash-table stats:
 # Load=8/32=25%, Rehash=0, Collisions=1/11=9%
-#  recipe to execute (from 'makefile', line 62):
+#  recipe to execute (from 'makefile', line 63):
 	@make -s all_
 
 # Not a target:
@@ -421,7 +429,7 @@ lex.yy.o: obj/lex.yy.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 118):
+#  recipe to execute (from 'makefile', line 119):
 	$(CC) -c $< $(CFLAGS) $(LEAKFLAG) -o $(OBJ)$@
 	$(info +++ $@)
 
@@ -440,7 +448,7 @@ obj/output.o:
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-05-10 16:05:28.020901698
+#  Last modified 2022-05-31 13:50:02.285444506
 #  File has been updated.
 #  Successfully updated.
 
@@ -453,7 +461,7 @@ tpcas.tab.o: obj/tpcas.tab.c
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 114):
+#  recipe to execute (from 'makefile', line 115):
 	$(CC) -c $< $(CFLAGS) $(LEAKFLAG) -o $(OBJ)$@ 
 	$(info +++ $@)
 
@@ -484,7 +492,7 @@ lex.yy.c: src/tpcas.lex
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 87):
+#  recipe to execute (from 'makefile', line 88):
 	flex -o $(OBJ)$@ $< 
 	$(info + $@  from $^)
 
@@ -521,7 +529,7 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 140):
+#  recipe to execute (from 'makefile', line 141):
 	$(info Cleaning Object Type)
 	@rm $(OBJ)*
 	$(info Done!)
@@ -536,7 +544,7 @@ tpcas.tab.c: src/tpcas.y
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 92):
+#  recipe to execute (from 'makefile', line 93):
 	bison $< $(BISONFLAGS) -d -o $(OBJ)$@
 	$(info + $@  from $^)
 
@@ -550,21 +558,21 @@ output: obj/output.o obj/std_utils.o
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 77):
+#  recipe to execute (from 'makefile', line 78):
 	$(CC) -o $@ $^ $(CC_OPTIONS)
 
 asm: asm_make_output
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 148):
-	@./output
+#  recipe to execute (from 'makefile', line 149):
+	
 
 tpcas.tab.h: src/tpcas.y
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 92):
+#  recipe to execute (from 'makefile', line 93):
 	bison $< $(BISONFLAGS) -d -o $(OBJ)$@
 	$(info + $@  from $^)
 
@@ -573,7 +581,6 @@ obj/tpcas.tab.c:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
- 
 
 # Not a target:
 obj/type.o:
@@ -583,6 +590,7 @@ obj/type.o:
 
 # Not a target:
 obj/debug_messages.o:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -591,8 +599,14 @@ inc/includes.h: inc/struct.h inc/utils.h
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 111):
+#  recipe to execute (from 'makefile', line 112):
 	$(info + $@)
+
+# Not a target:
+obj/builtin_func.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 obj/translator.o:
@@ -601,19 +615,19 @@ obj/translator.o:
 #  File has not been updated.
 
 # files hash-table stats:
-# Load=41/1024=4%, Rehash=0, Collisions=4/95=4%
+# Load=42/1024=4%, Rehash=0, Collisions=4/97=4%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 61 / storage = 648 B / avg = 10 B
-# current buf: size = 8162 B / used = 648 B / count = 61 / avg = 10 B
+# strcache buffers: 1 (0) / strings = 64 / storage = 673 B / avg = 10 B
+# current buf: size = 8162 B / used = 673 B / count = 64 / avg = 10 B
 
-# strcache performance: lookups = 102 / hit rate = 40%
+# strcache performance: lookups = 105 / hit rate = 39%
 # hash-table stats:
-# Load=61/8192=1%, Rehash=0, Collisions=1/102=1%
-# Finished Make data base on Tue May 10 16:28:24 2022
+# Load=64/8192=1%, Rehash=0, Collisions=1/105=1%
+# Finished Make data base on Tue May 31 13:50:19 2022
 
  

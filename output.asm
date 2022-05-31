@@ -9,9 +9,11 @@ gC1: db 0
 gI1: dd 0
 section .text
 extern printInt
-global: _start
+global _start
 
-_start:
+main:
+	add rsp, 4
+	pop dword [rbp-0]
 	; End of Program: Print -1 as Fine-Output
 	mov rdi, -1
 	call printInt
@@ -24,10 +26,12 @@ getVoid:
 	push rbp
 	mov rbp, rsp
 
-	add rsp, 0
+	add rsp, 14
+	pop dword [rbp-5]
 
 ; Function Footer : refresh rbp
 	mov rsp, rbp
 	pop rbp
 	ret
+
 

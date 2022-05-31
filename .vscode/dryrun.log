@@ -1,4 +1,4 @@
-make --dry-run --always-make --keep-going --print-directory
+make --dry-run --keep-going --print-directory
 make: Entering directory '/home/antonin/Documents/L3/S6/Compilation/Projet-AS-C'
 make -s all_
 make: Leaving directory '/home/antonin/Documents/L3/S6/Compilation/Projet-AS-C'

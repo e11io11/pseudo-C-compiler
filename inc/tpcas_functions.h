@@ -20,7 +20,7 @@
 #include <getopt.h>
 #include "../inc/debug.h"
 #include "type.h"
-
+#include "builtin_func.h"
 
 int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag);
 
@@ -29,4 +29,6 @@ _type mainFct_charToType(const char * input);
 programSymbolTables mainFct_Tree_to_Hash(Node * root);
 
 void mainFct_testHashTable();
+
+void displayAllSymbolTab(programSymbolTables psb);
 #endif

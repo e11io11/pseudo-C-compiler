@@ -6,6 +6,10 @@
         "includes.h": "c",
         "debug.h": "c",
         "typeinfo": "c",
-        "tpcas_functions.h": "c"
+        "tpcas_functions.h": "c",
+        "type.h": "c",
+        "programdata.h": "c",
+        "translator.h": "c",
+        "builtin_func.h": "c"
     }
 }
