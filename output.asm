@@ -10,8 +10,7 @@ extern printInt
 global _start
 
 main:
-	add rsp, 8
-	pop dword [rbp-0]
+	add rsp, 0
 	; End of Program: Print -1 as Fine-Output
 	mov rdi, -1
 	call printInt
@@ -19,12 +18,13 @@ main:
 	mov rdi, 0
 	syscall
 
-ghost:
+function:
 ; Function Header : refresh rbp
 	push rbp
 	mov rbp, rsp
 
-	add rsp, 0
+	add rsp, 1
+	pop byte [rbp-0]
 
 ; Function Footer : refresh rbp
 	mov rsp, rbp

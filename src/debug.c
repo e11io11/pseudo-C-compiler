@@ -328,18 +328,18 @@ void switch_checked(Node * switchroot) {
                         /* else error */
                     default:
                         db_error_switch_case_non_constant(iter_label->firstChild);
-                        goto test;
+                        goto next_iter;
                 }
                 for (i = 0; i < c_mem_amount; i++) {
                     if (c_mem[i].v == v) {
                         db_error_switch_case_repeats(iter_label, v, c_mem[i].lineno);
-                        goto test;
+                        goto next_iter;
                     }
                 }
                 c_mem[i].lineno = iter_label->lineno;
                 c_mem[i].v = v;
                 c_mem_amount++;
-                test:;
+                next_iter:;
             } else if (iter_label->label == default_) {
                 Node * e;
                 if ((e = findLabelInTree(iter_label->nextSibling, default_))) db_error_switch_multiple_default(e);

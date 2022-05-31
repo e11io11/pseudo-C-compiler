@@ -22,7 +22,7 @@ void cfree(void* p) {
 }
 
 void raiseError(const char * log) {
-    perror("ERROR :\t"); perror(log); exit(EXIT_FAILURE);
+    perror("ERROR :\t"); perror(log); exit(3);
 }
 
 void raiseWarning(const char *log) {

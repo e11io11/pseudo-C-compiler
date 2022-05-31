@@ -19,13 +19,13 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
         {"symbol", no_argument, 0, 's'},
         {"help", no_argument, 0, 'h'},
         {"symbolTab", no_argument, 0, 's'},
-        {"no-warn", no_argument, 0, 'q'},
+        {"no-warn", no_argument, 0, 'w'},
         {"builtin", no_argument, 0, 'b'},
         {0,0,0,'?'}
     };
     int option_index = 0;
     while (1) {
-        c = getopt_long(argc, argv, "ths", long_options, &option_index);
+        c = getopt_long(argc, argv, "thswb", long_options, &option_index);
         if (c == -1) {
             return 0;
         }
@@ -47,7 +47,7 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
             case 's': /* Enable symbol table display */
                 *symbolFlag = 1;
                 break;
-            case 'q':
+            case 'w':
                 _display_warnings = 0;
                 break;
             case 'b':
