@@ -4,30 +4,72 @@
 ;
 ; authors : Elliott FALGUEROLLE & Antonin JEAN
 
-section .data
+section .bss
+section .bss
+global_vars: resb 4
 section .text
 extern printInt
 global _start
 
-main:
-	add rsp, 0
-	; End of Program: Print -1 as Fine-Output
-	mov rdi, -1
-	call printInt
+_start:
+	mov rbp, rsp
+	sub rsp, 9
+	push 12
+	pop rax
+	mov dword [global_vars+0], eax
+	push 3
+	pop rax
+	mov dword [rbp-0], eax
+	mov eax, dword [rbp-0]
+	push rax
+	mov eax, dword [global_vars+0]
+	push rax
+	pop rbx
+	pop rax
+	add rax, rbx
+	push rax
+	push 5
+	pop rbx
+	pop rax
+	imul rax, rbx
+	push rax
+	push 3
+	pop rbx
+	pop rax
+	xor rdx, rdx
+	idiv rbx
+	push rax
+	pop rax
+	mov dword [rbp-5], eax
+	push 0
 	mov rax, 60
 	mov rdi, 0
 	syscall
 
 function:
-; Function Header : refresh rbp
+	; Function Header
 	push rbp
 	mov rbp, rsp
+	push rbx
 
-	add rsp, 1
-	pop byte [rbp-0]
+	sub rsp, 4
+	push 15
+	pop rax
+	mov dword [rbp-0], eax
+	mov eax, dword [rbp-0]
+	push rax
+	pop rax
 
-; Function Footer : refresh rbp
+	; Function Footer
 	mov rsp, rbp
+	pop rbx
+	pop rbp
+	ret
+
+
+	; Function Footer
+	mov rsp, rbp
+	pop rbx
 	pop rbp
 	ret
 
