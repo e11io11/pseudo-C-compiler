@@ -87,7 +87,7 @@ union YYSTYPE
     char byte;
     int num;
     char ident[64];
-    char comp[4];
+    char comp[5];
 
 #line 93 "obj/tpcas.tab.h"
 

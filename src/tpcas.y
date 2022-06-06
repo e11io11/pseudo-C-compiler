@@ -44,7 +44,7 @@ int parse;
     char byte;
     int num;
     char ident[64];
-    char comp[4];
+    char comp[5];
 }
 
 /* List of all Possible Values for a node */

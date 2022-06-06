@@ -36,8 +36,8 @@
 
 #define __ASM_PATTERN_FNC_FOOTER \
     "\n\t; Function Footer\n" \
-    "\tmov rsp, rbp\n" \
     "\tpop rbx\n" \
+    "\tmov rsp, rbp\n" \
     "\tpop rbp\n" \
     "\tret\n\n"
 
@@ -57,6 +57,10 @@ FILE * asm_file = NULL;
 FILE * getFile() { return asm_file; }
 
 int label_id = 0;
+
+char* parameters_[6] = {"rdi", "rsi", "rdx", "rcx", "r8", "r9"};
+char* parameters_int[6] = {"edi", "esi", "edx", "ecx", "r8d", "r9d"};
+char* parameters_char[6] = {"dil", "sil", "dl", "cl", "r8b", "r9b"};
 
 void __initAsmFile(const char * name, programSymbolTables symbolTabs, Node* tree) {
     char filename[256] = "\0";
@@ -114,10 +118,18 @@ void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables*
     for (int i = 0; i < parAmount; i++) {
         el = elements[i];
         el->h_val.pileOffset = totalOffset;
+        /*
+        if (i < 6)
+            fprintf(asm_file, "\tmov %s [rbp-%i], %s\n",
+                el->h_val.type == _type_char ? SIZE_CHAR : SIZE_INT,
+                el->h_val.pileOffset,
+                el->h_val.type == _type_char ? parameters_char[i] : parameters_int[i]);
+        */
         totalOffset += el->h_val.val.size;
-        //todo, set parameter variables to their values
     }
     free(elements);
+
+
     int varAmount = func->values.elemAmount;
     elements = HashTableValues(&(func->values));
     for (int i = 0; i < varAmount; i++) {
@@ -127,6 +139,15 @@ void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables*
     }
     free(elements);
     fprintf(asm_file, "\tsub rsp, %i\n", totalOffset);
+    Node* fnc_node = func->root->firstChild->firstChild->nextSibling->nextSibling->firstChild; //first parameter
+    for (int i = 0; i < 6 && i < func->parameters.elemAmount; i++) {
+        el = findHashElem(func->parameters, fnc_node->firstChild->value.ident);
+        fprintf(asm_file, "\tmov %s [rbp-%i], %s\n",
+            el->h_val.type == _type_char ? SIZE_CHAR : SIZE_INT,
+            el->h_val.pileOffset, 
+            strcmp(fnc_node->value.comp, "char") == 1 ? parameters_char[i] : parameters_int[i]);
+        fnc_node = fnc_node->nextSibling;
+    }
 }
 
 void initFunctions(programSymbolTables symbolTabs) {
@@ -146,7 +167,18 @@ void initFunctions(programSymbolTables symbolTabs) {
 }
 
 void initFunctionCall(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {
+    char* fnc_ident = node->value.ident;
+    node = node->firstChild->firstChild;
+    initRValue(symbolTabs, func, node);
+    functionSymbolTables* called_func = symbolTabs.functions;
+    while (called_func != NULL && strcmp(called_func->name, fnc_ident) != 0) {
+        called_func = called_func->next;
+    }
 
+    for (int i = 0; i < called_func->parameters.elemAmount; i++) {
+        fprintf(asm_file, "\tpop %s\n", parameters_[i]);
+    }
+    fprintf(asm_file, "\tcall %s\n\tpush rax\n", fnc_ident);
 }
 
 void initIdent(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {

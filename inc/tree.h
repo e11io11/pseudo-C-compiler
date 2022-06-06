@@ -49,7 +49,7 @@ typedef struct Node {
     
     int num;
     char ident[64];
-    char comp[4];
+    char comp[5];
   } value;
   struct Node *firstChild, *nextSibling;
   int lineno;
