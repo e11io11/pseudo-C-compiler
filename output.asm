@@ -6,24 +6,47 @@
 
 section .bss
 section .bss
+<<<<<<< HEAD
 global_vars: resb 0
+=======
+global_vars: resb 4
+>>>>>>> ba6886fca91d383cc05f3460c129980b7da18fad
 section .text
-extern printInt
 global _start
 
 _start:
 	mov rbp, rsp
+<<<<<<< HEAD
 	sub rsp, 8
+=======
+	sub rsp, 21
+	push 3
+	pop rax
+	mov dword [rbp-13], eax
+	mov eax, dword [rbp-13]
+	push rax
+	pop rdi
+	call function
+	push rax
+	pop rax
+	mov dword [rbp-8], eax
+	push 0
+>>>>>>> ba6886fca91d383cc05f3460c129980b7da18fad
 	mov rax, 60
 	mov rdi, 0
 	syscall
 
+<<<<<<< HEAD
 _blavla4:
+=======
+fnc_2:
+>>>>>>> ba6886fca91d383cc05f3460c129980b7da18fad
 	; Function Header
 	push rbp
 	mov rbp, rsp
 	push rbx
 
+<<<<<<< HEAD
 	sub rsp, 17
 	mov dword [rbp-13], edi
 	mov byte [rbp-12], esi
@@ -33,6 +56,12 @@ _blavla4:
 	mov dword [rbp-8], eax
 	mov al, byte [rbp-12]
 	push rax
+	pop rax
+
+	; Function Footer
+=======
+	sub rsp, 8
+	push 1
 	pop rax
 
 	; Function Footer
@@ -55,9 +84,35 @@ function:
 	mov rbp, rsp
 	push rbx
 
+	sub rsp, 12
+	mov dword [rbp-8], edi
+	mov eax, dword [rbp-8]
+	push rax
+	push 8
+>>>>>>> ba6886fca91d383cc05f3460c129980b7da18fad
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+
+	; Function Footer
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+
+function:
+	; Function Header
+	push rbp
+	mov rbp, rsp
+	push rbx
+
 	sub rsp, 9
 	push 10
 	pop rax
+<<<<<<< HEAD
 	mov byte [rbp-8], al
 	mov al, byte [rbp-8]
 	push rax
@@ -69,6 +124,11 @@ function:
 	pop rbp
 	ret
 
+=======
+	add rax, rbx
+	push rax
+	pop rax
+>>>>>>> ba6886fca91d383cc05f3460c129980b7da18fad
 
 	; Function Footer
 	pop rbx
@@ -77,3 +137,26 @@ function:
 	ret
 
 
+	; Function Footer
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+
+	putchar: ;rdi char
+    push rbp
+    mov rbp, rsp
+    push rdi
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, rsp
+    mov rdx, 1
+    syscall
+    mov rsp, rbp
+    pop rbp
+    ret
+
+	
+	
+	
