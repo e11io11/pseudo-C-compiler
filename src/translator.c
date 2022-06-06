@@ -52,7 +52,7 @@
 
 #define __ASM_FUNCTION_IDENT "\t"
 
-extern blt_f_decl __blt_fct[] = ;
+extern blt_f_decl __blt_fct[];
 
 FILE * asm_file = NULL;
 
