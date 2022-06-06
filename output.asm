@@ -6,59 +6,69 @@
 
 section .bss
 section .bss
-global_vars: resb 12
+global_vars: resb 0
 section .text
 extern printInt
 global _start
 
 _start:
 	mov rbp, rsp
-	sub rsp, 11
-	push 84
-	pop rax
-	mov byte [rbp-10], al
-	push 87
-	pop rax
-	mov byte [rbp-9], al
-	push 76
-	pop rax
-	mov byte [rbp-8], al
-	pop rax
-	mov dword [global_vars+0], eax
-	push 0
-	pop rax
-	mov dword [global_vars+8], eax
-	push 0
-	pop rax
-	mov dword [global_vars+4], eax
-	push 1
+	sub rsp, 8
 	mov rax, 60
 	mov rdi, 0
 	syscall
 
-updateTurn:
+_blavla4:
 	; Function Header
 	push rbp
 	mov rbp, rsp
 	push rbx
 
-	sub rsp, 8
-	mov eax, dword [global_vars+4]
+	sub rsp, 17
+	mov dword [rbp-13], edi
+	mov byte [rbp-12], esi
+	call function
 	push rax
-	push 1
+	pop rax
+	mov dword [rbp-8], eax
+	mov al, byte [rbp-12]
+	push rax
+	pop rax
+
+	; Function Footer
 	pop rbx
-	pop rax
-	add rax, rbx
-	push rax
-	mov eax, dword [global_vars+0]
-	push rax
+	mov rsp, rbp
+	pop rbp
+	ret
+
+
+	; Function Footer
 	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
+
+function:
+	; Function Header
+	push rbp
+	mov rbp, rsp
+	push rbx
+
+	sub rsp, 9
+	push 10
 	pop rax
-	xor rdx, rdx
-	idiv rbx
+	mov byte [rbp-8], al
+	mov al, byte [rbp-8]
 	push rax
 	pop rax
-	mov dword [global_vars+4], eax
+
+	; Function Footer
+	pop rbx
+	mov rsp, rbp
+	pop rbp
+	ret
+
 
 	; Function Footer
 	pop rbx
