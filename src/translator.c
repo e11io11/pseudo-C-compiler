@@ -71,16 +71,32 @@ void __initAsmFile(const char * name, programSymbolTables symbolTabs, Node* tree
     initGlobalVariables(symbolTabs);
     initTextSection(symbolTabs);  
     initFunctions(symbolTabs);
+    //initBuiltins();
     fclose(asm_file);
 }
 
 void initTextSection(programSymbolTables symbolTabs) {
-    fprintf(asm_file, "section .text\nextern printInt\n");
+    fprintf(asm_file, "section .text\n");
     if (findHashElem(symbolTabs.globals, "main") != NULL)
         fprintf(asm_file, "global _start\n");
     fprintf(asm_file, "\n");
 
 }
+
+/*
+void initBuiltins() {
+    HashElem* el;
+    HashElem ** elements = HashTableValues(&(BLT_FUNCTIONS));
+    for (int i = 0; i < BLT_FUNCTIONS.elemAmount; i++) {
+        el = elements[i];
+        el.
+        fprintf(asm_file, "\t%s\n", )
+    }
+    
+    free(elements);
+
+}
+*/
 
 void initGlobalVariables(programSymbolTables symbolTabs) {
     HashElem* el;
@@ -118,10 +134,8 @@ void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables*
 
     int varAmount = func->values.elemAmount;
     elements = HashTableValues(&(func->values));
-    printf("%i\n",varAmount);
     for (int i = 0; i < varAmount; i++) {
         el = elements[i];
-        printf("%s\n", el->h_key);
         el->h_val.pileOffset = totalOffset;
         totalOffset += el->h_val.val.size;
     }
@@ -152,6 +166,7 @@ void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables*
 
 void initFunctions(programSymbolTables symbolTabs) {
     functionSymbolTables* func = symbolTabs.functions;
+    HashElem* blt_func;
     while (func != NULL) {
         if (strcmp(func->name, "main") == 0)
             initMain(symbolTabs, func);
@@ -221,8 +236,10 @@ void initDivStar(programSymbolTables symbolTabs, functionSymbolTables* func, Nod
         initRValue(symbolTabs, func, node->firstChild);
         if (node->value.byte == '*')
             fprintf(asm_file, "%s\timul rax, rbx\n\tpush rax\n", __ASM_PATTERN_EXPR_HEADER);
-        else
+        else if (node->value.byte == '/')
             fprintf(asm_file, "%s\txor rdx, rdx\n\tidiv rbx\n\tpush rax\n", __ASM_PATTERN_EXPR_HEADER);
+        else
+            fprintf(asm_file, "%s\txor rdx, rdx\n\tidiv rbx\n\tpush rdx\n", __ASM_PATTERN_EXPR_HEADER);
 }
 
 void initOrderEq(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {

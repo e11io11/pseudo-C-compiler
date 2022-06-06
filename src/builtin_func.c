@@ -40,7 +40,19 @@ blt_f_decl __blt_fct[] = {
     {.name = "putchar",
     .parameters = "char",
     .parametersAmount = 1,
-    .return_value = "void"},
+    .return_value = "void",
+    .asm_src_code = "putchar: ;rdi char\n\
+    push rbp\n\
+    mov rbp, rsp\n\
+    push rdi\n\
+    mov rax, 1\n\
+    mov rdi, 1\n\
+    mov rsi, rsp\n\
+    mov rdx, 1\n\
+    syscall\n\
+    mov rsp, rbp\n\
+    pop rbp\n\
+    ret\n"},
 
 
     /* You can add builtin here :

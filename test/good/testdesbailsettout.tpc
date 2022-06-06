@@ -27,6 +27,7 @@ int main(void) {
     */
     c = 3;
     a = function(c);
+    putchar('a');
 
 
     return 0;
