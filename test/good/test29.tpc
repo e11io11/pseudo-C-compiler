@@ -1,0 +1,29 @@
+int playerAmount;
+int currentTurn, turnAmount;
+
+int updateTurn(void) {
+    currentTurn = (currentTurn + 1) % playerAmount;
+    /* Missing return */
+}
+
+int main(void) {
+
+    char turn, win, lose;
+    turn = 'T'; win = 'W'; lose = 'L';
+
+    playerAmount = getint();
+
+    switch (playerAmount) {
+        case 2: case 3: case 4: break;
+        default: return 0; /* ERROR INVALID PLAYER AMOUNT */
+    }
+
+    turnAmount = 0;
+    currentTurn = 0;
+
+    while (currentTurn < 100) {
+        updateTurn();
+    }
+
+    return 1;
+}

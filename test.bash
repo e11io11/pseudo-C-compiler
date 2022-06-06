@@ -3,7 +3,7 @@ res=0
 echo \#good:
 for file in test/good/* ; do
     echo $file
-    bin/tpcc < $file
+    bin/tpcc -w < $file
     current=$?
     echo $current
     if [[ $current -ne 0 ]]; then

@@ -26,7 +26,6 @@ int mainFct_load_arg(int argc, char * argv[], int * treeFlag, int * symbolFlag) 
     int option_index = 0;
     while (1) {
         c = getopt_long(argc, argv, "thswb", long_options, &option_index);
-        printf("%d\n", c);
         if (c == -1) {
             return 0;
         }

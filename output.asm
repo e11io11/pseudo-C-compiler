@@ -8,7 +8,6 @@ section .bss
 section .bss
 global_vars: resb 4
 section .text
-extern printInt
 global _start
 
 _start:
@@ -84,3 +83,7 @@ function:
 	ret
 
 
+	
+	
+	
+	

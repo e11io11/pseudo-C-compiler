@@ -52,6 +52,8 @@
 
 #define __ASM_FUNCTION_IDENT "\t"
 
+extern blt_f_decl __blt_fct[] = ;
+
 FILE * asm_file = NULL;
 
 FILE * getFile() { return asm_file; }
@@ -71,7 +73,7 @@ void __initAsmFile(const char * name, programSymbolTables symbolTabs, Node* tree
     initGlobalVariables(symbolTabs);
     initTextSection(symbolTabs);  
     initFunctions(symbolTabs);
-    //initBuiltins();
+    initBuiltins();
     fclose(asm_file);
 }
 
@@ -83,20 +85,17 @@ void initTextSection(programSymbolTables symbolTabs) {
 
 }
 
-/*
+
 void initBuiltins() {
     HashElem* el;
     HashElem ** elements = HashTableValues(&(BLT_FUNCTIONS));
     for (int i = 0; i < BLT_FUNCTIONS.elemAmount; i++) {
         el = elements[i];
-        el.
-        fprintf(asm_file, "\t%s\n", )
+        fprintf(asm_file, "\t%s\n", __blt_fct[el->h_val.pileOffset].asm_src_code);
     }
-    
     free(elements);
-
 }
-*/
+
 
 void initGlobalVariables(programSymbolTables symbolTabs) {
     HashElem* el;
@@ -166,7 +165,6 @@ void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables*
 
 void initFunctions(programSymbolTables symbolTabs) {
     functionSymbolTables* func = symbolTabs.functions;
-    HashElem* blt_func;
     while (func != NULL) {
         if (strcmp(func->name, "main") == 0)
             initMain(symbolTabs, func);
@@ -189,7 +187,9 @@ void initFunctionCall(programSymbolTables symbolTabs, functionSymbolTables* func
     while (called_func != NULL && strcmp(called_func->name, fnc_ident) != 0) {
         called_func = called_func->next;
     }
-    if (called_func == NULL) return;
+
+    if (called_func == NULL) return; /* FOR BUILTIN  FUNCTIONS */
+
     for (int i = 0; i < called_func->parameters.elemAmount; i++) {
         fprintf(asm_file, "\tpop %s\n", parameters_[i]);
     }

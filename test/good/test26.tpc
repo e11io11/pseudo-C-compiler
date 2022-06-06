@@ -1,10 +1,11 @@
 char c, d;
 int n1, n4,     n0;
 
+int dosomething(int i, int y) { return 1;}
 
 int function(void)
 {
-    char var1;
+    char var1; int i,y;
     var1 = 10;
     if (var1 != 10 && var1 > 2) {
         while (var1 <= 200) {
@@ -14,7 +15,7 @@ int function(void)
     else
         return -42;
     switch (dosomething(i, y)) {
-        case 'b' : break; break; break; dosomething();
+        case 'b' : break; break; break; dosomething(1, 2);
     }
 
     switch (9) {
@@ -27,7 +28,7 @@ int function(void)
 
 char _blavla4(char text, int number) {
     int n;
-    n = function(blabla, dd);
+    n = function();
     ;
     return text;
 }

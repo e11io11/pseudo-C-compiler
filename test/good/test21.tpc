@@ -2,6 +2,8 @@ char c, d;
 int n1, n4,     n0;
 
 
+void ddqsd(void) {}
+
 int function(void)
 {
     char var1;
@@ -14,9 +16,7 @@ int function(void)
     else
         return -42;
     switch (var1) {
-        printf(something);
-        blabla();
-
+        putchar('s');
         case 'n': ddqsd(); break;
         
     }
@@ -31,7 +31,7 @@ int function(void)
 
 char _blavla4(char text, int number) {
     int n;
-    n = function(blabla, dd);
+    n = function();
     ;
     return text;
 }

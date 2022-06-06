@@ -16,5 +16,6 @@ void initAssign(programSymbolTables symbolTabs, functionSymbolTables* func, Node
 void initFunctionBody(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node);
 void initRValue(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node);
 void initIdent(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node);
+void initBuiltins();
 
 #endif
