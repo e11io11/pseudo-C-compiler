@@ -12,7 +12,9 @@ void initFunctions(programSymbolTables symbolTabs);
 void initMain(programSymbolTables symbolTabs, functionSymbolTables* func);
 void initTextSection(programSymbolTables symbolTabs);
 void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables* func);
-void initAssign(programSymbolTables symbolTabs, functionSymbolTables* func, Node* assign);
-void initFunctionBody(programSymbolTables symbolTabs, functionSymbolTables* func, Node* body);
+void initAssign(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node);
+void initFunctionBody(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node);
+void initRValue(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node);
+void initIdent(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node);
 
 #endif

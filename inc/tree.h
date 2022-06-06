@@ -35,7 +35,8 @@ typedef enum {
   default_,
   break_,
   assign,
-  call
+  call,
+  not
   /* list all other node labels, if any */
   /* The list must coincide with the string array in tree.c */
   /* To avoid listing them twice, see https://stackoverflow.com/a/10966395 */
@@ -48,7 +49,7 @@ typedef struct Node {
     
     int num;
     char ident[64];
-    char comp[4];
+    char comp[5];
   } value;
   struct Node *firstChild, *nextSibling;
   int lineno;
