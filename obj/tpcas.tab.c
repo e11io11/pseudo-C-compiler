@@ -2189,6 +2189,7 @@ int main(int argc, char** argv) {
     /*mainFct_testHashTable();*/
     int returnCode = 0;
     if (mainFct_load_arg(argc, argv, &treeFlag, &symbolFlag)) return 3;
+    debug("here");
     parse = yyparse();
     
     if (!parse) {

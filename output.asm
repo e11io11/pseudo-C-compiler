@@ -24,7 +24,6 @@ function:
 	mov rbp, rsp
 
 	add rsp, 1
-	pop byte [rbp-0]
 
 ; Function Footer : refresh rbp
 	mov rsp, rbp
