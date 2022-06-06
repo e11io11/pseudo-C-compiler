@@ -1857,7 +1857,7 @@ yyreduce:
 
   case 42: /* F: '!' F  */
 #line 154 "src/tpcas.y"
-                                            {(yyval.node) = (yyvsp[0].node);}
+                                            {(yyval.node) = makeNode(not); addChild((yyval.node), (yyvsp[0].node));}
 #line 1862 "obj/tpcas.tab.c"
     break;
 

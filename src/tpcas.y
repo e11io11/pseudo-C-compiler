@@ -151,7 +151,7 @@ T   :  T DIVSTAR F                          {$$ = makeNode(divstar); $$->value.b
     |  F                                    {$$ = $1;}
     ;
 F   :  ADDSUB F                             {$$ = makeNode(addsub); $$->value.byte = $1; addChild($$, $2);}
-    |  '!' F                                {$$ = $2;}
+    |  '!' F                                {$$ = makeNode(not); addChild($$, $2);}
     |  '(' Exp ')'                          {$$ = $2;}
     |  NUM                                  {$$ = makeNode(num); $$->value.num = $1;}
     |  CHARACTER                            {$$ = makeNode(character); $$->value.byte = $1;}

@@ -9,11 +9,17 @@ int function(void) {
 
 int main(void) {
     int a;
+    /*
     char b;
     int c;
+    int d;
     g = 12;
     a = 3;
     c = (a + g) *5 /3;
+    d = a && c || a;
+    */
+
+    a = !(0 || 1);   
 
     return 0;
 }

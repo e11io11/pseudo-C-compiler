@@ -56,6 +56,8 @@ FILE * asm_file = NULL;
 
 FILE * getFile() { return asm_file; }
 
+int label_id = 0;
+
 void __initAsmFile(const char * name, programSymbolTables symbolTabs, Node* tree) {
     char filename[256] = "\0";
     sprintf(filename, "%s.asm", name);
@@ -191,6 +193,67 @@ void initDivStar(programSymbolTables symbolTabs, functionSymbolTables* func, Nod
             fprintf(asm_file, "%s\txor rdx, rdx\n\tidiv rbx\n\tpush rax\n", __ASM_PATTERN_EXPR_HEADER);
 }
 
+void initOrderEq(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {
+        initRValue(symbolTabs, func, node->firstChild);
+        char jmp[4] = "j";
+        if (node->label == eq) {
+            switch(node->value.comp[0]) {
+                case '!': jmp[2] = 'n'; jmp[2] = 'e'; jmp[3] = '\0';
+                default: jmp[1] = 'e'; jmp[2] = '\0'; 
+            }
+        }
+        else {
+            switch(node->value.comp[0]) {
+                case '>': jmp[1] = 'g'; break;
+                case '<': jmp[1] = 'l'; break;
+                default: jmp[1] = 'e'; break;
+            }
+            switch(node->value.comp[1]) {
+                case '=': jmp[2] = 'e'; jmp[3] = '\0'; break;
+                default: jmp[2] = '\0'; break;
+            }
+        }
+        fprintf(asm_file, "%s\tmov rdx, 1\n\tcmp rax, rbx\n\t%s label_%i\n\tmov rdx, 0\n\tlabel_%i:\n\tpush rdx\n",
+            __ASM_PATTERN_EXPR_HEADER,
+            jmp,
+            label_id,
+            label_id);
+        label_id += 1;
+}
+
+void initOr(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {
+        initRValue(symbolTabs, func, node->firstChild);
+        fprintf(asm_file, "%s\tmov rdx, 1\n\tcmp rax, 0\n\tjne label_%i\n\
+    cmp rbx, 0\n\tjne label_%i\n\
+    mov rdx, 0\n\tlabel_%i:\n\tpush rdx\n",
+            __ASM_PATTERN_EXPR_HEADER,
+            label_id,
+            label_id,
+            label_id);
+        label_id += 1;
+}
+
+void initAnd(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {
+        initRValue(symbolTabs, func, node->firstChild);
+        fprintf(asm_file, "%s\tmov rdx, 0\n\tcmp rax, 0\n\tje label_%i\n\
+    cmp rbx, 0\n\tje label_%i\n\
+    mov rdx, 1\n\tlabel_%i:\n\tpush rdx\n",
+            __ASM_PATTERN_EXPR_HEADER,
+            label_id,
+            label_id,
+            label_id);
+        label_id += 1;
+}
+
+void initNot(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {
+        initRValue(symbolTabs, func, node->firstChild);
+        fprintf(asm_file, "\tpop rax\n\tmov rdx, 1\n\tcmp rax, 0\n\tje label_%i\n\
+    mov rdx, 0\n\tlabel_%i:\n\tpush rdx\n",
+            label_id,
+            label_id);
+        label_id += 1;
+}
+
 
 void initRValue(programSymbolTables symbolTabs, functionSymbolTables* func, Node* node) {
     while (node != NULL) {
@@ -210,8 +273,23 @@ void initRValue(programSymbolTables symbolTabs, functionSymbolTables* func, Node
         case divstar:
             initDivStar(symbolTabs, func, node);
             break;
+        case order:
+            initOrderEq(symbolTabs, func, node);
+            break;
+        case eq:
+            initOrderEq(symbolTabs, func, node);
+            break;
+        case and:
+            initAnd(symbolTabs, func, node);
+            break;
+        case or:
+            initOr(symbolTabs, func, node);
+            break;
+        case not:
+            initNot(symbolTabs, func, node);
+            break;
         default:
-            printf("something happened here :(\n");
+            printf("something hasn't been implemented yet :(\n");
             break;
         }
         node = node->nextSibling;

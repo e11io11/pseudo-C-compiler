@@ -13,34 +13,28 @@ global _start
 
 _start:
 	mov rbp, rsp
-	sub rsp, 9
-	push 12
+	sub rsp, 4
+	push 0
+	push 1
+	pop rbx
 	pop rax
-	mov dword [global_vars+0], eax
-	push 3
+	mov rdx, 1
+	cmp rax, 0
+	jne label_0
+    cmp rbx, 0
+	jne label_0
+    mov rdx, 0
+	label_0:
+	push rdx
+	pop rax
+	mov rdx, 1
+	cmp rax, 0
+	je label_1
+    mov rdx, 0
+	label_1:
+	push rdx
 	pop rax
 	mov dword [rbp-0], eax
-	mov eax, dword [rbp-0]
-	push rax
-	mov eax, dword [global_vars+0]
-	push rax
-	pop rbx
-	pop rax
-	add rax, rbx
-	push rax
-	push 5
-	pop rbx
-	pop rax
-	imul rax, rbx
-	push rax
-	push 3
-	pop rbx
-	pop rax
-	xor rdx, rdx
-	idiv rbx
-	push rax
-	pop rax
-	mov dword [rbp-5], eax
 	push 0
 	mov rax, 60
 	mov rdi, 0
