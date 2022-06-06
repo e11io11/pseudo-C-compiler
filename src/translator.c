@@ -112,32 +112,32 @@ void initMain(programSymbolTables symbolTabs, functionSymbolTables* func) {
 
 void initFunctionVariables(programSymbolTables symbolTabs, functionSymbolTables* func) {
     HashElem* el;
-    int totalOffset = 0;
-    int parAmount = func->parameters.elemAmount;
-    HashElem ** elements = HashTableValues(&(func->parameters));
-    for (int i = 0; i < parAmount; i++) {
-        el = elements[i];
-        el->h_val.pileOffset = totalOffset;
-        /*
-        if (i < 6)
-            fprintf(asm_file, "\tmov %s [rbp-%i], %s\n",
-                el->h_val.type == _type_char ? SIZE_CHAR : SIZE_INT,
-                el->h_val.pileOffset,
-                el->h_val.type == _type_char ? parameters_char[i] : parameters_int[i]);
-        */
-        totalOffset += el->h_val.val.size;
-    }
-    free(elements);
-
+    HashElem* el_asVar;
+    int totalOffset = 8;
+    HashElem ** elements;
 
     int varAmount = func->values.elemAmount;
     elements = HashTableValues(&(func->values));
+    printf("%i\n",varAmount);
     for (int i = 0; i < varAmount; i++) {
         el = elements[i];
+        printf("%s\n", el->h_key);
         el->h_val.pileOffset = totalOffset;
         totalOffset += el->h_val.val.size;
     }
     free(elements);
+
+    
+    int parAmount = func->parameters.elemAmount;
+    elements = HashTableValues(&(func->parameters));
+    for (int i = 0; i < parAmount; i++) {
+        el = elements[i];
+        el_asVar = findHashElem(func->values, el->h_key);
+        el->h_val.pileOffset = el_asVar->h_val.pileOffset;
+    }
+    free(elements); 
+    
+
     fprintf(asm_file, "\tsub rsp, %i\n", totalOffset);
     Node* fnc_node = func->root->firstChild->firstChild->nextSibling->nextSibling->firstChild; //first parameter
     for (int i = 0; i < 6 && i < func->parameters.elemAmount; i++) {
