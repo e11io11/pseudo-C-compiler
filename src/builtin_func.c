@@ -16,7 +16,8 @@ blt_f_decl __blt_fct[] = {
     {.name = "getint",
     .parameters = "void",
     .parametersAmount = 0,
-    .return_value = "int"}, 
+    .return_value = "int",
+    .asm_src_code = "\0"}, 
     /**
      * @brief Get a char from stdin and returns it
      * 
@@ -24,7 +25,8 @@ blt_f_decl __blt_fct[] = {
     {.name = "getchar",
     .parameters = "void",
     .parametersAmount = 0,
-    .return_value = "char"},
+    .return_value = "char",
+    .asm_src_code = "\0"},
     /**
      * @brief Put an int into stdout
      * 
@@ -32,7 +34,8 @@ blt_f_decl __blt_fct[] = {
     {.name = "putint",
     .parameters = "int",
     .parametersAmount = 1,
-    .return_value = "void"},
+    .return_value = "void",
+    .asm_src_code = "\0"},
     /**
      * @brief Put a char into stdout
      * 
@@ -40,7 +43,8 @@ blt_f_decl __blt_fct[] = {
     {.name = "putchar",
     .parameters = "char",
     .parametersAmount = 1,
-    .return_value = "void"},
+    .return_value = "void",
+    .asm_src_code = "\0"},
 
 
     /* You can add builtin here :
@@ -57,14 +61,15 @@ blt_f_decl __blt_fct[] = {
     {.name = "",
     .parameters = "",
     .parametersAmount = 0,
-    .return_value = ""}
+    .return_value = "",
+    .asm_src_code = "\0"}
 };
 
-value init_func_symboltab(blt_f_decl bf) {
+value init_func_symboltab(blt_f_decl bf, int index) {
     value result;
     char * p;
     result.type = _type_function;
-    result.pileOffset = 0;
+    result.pileOffset = index;
     result.val.func.ret = charToType(bf.return_value);
     p = strtok(bf.parameters, ",");
     if (p)
@@ -93,7 +98,7 @@ void blt_func_init() {
     for (i = 0; i < blt_functions.amount; i++) {
         putHashVal_checked(&(blt_functions.fcts),
             newHashElem(__blt_fct[i].name, 
-                        init_func_symboltab(__blt_fct[i]), 0));
+                        init_func_symboltab(__blt_fct[i], i), 0));
     }
 
 }
@@ -114,4 +119,12 @@ void displayBuiltinDecl() {
         printf(" - %s : %s -> %s\n", __blt_fct[i].name, __blt_fct[i].parameters, __blt_fct[i].return_value);
     }
     printf("\n\n");
+}
+
+char * getBuiltinSrcCode(HashElem * elem) {
+    if (AMOUNT_BLT_FUNCTIONS > elem->h_val.pileOffset) {
+        return __blt_fct[elem->h_val.pileOffset].asm_src_code;
+    }
+    raiseError("Error while loading asm src code in builtin");
+    return "";
 }

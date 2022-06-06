@@ -4,7 +4,7 @@
  * @author Elliott FALGUEROLLE
  * @email ofghanirre@gmail.com
  * @create date 2021-11-14 19:57:47
- * @modify date 2021-11-14 19:57:47
+ * @modify date 2022-06-01 21:01:53
  * @desc Lex file for the Syntax Analyzer
  * It reads an input and separate tokens out
  * of it, these tokens are then sent to a Bison

@@ -21,6 +21,7 @@ typedef struct builtinFunctionSymbolTables {
 
 void blt_func_init();
 
+char * getBuiltinSrcCode(HashElem * elem);
 
 extern builtinFunctionSymbolTables blt_functions;
 #define BLT_FUNCTIONS blt_functions.fcts
