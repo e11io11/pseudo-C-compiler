@@ -175,6 +175,8 @@ void initFunctionCall(programSymbolTables symbolTabs, functionSymbolTables* func
         called_func = called_func->next;
     }
 
+    if (called_func == NULL) return; /* FOR BUILTIN  FUNCTIONS */
+
     for (int i = 0; i < called_func->parameters.elemAmount; i++) {
         fprintf(asm_file, "\tpop %s\n", parameters_[i]);
     }

@@ -6,29 +6,59 @@
 
 section .bss
 section .bss
-global_vars: resb 0
+global_vars: resb 12
 section .text
 extern printInt
 global _start
 
 _start:
 	mov rbp, rsp
-	sub rsp, 8
-	push 2
+	sub rsp, 3
+	push 84
 	pop rax
-	mov dword [rbp-0], eax
+	mov byte [rbp-2], al
+	push 87
+	pop rax
+	mov byte [rbp-1], al
+	push 76
+	pop rax
+	mov byte [rbp-0], al
+	pop rax
+	mov dword [global_vars+0], eax
+	push 0
+	pop rax
+	mov dword [global_vars+8], eax
+	push 0
+	pop rax
+	mov dword [global_vars+4], eax
 	push 1
 	mov rax, 60
 	mov rdi, 0
 	syscall
 
-ghost:
+updateTurn:
 	; Function Header
 	push rbp
 	mov rbp, rsp
 	push rbx
 
 	sub rsp, 0
+	mov eax, dword [global_vars+4]
+	push rax
+	push 1
+	pop rbx
+	pop rax
+	add rax, rbx
+	push rax
+	mov eax, dword [global_vars+0]
+	push rax
+	pop rbx
+	pop rax
+	xor rdx, rdx
+	idiv rbx
+	push rax
+	pop rax
+	mov dword [global_vars+4], eax
 
 	; Function Footer
 	pop rbx

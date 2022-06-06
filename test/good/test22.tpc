@@ -1,10 +1,12 @@
 char c, d;
 int n1, n4,     n0;
 
+void dosomething(int i) {}
 
 int function(void)
 {
     char var1;
+    int i;
     var1 = 10;
     if (var1 != 10 && var1 > 2) {
         while (var1 <= 200) {
@@ -13,16 +15,14 @@ int function(void)
     }
     else
         return -42;
-    switch (_var1) {
-        printf(something);
+    switch (var1) {
+        putchar('s');
         var1 = 'b';
-        blabla();
         case 'n': 
-            ddqsd();
             break;
         case 'b':
             while (1) {
-                dosomething(i, y);
+                dosomething(i);
                 i = i+   1;
             }
         case '9':
@@ -42,7 +42,7 @@ int function(void)
 
 char _blavla4(char text, int number) {
     int n;
-    n = function(blabla, dd);
+    n = function();
     ;
     return text;
 }
